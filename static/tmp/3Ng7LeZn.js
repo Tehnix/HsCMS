@@ -1,0 +1,1 @@
+(function(){new nicEditor({fullPanel:true}).panelInstance("h3")})();$(function(){var reorganized=false,width=$(window).width();console.log(width);$(window).resize(function(){width=$(window).width();if(!reorganized&&width<900){reorganized=true;console.log("Oh shiat, it just happened D:")}else if(reorganized&&width>900){reorganized=false;console.log("Phew, you're back :);")}})})

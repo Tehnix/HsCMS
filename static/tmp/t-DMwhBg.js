@@ -1,0 +1,1 @@
+(function(){new nicEditor({fullPanel:true}).panelInstance("h3")})();$(function(){var width=$(window).width();console.log(width);$(window).resize(function(){width=$(window).width();console.log(width)})})
