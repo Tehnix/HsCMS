@@ -135,7 +135,8 @@ instance YesodAuth App where
 
     -- You can add other plugins like BrowserID, email or OAuth here
     authPlugins _ = [authGoogleEmail]
-
+    
+    authHttpManager :: App -> Manager
     authHttpManager = httpManager
 
 -- This instance is required to use forms. You can modify renderMessage to
