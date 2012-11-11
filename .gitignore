@@ -1,3 +1,5 @@
+*.DS_STORE
+
 dist
 cabal-dev
 *.o

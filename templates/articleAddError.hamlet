@@ -1,0 +1,5 @@
+<form method=post enctype=#{enctype}>
+    ^{articleWidget}
+    <div>
+        <input type=submit value="Post New Article">
+
