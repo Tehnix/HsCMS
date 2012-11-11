@@ -1,4 +1,4 @@
-exec: ../dist/build/yesog/yesog
+exec: ../dist/build/HsCMS/HsCMS
 args:
     - production
 host: <<HOST-NOT-SET>>

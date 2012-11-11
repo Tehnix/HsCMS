@@ -1,1 +1,0 @@
-(function(){new nicEditor({fullPanel:true}).panelInstance("h3")})();$(function(){$(window).resize(function(){console.log("blaa")})})

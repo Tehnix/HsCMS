@@ -4,6 +4,7 @@ import Prelude
 import Yesod
 import Yesod.Static
 import Yesod.Auth
+import Yesod.Auth.BrowserId
 import Yesod.Auth.GoogleEmail
 import Yesod.Default.Config
 import Yesod.Default.Util (addStaticContentExternal)
@@ -18,7 +19,6 @@ import Model
 import Text.Jasmine (minifym)
 import Web.ClientSession (getKey)
 import Text.Hamlet (hamletFile)
-import Data.Text
 
 -- | The site argument for your application. This can be a good place to
 -- keep settings and values requiring initialization before your application
@@ -72,6 +72,7 @@ instance Yesod App where
     defaultLayout widget = do
         master <- getYesod
         mmsg <- getMessage
+
         -- We break up the default layout into two components:
         -- default-layout is the contents of the body tag, and
         -- default-layout-wrapper is the entire page. Since the final
@@ -81,7 +82,6 @@ instance Yesod App where
         pc <- widgetToPageContent $ do
             $(widgetFile "normalize")
             addStylesheet $ StaticR css_bootstrap_css
-            addScriptRemote "/static/js/jquery.js"
             $(widgetFile "default-layout")
         hamletToRepHtml $(hamletFile "templates/default-layout-wrapper.hamlet")
 
@@ -134,7 +134,7 @@ instance YesodAuth App where
                 fmap Just $ insert $ User (credsIdent creds) Nothing
 
     -- You can add other plugins like BrowserID, email or OAuth here
-    authPlugins _ = [authGoogleEmail]
+    authPlugins _ = [authBrowserId, authGoogleEmail]
 
     authHttpManager = httpManager
 
@@ -146,10 +146,6 @@ instance RenderMessage App FormMessage where
 -- | Get the 'Extra' value, used to hold data from the settings.yml file.
 getExtra :: Handler Extra
 getExtra = fmap (appExtra . settings) getYesod
-
--- The navigatinal menu
-navigation :: GWidget sub App ()
-navigation = $(widgetFile "navigation")
 
 -- Note: previous versions of the scaffolding included a deliver function to
 -- send emails. Unfortunately, there are too many different options for us to

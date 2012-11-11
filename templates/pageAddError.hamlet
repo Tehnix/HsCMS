@@ -1,0 +1,5 @@
+<form method=post enctype=#{enctype}>
+    ^{pageWidget}
+    <div>
+        <input type=submit value="Post New Page">
+

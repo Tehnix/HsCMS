@@ -2,8 +2,4 @@
     <li>
         <a href=@{BlogR}>Blog
     <li>
-        <a href=@{EchoR "Blaaaa"}>Echo Blaaaa
-    <li>
-        <a href=@{MirrorR}>Mirror
-    <li>
         <a href=@{AdminR}>Admin

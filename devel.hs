@@ -1,5 +1,5 @@
 {-# LANGUAGE PackageImports #-}
-import "yesog" Application (getApplicationDev)
+import "HsCMS" Application (getApplicationDev)
 import Network.Wai.Handler.Warp
     (runSettings, defaultSettings, settingsPort)
 import Control.Concurrent (forkIO)

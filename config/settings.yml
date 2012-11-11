@@ -2,7 +2,7 @@ Default: &defaults
   host: "*4" # any IPv4 host
   port: 3000
   approot: "http://localhost:3000"
-  copyright: 
+  copyright: Copyright Christian Kjaer Laustsen
   #analytics: UA-YOURCODE
 
 Development:
@@ -15,5 +15,5 @@ Staging:
   <<: *defaults
 
 Production:
-  approot: "http://www.codetalk.io"
+  approot: "http://codetalk.io"
   <<: *defaults
