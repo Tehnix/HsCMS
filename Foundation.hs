@@ -147,6 +147,10 @@ instance RenderMessage App FormMessage where
 getExtra :: Handler Extra
 getExtra = fmap (appExtra . settings) getYesod
 
+-- The navigational menu
+navigation :: GWidget sub App ()
+navigation = $(widgetFile "navigation")
+
 -- Note: previous versions of the scaffolding included a deliver function to
 -- send emails. Unfortunately, there are too many different options for us to
 -- give a reasonable default. Instead, the information is available on the
