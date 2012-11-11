@@ -6,3 +6,7 @@ cabal-dev
 *.hi
 *.chi
 *.chs.h
+
+*.swp
+*.sqlite3
+static/tmp/*

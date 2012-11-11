@@ -1,14 +1,11 @@
-$maybe _ <- maid
-    <form method=post enctype=#{enctype}>
-        ^{pageWidget}
-        <div>
-            <input type=submit value="Post New Article">
-<hr>
-
 $maybe Entity _ user <- muser
     $if isAdmin user
-        <p>Admin high-five!!!
-            
+        <form method=post enctype=#{enctype}>
+            ^{pageWidget}
+            <div>
+                <input type=submit value="Post New Article">
+<hr>
+
 <h1> Pages
 $if null contentPages
     <p> There are no pages written yet

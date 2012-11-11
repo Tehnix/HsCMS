@@ -2,4 +2,6 @@
     <li>
         <a href=@{BlogR}>Blog
     <li>
+        <a href=@{ContentR}>Content
+    <li>
         <a href=@{AdminR}>Admin
