@@ -1,0 +1,34 @@
+<form method=post enctype=#{enctype}>
+    <div #form-title>
+        <input id="article-title-field" name="article-title-field" type="text" required="" value="">
+    <div #permalink>
+        <b>Permalink</b> http://domain.com/article/<b>#form-title</b>/
+    
+    <div #form-content>
+        <div .padding>
+            <div .left>
+                Markdown
+            <div .right>
+                ?
+            <div .clear>
+            <hr>
+            <textarea id="article-content-field" name="article-content-field"></textarea>
+    <div #form-content-preview>
+        <div .padding>
+            <div .left>
+                Preview
+            <div .right>
+                #word-count
+            <div .clear>
+            <hr>
+            <div #preview-content-container>
+    <div .clear>
+    <div #bottom-bar>
+        <div .spacing>
+            <div .left>
+                <button .btn.btn-inverse> <i class="icon-tag icon-white"></i> News, Category
+            <div .right>
+                <input .btn.btn-primary type=submit value="Save Draft">
+                <input .btn.btn-danger type=submit value="Publish">
+    <div .hide>
+        ^{articleWidget}

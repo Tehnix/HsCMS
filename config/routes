@@ -7,8 +7,9 @@
 / HomeR GET
 
 /admin AdminR GET
+/admin/blog AdminBlogR GET POST
 
-/blog BlogR GET POST
+/blog BlogR GET
 /blog/#ArticleId ArticleR GET
 
 /page ContentR GET POST

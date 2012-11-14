@@ -4,7 +4,6 @@ import Prelude
 import Yesod
 import Yesod.Static
 import Yesod.Auth
-import Yesod.Auth.BrowserId
 import Yesod.Auth.GoogleEmail
 import Yesod.Default.Config
 import Yesod.Default.Util (addStaticContentExternal)
@@ -85,7 +84,7 @@ instance Yesod App where
             addScriptRemote "/static/js/jquery.js"
             $(widgetFile "default-layout")
         hamletToRepHtml $(hamletFile "templates/default-layout-wrapper.hamlet")
-
+        
     -- This is done to provide an optimization for serving static files from
     -- a separate domain. Please see the staticRoot setting in Settings.hs
     urlRenderOverride y (StaticR s) =
@@ -94,6 +93,13 @@ instance Yesod App where
 
     -- The page to be redirected to when authentication is required.
     authRoute _ = Just $ AuthR LoginR
+    
+    -- Require admin priviliges
+    isAuthorized AdminR _ = fmap isAdmin maybeAuth
+    -- isAuthorized BlogR True = return isAdmin
+    
+    -- Anyone can access all other pages
+    isAuthorized _ _ = return Authorized
 
     -- This function creates static content files in the static folder
     -- and names them based on a hash of their content. This allows
@@ -135,7 +141,7 @@ instance YesodAuth App where
                 fmap Just $ insert $ User (credsIdent creds) Nothing
 
     -- You can add other plugins like BrowserID, email or OAuth here
-    authPlugins _ = [authBrowserId, authGoogleEmail]
+    authPlugins _ = [authGoogleEmail]
 
     authHttpManager = httpManager
 
@@ -148,9 +154,15 @@ instance RenderMessage App FormMessage where
 getExtra :: Handler Extra
 getExtra = fmap (appExtra . settings) getYesod
 
+-- Check if a user is one of the pre-specified admin users
+isAdmin :: Maybe (Entity (UserGeneric backend)) -> AuthResult
+isAdmin (Just (Entity _ user)) | userIdent user == "christianlaustsen@gmail.com" = Authorized
+                               | otherwise                                       = AuthenticationRequired
+isAdmin Nothing = AuthenticationRequired
+
 -- The navigational menu
-navigation :: GWidget sub App ()
-navigation = $(widgetFile "navigation")
+navigation = do
+    $(widgetFile "navigation")
 
 -- Note: previous versions of the scaffolding included a deliver function to
 -- send emails. Unfortunately, there are too many different options for us to

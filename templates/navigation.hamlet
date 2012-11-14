@@ -1,4 +1,4 @@
-<ul>
+<ul #navigation>
     <li>
         <a href=@{BlogR}>Blog
     <li>
