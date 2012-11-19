@@ -15,14 +15,15 @@ html, body {
 }
 h1 { font-size: 2.3em }
 h2 { font-size: 1.6em; }
+hr { margin: 8px 0 8px 0; }
 label { width: 8em; display: inline-block; }
 input, textarea { background: #FAFAFA}
 textarea { width: 27em; height: 9em;}
 ul { list-style: square; }
-a { color: #A56; }
+a { color: #878787; }
 a:hover { color: #C58; text-decoration: none; }
 a:active { color: #C58; }
-a:visited { color: #943; }
+a:visited { color: #878787; }
 
 .clear { clear: both }
 .required { margin: 1em 0; }
@@ -30,6 +31,7 @@ a:visited { color: #943; }
 .hide { display:none; }
 .left { float:left }
 .right { float:right; }
+.delimiter { border-left: 1px solid #AEAEAE; height: 19px; display: inline-block; margin: 0 8px -5px 8px; }
 
 .padding {
     position: relative;
@@ -48,7 +50,7 @@ a:visited { color: #943; }
 
 /* Navigation */
 #nav {
-    position: fixed;
+    position: absolute;
     z-index: 10;
     top: 0;
     left: 0;
@@ -146,13 +148,14 @@ a:visited { color: #943; }
 /* Content */
 #main {
     position: relative;
-    min-height: 100%;
+    height: 100%;
 }
 #content {
     position: relative;
+    height: 91%;
     top: #{topMargin};
     line-height: 1.5em;
-    padding: 20px #{sideSpacing} 100px #{sideSpacing};
+    padding: #{sideSpacing};
     color: #AEAEAE;
     
     #welcome-menu {
@@ -170,54 +173,4 @@ a:visited { color: #943; }
             }
         }
     }
-}
-
-
-
-/* Forms */
-#bottom-bar {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    background: #292929;
-    height: #{topMargin};
-    line-height: #{topMargin};
-}
-#form-title {
-    position: relative;
-    background: #fff;
-    padding: #{innerSpacing};
-    margin-bottom: 10px;
-    input {
-        width: 100%;
-        border: none;
-        background: none;
-        box-shadow: none;
-    }
-}
-#form-content {
-    position: relative;
-    background: #fff;
-    width: 49%;
-    min-height: 500px;
-    float:left;
-    margin-top: 10px;
-
-    textarea {
-        width: 100%;
-        min-height: 415px;
-        border: none;
-        background: none;
-        box-shadow: none;
-        padding: 0;
-    }
-}
-#form-content-preview {
-    position: relative;
-    background: #fff;
-    float:right;
-    width: 49%;
-    min-height: 500px;
-    margin-top: 10px;
 }

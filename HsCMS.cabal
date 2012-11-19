@@ -28,6 +28,7 @@ library
                      Settings
                      Settings.StaticFiles
                      Settings.Development
+                     GeneralFunctions
                      Handler.Admin
                      Handler.Home
                      Handler.Content
@@ -81,6 +82,8 @@ library
                  , data-default
                  , utf8-string
                  , pureMD5
+                 , time
+                 , old-locale
 
 executable         HsCMS
     if flag(library-only)

@@ -81,6 +81,7 @@ instance Yesod App where
         pc <- widgetToPageContent $ do
             $(widgetFile "normalize")
             addStylesheet $ StaticR css_bootstrap_css
+            addStylesheetRemote "/static/css/fonts.css"
             addScriptRemote "/static/js/jquery.js"
             $(widgetFile "default-layout")
         hamletToRepHtml $(hamletFile "templates/default-layout-wrapper.hamlet")
@@ -96,7 +97,8 @@ instance Yesod App where
     
     -- Require admin priviliges
     isAuthorized AdminR _ = fmap isAdmin maybeAuth
-    -- isAuthorized BlogR True = return isAdmin
+    isAuthorized AdminBlogR _ = fmap isAdmin maybeAuth
+    isAuthorized AdminBlogNewR _ = fmap isAdmin maybeAuth
     
     -- Anyone can access all other pages
     isAuthorized _ _ = return Authorized

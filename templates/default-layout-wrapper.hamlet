@@ -26,8 +26,10 @@ $newline never
         <div class="container">
             <header>
             ^{pageBody pc}
+            <!--
             <footer>
                 #{extraCopyright $ appExtra $ settings master}
+                -->
 
         $maybe analytics <- extraAnalytics $ appExtra $ settings master
             <script>

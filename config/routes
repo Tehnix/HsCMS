@@ -6,11 +6,15 @@
 
 / HomeR GET
 
-/admin AdminR GET
-/admin/blog AdminBlogR GET POST
-
 /blog BlogR GET
 /blog/#ArticleId ArticleR GET
 
 /page ContentR GET POST
 /page/#ContentPageId ContentPageR GET
+
+
+
+/admin AdminR GET
+/admin/blog/ AdminBlogR GET
+/admin/blog/post AdminBlogNewR GET POST
+/admin/blog/post/#ArticleId AdminBlogPostR GET POST

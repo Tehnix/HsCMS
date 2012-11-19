@@ -1,10 +1,11 @@
-<h1> Articles
 $if null articles
     <p> There are no articles in the blog
 $else
     $forall Entity articleId article <- articles
         <header .article-header>
-            <a href=@{ArticleR articleId} >
-                <h1> #{articleTitle article}
-        <article .article-body> #{articleContent article}
+            <a href=@{ArticleR articleId}>
+                <h1>#{articleTitle article}
+        <article .article-body>
+            #{articleHtmlContent article}
+        <hr .wide-hr>
 

@@ -2,17 +2,17 @@
     <img #admin-logo src="/static/img/C-logo.png" alt="" />
     <ul #navigation>
         <li>
-            <a href=@{BlogR}>Blog
+            <a href=@{AdminR}>Dashboard
         <li>
-            <a href=@{ContentR}>Content
+            <a href=@{AdminBlogR}>Blog
         <li>
-            <a href=@{AdminR}>Admin
+            <a href=@{ContentR}>Pages
     
     <div .user-dropdown.dropdown>
         <a .dropdown-toggle href="#" data-toggle="dropdown"> <img id="user-image" src="//www.gravatar.com/avatar/#{emailHash}?s=20"> #{userEmail} <b class="caret"></b>
         <ul .dropdown-menu.pull-right role="menu" aria-labelledby="down1">
             <li>
-                <a href="#">Some link....
+                <a href=@{AdminBlogNewR}>New Post
             <li .divider>
             <li>
                 <a href=@{AuthR LogoutR}>Logout

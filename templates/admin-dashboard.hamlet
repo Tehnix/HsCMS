@@ -3,7 +3,7 @@
         <li>
             <b>Welcome back</b>, #{splitByAt $ T.unpack userEmail}
         <li>
-            <a href=@{AdminBlogR}><i class="icon-pencil"></i> New Post
+            <a href=@{AdminBlogNewR}><i class="icon-pencil"></i> New Post
         <li>
             <i class="icon-user"></i> Authors
         <li>

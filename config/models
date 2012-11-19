@@ -9,7 +9,11 @@ Email
     UniqueEmail email
 Article
     title Text
-    content Html
+    mdContent Html
+    htmlContent Html
+    wordCount Int
+    added UTCTime
+    author Text
     deriving
 ContentPage
     title Text
