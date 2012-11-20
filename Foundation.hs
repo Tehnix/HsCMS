@@ -159,6 +159,9 @@ getExtra = fmap (appExtra . settings) getYesod
 -- Check if a user is one of the pre-specified admin users
 isAdmin :: Maybe (Entity (UserGeneric backend)) -> AuthResult
 isAdmin (Just (Entity _ user)) | userIdent user == "christianlaustsen@gmail.com" = Authorized
+                               | userIdent user == "matrix@codetalk.io"          = Authorized
+                               | userIdent user == "sotd@codetalk.io"            = Authorized
+                               | userIdent user == "kdj.1337@gmail.com"          = Authorized
                                | otherwise                                       = AuthenticationRequired
 isAdmin Nothing = AuthenticationRequired
 
