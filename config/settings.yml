@@ -15,5 +15,5 @@ Staging:
   <<: *defaults
 
 Production:
-  approot: "http://codetalk.io"
+  approot: "http://tehnix.codetalk.io"
   <<: *defaults
