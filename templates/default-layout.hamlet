@@ -9,7 +9,13 @@
             <br />
             Consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
     <div .bottom>
-        ^{navigation}
+        <ul #navigation>
+            <li>
+                <a href=@{BlogR}>Blog
+            <li>
+                <a href=@{ContentR}>Content
+            <li>
+                <a href=@{AdminR}>Admin
 <div #main.right role="main">
     <div #content>
         $maybe msg <- mmsg

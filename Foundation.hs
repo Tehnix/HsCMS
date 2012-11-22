@@ -18,6 +18,7 @@ import Model
 import Text.Jasmine (minifym)
 import Web.ClientSession (getKey)
 import Text.Hamlet (hamletFile)
+import qualified Data.Text as T
 
 -- | The site argument for your application. This can be a good place to
 -- keep settings and values requiring initialization before your application
@@ -131,9 +132,9 @@ instance YesodAuth App where
     type AuthId App = UserId
 
     -- Where to send a user after successful login
-    loginDest _ = HomeR
+    loginDest _ = BlogR
     -- Where to send a user after logout
-    logoutDest _ = HomeR
+    logoutDest _ = BlogR
 
     getAuthId creds = runDB $ do
         x <- getBy $ UniqueUser $ credsIdent creds
@@ -156,18 +157,14 @@ instance RenderMessage App FormMessage where
 getExtra :: Handler Extra
 getExtra = fmap (appExtra . settings) getYesod
 
+admins :: [T.Text]
+admins = ["christianlaustsen@gmail.com", "matrix@codetalk.io", "sotd@codetalk.io", "kdj.1337@gmail.com"]
+
 -- Check if a user is one of the pre-specified admin users
 isAdmin :: Maybe (Entity (UserGeneric backend)) -> AuthResult
-isAdmin (Just (Entity _ user)) | userIdent user == "christianlaustsen@gmail.com" = Authorized
-                               | userIdent user == "matrix@codetalk.io"          = Authorized
-                               | userIdent user == "sotd@codetalk.io"            = Authorized
-                               | userIdent user == "kdj.1337@gmail.com"          = Authorized
-                               | otherwise                                       = AuthenticationRequired
+isAdmin (Just (Entity _ user)) | elem (userIdent user) admins = Authorized
+                               | otherwise                    = AuthenticationRequired
 isAdmin Nothing = AuthenticationRequired
-
--- The navigational menu
-navigation = do
-    $(widgetFile "navigation")
 
 -- Note: previous versions of the scaffolding included a deliver function to
 -- send emails. Unfortunately, there are too many different options for us to

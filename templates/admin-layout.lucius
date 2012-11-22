@@ -48,6 +48,15 @@ a:visited { color: #878787; }
     height:100%;
 }
 
+#message {
+    background: #FFF5B5;
+    margin-bottom: 10px;
+    padding: 5px 10px 5px 10px;
+    color: black;
+    border: 1px solid #DDDCDC;
+    font-weight: bold;
+}
+
 /* Navigation */
 #nav {
     position: absolute;

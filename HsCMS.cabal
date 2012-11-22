@@ -30,7 +30,7 @@ library
                      Settings.Development
                      GeneralFunctions
                      Handler.Admin
-                     Handler.Home
+                     Handler.AdminBlog
                      Handler.Content
                      Handler.Blog
 

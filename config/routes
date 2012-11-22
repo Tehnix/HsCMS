@@ -4,17 +4,16 @@
 /favicon.ico FaviconR GET
 /robots.txt RobotsR GET
 
-/ HomeR GET
-
-/blog BlogR GET
+/ BlogR GET
 /blog/#ArticleId ArticleR GET
 
-/page ContentR GET POST
+/page ContentR GET
 /page/#ContentPageId ContentPageR GET
 
 
 
 /admin AdminR GET
+
 /admin/blog/ AdminBlogR GET
 /admin/blog/post AdminBlogNewR GET POST
 /admin/blog/post/#ArticleId AdminBlogPostR GET POST
