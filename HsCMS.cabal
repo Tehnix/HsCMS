@@ -31,8 +31,8 @@ library
                      GeneralFunctions
                      Handler.Admin
                      Handler.AdminBlog
-                     Handler.Content
                      Handler.Blog
+                     Handler.Content
 
     if flag(dev) || flag(library-only)
         cpp-options:   -DDEVELOPMENT

@@ -22,4 +22,9 @@ $(function(){
     $(window).resize(function() {
         rearrange($(window).width());
     });
+    
+    
+    $("#site-title").on('click', function() {
+        document.location = "/";
+    });
 });

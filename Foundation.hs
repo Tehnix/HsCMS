@@ -147,6 +147,11 @@ instance YesodAuth App where
     authPlugins _ = [authGoogleEmail]
 
     authHttpManager = httpManager
+    
+    -- Overwrite the login handler
+    loginHandler = loginLayout $ do
+        $(widgetFile "login")
+
 
 -- This instance is required to use forms. You can modify renderMessage to
 -- achieve customized and internationalized form validation messages.
@@ -157,6 +162,21 @@ instance RenderMessage App FormMessage where
 getExtra :: Handler Extra
 getExtra = fmap (appExtra . settings) getYesod
 
+-- The layout for the login page
+loginLayout :: GWidget Auth App () -> GHandler Auth App RepHtml
+loginLayout widget = do
+    master <- getYesod
+    mmsg <- getMessage
+    
+    pc <- widgetToPageContent $ do
+        $(widgetFile "normalize")
+        addStylesheet $ StaticR css_bootstrap_css
+        addStylesheetRemote "/static/css/fonts.css"
+        addScriptRemote "/static/js/jquery.js"
+        $(widgetFile "login-layout")
+    hamletToRepHtml $(hamletFile "templates/login-layout-wrapper.hamlet")
+
+-- TODO: Use the admins value in settings.yml instead
 admins :: [T.Text]
 admins = ["christianlaustsen@gmail.com", "matrix@codetalk.io", "sotd@codetalk.io", "kdj.1337@gmail.com"]
 

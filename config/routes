@@ -6,6 +6,7 @@
 
 / BlogR GET
 /blog/#ArticleId ArticleR GET
+/author/#T.Text AuthorR GET
 
 /page ContentR GET
 /page/#ContentPageId ContentPageR GET

@@ -1,0 +1,8 @@
+#login-box {
+    background: white;
+    width: 400px;
+    height: 200px;
+    margin: 0 auto;
+    margin-top: 200px;
+    padding: 25px;
+}

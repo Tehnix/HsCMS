@@ -4,18 +4,14 @@
         <div #site-title>
             CodeTalk
         <div #site-description>
-            Lorem ipsum dolor sit amet
+            A little blog about various things
             <br />
             <br />
-            Consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+            Basically Cats, cats! Cats and jazz, that is all... and something about programming ofc...
     <div .bottom>
         <ul #navigation>
-            <li>
-                <a href=@{BlogR}>Blog
-            <li>
-                <a href=@{ContentR}>Content
-            <li>
-                <a href=@{AdminR}>Admin
+            <!--<li>
+                <a href=@{BlogR}>Blog-->
 <div #main.right role="main">
     <div #content>
         $maybe msg <- mmsg

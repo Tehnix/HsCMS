@@ -1,4 +1,29 @@
-.wide-hr {
-margin-left: -75px;
-margin-right: -75px;
+#content {
+    padding: 10px 10px 2px 0px !important;
+}
+#main.full {
+    #content {
+        padding: 0px 0px 0px 0px !important;
+    }
+}
+
+.article {
+    background: #fff;
+    padding: 15px 30px 15px 30px;
+    margin-bottom: 10px;
+    border: solid 1px #D2D2D2;
+    .article-header {
+        a {
+            color: #333 !important;
+        }
+        a:visited {
+            color: #333 !important;
+        }
+    }
+}
+
+.article-information {
+    color: #666;
+    font-size: 12px;
+    margin-top: 5px;
 }
