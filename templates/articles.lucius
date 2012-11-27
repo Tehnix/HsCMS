@@ -20,6 +20,11 @@
             color: #333 !important;
         }
     }
+    .article-body {
+        max-height: 290px;
+        overflow-y: hidden;
+        margin-bottom: 10px;
+    }
 }
 
 .article-information {
