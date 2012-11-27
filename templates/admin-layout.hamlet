@@ -1,5 +1,6 @@
 <div #nav role="nav">
-    <img #admin-logo src="/static/img/C-logo.png" alt="" />
+    <a href="/">
+        <img #admin-logo src="/static/img/C-logo.png" alt="" />
     <ul #navigation>
         <li>
             <a href=@{AdminR}>Dashboard

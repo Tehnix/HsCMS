@@ -8,7 +8,7 @@ $else
                     <h1>#{articleTitle article}
                 <p .article-information>
                     Written by 
-                    <a href=@{AuthorR (articleAuthor article)}>#{articleAuthor article}
+                    <a href=@{AuthorR (articleAuthor article)}>#{splitByAt $ T.unpack $ articleAuthor article}
                     on #{formatTime defaultTimeLocale "%h. %d, %Y" (articleAdded article)}
             <article .article-body>
                 #{articleHtmlContent article}

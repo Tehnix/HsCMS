@@ -39,6 +39,9 @@ addSeparator' s t n = if (P.length s) == 0
 addSeparator :: String -> Text
 addSeparator s = T.pack (addSeparator' (P.reverse s) "" 0)
 
+splitByAt :: [Char] -> [Char]
+splitByAt t = takeWhile (/='@') t
+
 -- Convert the user email to lowercase and md5 hash it
 lowerEmailHash :: Maybe (Entity (UserGeneric backend)) -> String
 lowerEmailHash (Just (Entity _ user)) = show $ md5 . L.fromString $ T.unpack $ T.toLower $ userIdent user
