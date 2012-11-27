@@ -58,7 +58,7 @@ pre {
 #content {
     position: relative;
     line-height: 1.5em;
-    padding: 20px 75px 0px 75px;
+    padding: 15px 30px 15px 30px;
     font-family: "OpenSansBold", sans-serif;
 }
 

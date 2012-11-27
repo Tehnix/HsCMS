@@ -7,6 +7,21 @@
     }
 }
 
+.read-more {
+    font-size: 12px;
+    padding: 8px;
+    color: white;
+    background: #971B1B;
+    float: right;
+    border: solid 1px #D2D2D2;
+}
+.read-more:visited {
+    color: white;
+}
+.read-more:hover {
+    color: white;
+}
+
 .article {
     background: #fff;
     padding: 15px 30px 15px 30px;

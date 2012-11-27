@@ -1,5 +1,6 @@
 #main {
     background: #fff;
+    border-left: solid 1px #D2D2D2;
 }
 
 h1 {

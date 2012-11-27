@@ -1,5 +1,6 @@
 <h1> #{articleTitle article}
 <article> #{articleHtmlContent article}
-    
-<a href=@{BlogR} >< Back
 
+<br />
+<a href=@{BlogR}>< Back
+<br />

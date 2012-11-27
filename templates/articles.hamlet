@@ -12,4 +12,8 @@ $else
                     on #{formatTime defaultTimeLocale "%h. %d, %Y" (articleAdded article)}
             <article .article-body>
                 #{articleHtmlContent article}
+            <a .read-more href=@{ArticleR articleId}>
+                Read more 
+                <i .icon-chevron-right.icon-white></i>
+            <div .clear>
 
