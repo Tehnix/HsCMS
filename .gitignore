@@ -11,3 +11,4 @@ cabal-dev
 *.swp
 *.sqlite3
 static/tmp/*
+HsCMS.keter
