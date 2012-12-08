@@ -11,7 +11,6 @@ import Yesod.Auth
 import Data.Time
 import System.Locale (defaultTimeLocale)
 
-
 getBlogR :: Handler RepHtml
 getBlogR = do
     maid <- maybeAuthId

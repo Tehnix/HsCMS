@@ -59,7 +59,6 @@ pre {
     position: relative;
     line-height: 1.5em;
     padding: 15px 30px 15px 30px;
-    font-family: "OpenSansBold", sans-serif;
 }
 
 #nav {
@@ -122,6 +121,7 @@ pre {
             text-align: center;
             font-family: "OpenSansBold", sans-serif;
             margin-bottom: 20px;
+            padding: 10px 2px 10px 2px;
         }
         #site-description {
             line-height: 1.3em;

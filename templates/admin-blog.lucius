@@ -16,8 +16,8 @@
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
-        font-family: "OpenSansBold", sans-serif;
         font-size: 20px;
+        margin: 0;
     }
     #search-box {
         border: none;
@@ -116,7 +116,6 @@
     
     #content-preview-container {
         color: #000;
-        font-family: "OpenSansBold", sans-serif;
     }
     .left {
         width: 70%;

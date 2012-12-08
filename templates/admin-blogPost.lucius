@@ -42,11 +42,11 @@
 }
 #form-content {
     position: relative;
-    background: #fff;
     width: 49%;
     min-height: 82%;
     float:left;
     margin-top: 10px;
+    padding-bottom: 60px;
 
     textarea {
         width: 100%;
@@ -62,7 +62,6 @@
 }
 #form-content-preview {
     position: relative;
-    background: #fff;
     float:right;
     width: 49%;
     min-height: 82%;

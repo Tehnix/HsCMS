@@ -33,9 +33,16 @@ a:visited { color: #878787; }
 .right { float:right; }
 .delimiter { border-left: 1px solid #AEAEAE; height: 19px; display: inline-block; margin: 0 8px -5px 8px; }
 
+.btn {
+    padding: 2px 10px;
+    font-size: 13px;
+}
+
 .padding {
     position: relative;
     padding: #{innerSpacing};
+    background: #fff;
+    min-height:452px;
 }
 .spacing {
     position: relative;

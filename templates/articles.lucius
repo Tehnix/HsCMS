@@ -9,7 +9,7 @@
 
 .read-more {
     font-size: 12px;
-    padding: 8px;
+    padding: 4px 8px 4px 8px;
     color: white;
     background: #971B1B;
     float: right;
@@ -36,7 +36,7 @@
         }
     }
     .article-body {
-        max-height: 290px;
+        max-height: 284px;
         overflow-y: hidden;
         margin-bottom: 10px;
     }
