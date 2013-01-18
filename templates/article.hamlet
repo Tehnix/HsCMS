@@ -1,6 +1,10 @@
-<h1> #{articleTitle article}
-<article> #{articleHtmlContent article}
-
-<br />
-<a href=@{BlogR}>< Back
-<br />
+<section .article>
+    <header .article-header>
+            <h1>#{articleTitle article}
+        <p .article-information>
+            Written by 
+            <a href=@{AuthorR (articleAuthor article)}>#{splitByAt $ T.unpack $ articleAuthor article}
+            on #{formatTime defaultTimeLocale "%h. %d, %Y" (articleAdded article)}
+    <article .article-body>
+        #{articleHtmlContent article}
+    <div .clear>

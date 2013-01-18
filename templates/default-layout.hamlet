@@ -1,20 +1,6 @@
-<div #nav.left role="nav">
-    <div .top>
-    <div .middle>
-        <div #site-title>
-            CodeTalk
-        <div #site-description>
-            A little blog about various things
-            <br />
-            <br />
-            Basically Cats, cats! Cats and jazz, that is all... and something about programming ofc...
-    <div .bottom>
-        <ul #navigation>
-            <!--<li>
-                <a href=@{BlogR}>Blog-->
 <div #main.right role="main">
     <div #content>
         $maybe msg <- mmsg
             <div #message>#{msg}
         ^{widget}
-  <div .clear>
+    <div .clear>

@@ -6,7 +6,7 @@ host: tehnix.codetalk.io
 # Use the following to automatically copy your bundle upon creation via `yesod
 # keter`. Uses `scp` internally, so you can set it to a remote destination
 # copy-to: user@host:/opt/keter/incoming
-copy-to: tenshi@199.48.69.234:/opt/keter/incoming
+copy-to: root@199.48.69.234:/opt/keter/incoming
 
 static-hosts:
     - host: static.codetalk.io
