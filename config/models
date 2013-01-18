@@ -14,6 +14,7 @@ Article
     wordCount Int
     added UTCTime
     author Text
+    visible Int
     deriving
 ContentPage
     title Text

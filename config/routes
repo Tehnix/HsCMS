@@ -18,3 +18,4 @@
 /admin/blog/ AdminBlogR GET
 /admin/blog/post AdminBlogNewR GET POST
 /admin/blog/post/#ArticleId AdminBlogPostR GET POST
+/admin/blog/delete/#ArticleId AdminBlogDeleteR POST

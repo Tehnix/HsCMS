@@ -18,7 +18,7 @@
                         #{addSeparator $ show $ articleWordCount article}
                     <a .edit-link.hide href=@{AdminBlogPostR articleId}>
                     <a .view-link.hide href=@{ArticleR articleId}>
-                    <a .delete-link.hide href=@{AdminBlogPostR articleId}>
+                    <a .delete-link.hide href=@{AdminBlogDeleteR articleId}>
                 <article>
                     <header>
                         <hgroup>

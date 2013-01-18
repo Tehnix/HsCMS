@@ -4,6 +4,7 @@ module Handler.AdminBlog
     , postAdminBlogNewR
     , getAdminBlogPostR
     , postAdminBlogPostR
+    , postAdminBlogDeleteR
     )
 where
     
@@ -43,7 +44,7 @@ postAdminBlogNewR = do
     wordCount <- runInputPost $ ireq intField "form-wordcount-field"
     added <- liftIO getCurrentTime
     author <- fmap usersEmail maybeAuth
-    _ <- runDB $ insert $ Article title mdContent htmlContent wordCount added author
+    _ <- runDB $ insert $ Article title mdContent htmlContent wordCount added author 1
     setMessage $ "Post Created"
     redirect AdminBlogR
 
@@ -66,4 +67,11 @@ postAdminBlogPostR articleId = do
     wordCount <- runInputPost $ ireq intField "form-wordcount-field"
     runDB $ update articleId [ArticleTitle =. title, ArticleMdContent =. mdContent, ArticleHtmlContent =. htmlContent, ArticleWordCount =. wordCount]
     setMessage $ "Post Update"
+    redirect AdminBlogR
+
+-- Handling the updated blog post
+postAdminBlogDeleteR :: ArticleId -> Handler ()
+postAdminBlogDeleteR articleId = do
+    runDB $ update articleId [ArticleVisible =. 0]
+    setMessage $ "Post Deleted"
     redirect AdminBlogR

@@ -3,7 +3,7 @@ Default: &defaults
   port: 3000
   approot: "http://localhost:3000"
   copyright: Copyright Christian Kjaer Laustsen
-  admins: ["christianlaustsen@gmail.com", "matrix@codetalk.io", "sotd@codetalk.io", "kdj.1337@gmail.com", "iliekpenguinz@gmail.com"]
+  admins: ["christianlaustsen@gmail.com"]
   #analytics: UA-YOURCODE
 
 Development:
@@ -16,5 +16,5 @@ Staging:
   <<: *defaults
 
 Production:
-  approot: "http://tehnix.codetalk.io"
+  approot: "http://codetalk.io"
   <<: *defaults

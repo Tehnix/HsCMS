@@ -178,7 +178,7 @@ loginLayout widget = do
 
 -- TODO: Use the admins value in settings.yml instead
 admins :: [T.Text]
-admins = ["christianlaustsen@gmail.com", "matrix@codetalk.io", "sotd@codetalk.io", "kdj.1337@gmail.com", "iliekpenguinz@gmail.com"]
+admins = ["christianlaustsen@gmail.com"]
 
 -- Check if a user is one of the pre-specified admin users
 isAdmin :: Maybe (Entity (UserGeneric backend)) -> AuthResult
