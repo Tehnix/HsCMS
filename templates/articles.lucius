@@ -8,16 +8,14 @@
     color: #444;
     .article-header {
         color: #222;
-        a {
-            color: #222 !important;
-        }
-        a:visited {
-            color: #222 !important;
-        }
+        a { color: #222 !important; }
+        a:hover { text-decoration: none !important; }
+        a:visited { color: #222 !important; }
     }
     .article-information {
         margin-top: 5px;
         margin-bottom: 30px;
+        a:hover { text-decoration: none !important; }
     }
     .article-body {
         margin-bottom: 10px;
