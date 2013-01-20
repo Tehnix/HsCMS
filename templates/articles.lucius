@@ -23,3 +23,6 @@
         margin-bottom: 10px;
     }
 }
+div#content section:last-child {
+    border-bottom:0px;
+}

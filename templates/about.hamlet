@@ -1,0 +1,6 @@
+<div #about>
+    <a href=@{BlogR}>Home
+    > About
+    <br /><br />
+    
+    Don't worry, don't worry, I'm gonna get to it eventually! ;) ...

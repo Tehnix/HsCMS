@@ -26,10 +26,8 @@ $newline never
         <div class="container">
             <header>
             ^{pageBody pc}
-            <!--
-            <footer>
+            <div id="copyright">
                 #{extraCopyright $ appExtra $ settings master}
-                -->
         $maybe analytics <- extraAnalytics $ appExtra $ settings master
             <script>
               if(!window.location.href.match(/localhost/)){

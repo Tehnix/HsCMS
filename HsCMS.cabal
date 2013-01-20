@@ -33,6 +33,7 @@ library
                      Handler.AdminBlog
                      Handler.Blog
                      Handler.Content
+                     Handler.About
 
     if flag(dev) || flag(library-only)
         cpp-options:   -DDEVELOPMENT

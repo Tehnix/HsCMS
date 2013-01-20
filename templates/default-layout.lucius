@@ -6,6 +6,7 @@ html, body {
     padding:0;
     font-size: 1em;
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-weight: 200;
 }
 h1 { font-size: 2.3em; font-weight: 100; line-height: 1em;}
 h2 { font-size: 1.6em; font-weight: 100; }
@@ -16,10 +17,10 @@ label { width: 8em; display: inline-block; }
 input, textarea { background: #FAFAFA}
 textarea { width: 27em; height: 9em; }
 ul { list-style: square; }
-a { color: #A56; }
-a:hover { color: #C58; text-decoration: none; }
-a:active { color: #C58; }
-a:visited { color: #943; }
+a { color: #08c; text-decoration: none; }
+a:hover { outline: 0; color: #005580; text-decoration: underline; }
+a:active { outline: 0; color: #C58; }
+a:visited { color: #08c; }
 pre {
     background: #F4F4F4;
     font: 13px "Courier 10 Pitch", Courier, monospace;
@@ -41,7 +42,6 @@ pre {
 
 #main {
     position: relative;
-    min-height: 100%;
 }
 
 #content {
@@ -51,6 +51,30 @@ pre {
 }
 
 #footer {
-    margin: 0px 30px 15px 30px;
+    color: #999;
+    font-size: 0.85em;
+    margin: 0px 30px 5px 30px;
+    padding: 5px 30px 5px 30px;
     border-top: 1px solid #D2D2D2;
+    .left-half {
+        float:left;
+    }
+    .right-half {
+        float:right;
+    }
+}
+
+#copyright {
+    color: #999;
+    font-size: 0.8em;
+    margin: 0px 30px 15px 30px;
+    padding: 5px 30px 25px 30px;
+    text-align: center;
+}
+
+/* iPhone [portrait + landscape] */
+@media only screen and (max-device-width: 480px) {
+    #content {
+        padding: 0px 0px 15px 0px;
+    }
 }

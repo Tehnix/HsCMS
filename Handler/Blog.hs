@@ -2,6 +2,7 @@ module Handler.Blog
     ( getBlogR
     , getArticleR
     , getAuthorR
+    , getArchivesR
     )
 where
 
@@ -27,6 +28,16 @@ getArticleR articleId = do
     defaultLayout $ do
         setTitle $ toHtml $ articleTitle article
         $(widgetFile "article")
+
+getArchivesR :: Handler RepHtml
+getArchivesR = do
+    maid <- maybeAuthId
+    muser <- maybeAuth
+    -- Get the list of articles inside the database
+    articles <- runDB $ selectList [] [Desc ArticleAdded]
+    defaultLayout $ do
+        setTitle "Archives"
+        $(widgetFile "archives")
 
 getAuthorR :: T.Text -> Handler RepHtml
 getAuthorR author = do

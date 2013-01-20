@@ -1,5 +1,5 @@
 $if null articles
-    <p> There are no articles in the blog
+    <p> There are no articles yet...
 $else
     $forall Entity articleId article <- articles
         <section .article>
@@ -7,9 +7,9 @@ $else
                 <a href=@{ArticleR articleId}>
                     <h1>#{articleTitle article}
                 <p .article-information>
-                    Written by 
-                    <a href=@{AuthorR (articleAuthor article)}>#{splitByAt $ T.unpack $ articleAuthor article}
-                    on #{formatTime defaultTimeLocale "%h. %d, %Y" (articleAdded article)}
+                    Published 
+                    on #{formatTime defaultTimeLocale "%h %d, %Y" (articleAdded article)} 
+                    by <a href=@{AuthorR (articleAuthor article)}>#{splitByAt $ T.unpack $ articleAuthor article}
             <article .article-body>
                 #{articleHtmlContent article}
             <div .clear>
