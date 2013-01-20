@@ -9,11 +9,11 @@
         <table #archives-table .table.table-bordered.table-condensed.table-striped.table-hover>
             <thead>
                 <tr>
-                    <th>
+                    <th .title>
                         Title
-                    <th>
+                    <th .author>
                         Author
-                    <th>
+                    <th .published>
                         Published
             <tbody>
                 $forall Entity articleId article <- articles

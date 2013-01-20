@@ -1,6 +1,6 @@
 <section .article>
     <a href=@{BlogR}>Home
-    > About
+    > #{articleTitle article}
     <br /><br />
     
     <header .article-header>
