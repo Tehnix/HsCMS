@@ -68,6 +68,6 @@ adminLayout widget = do
         addScriptRemote "/static/js/textAreaExpander.js"
         addScriptRemote "/static/js/showdown.js"
         addScriptRemote "/static/js/extensions/github.js"
-        $(widgetFile "admin-layout")
-    hamletToRepHtml $(hamletFile "templates/admin-layout-wrapper.hamlet")
+        $(widgetFile "admin/admin-layout")
+    hamletToRepHtml $(hamletFile "templates/admin/admin-layout-wrapper.hamlet")
  

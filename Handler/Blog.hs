@@ -20,14 +20,14 @@ getBlogR = do
     articles <- runDB $ selectList [] [Desc ArticleAdded]
     defaultLayout $ do
         setTitle "Blog"
-        $(widgetFile "articles")
+        $(widgetFile "blog/articles")
 
 getArticleR :: ArticleId -> Handler RepHtml
 getArticleR articleId = do
     article <- runDB $ get404 articleId
     defaultLayout $ do
         setTitle $ toHtml $ articleTitle article
-        $(widgetFile "article")
+        $(widgetFile "blog/article")
 
 getArchivesR :: Handler RepHtml
 getArchivesR = do
@@ -37,7 +37,7 @@ getArchivesR = do
     articles <- runDB $ selectList [] [Desc ArticleAdded]
     defaultLayout $ do
         setTitle "Archives"
-        $(widgetFile "archives")
+        $(widgetFile "blog/archives")
 
 getAuthorR :: T.Text -> Handler RepHtml
 getAuthorR author = do
@@ -47,4 +47,4 @@ getAuthorR author = do
     articles <- runDB $ selectList [ArticleAuthor ==. author] [Desc ArticleAdded]
     defaultLayout $ do
         setTitle "Blog"
-        $(widgetFile "articles")
+        $(widgetFile "blog/articles")

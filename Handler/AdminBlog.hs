@@ -23,7 +23,7 @@ getAdminBlogR = do
     articles <- runDB $ selectList [] [Desc ArticleAdded]
     adminLayout $ do
         setTitle "Admin: Blog Posts"
-        $(widgetFile "admin-blog")
+        $(widgetFile "admin/blog")
              
 -- The form page for posting a new blog post 
 getAdminBlogNewR :: Handler RepHtml
@@ -32,7 +32,7 @@ getAdminBlogNewR = do
     marticle <- return $ Nothing
     adminLayout $ do
         setTitle "Admin: New Post"
-        $(widgetFile "admin-blogPost")
+        $(widgetFile "admin/blogPost")
 
 
 -- Handling the new posted blog post
@@ -56,7 +56,7 @@ getAdminBlogPostR articleId = do
     marticle <- return $ Just dbarticle
     adminLayout $ do
         setTitle "Admin: New Post"
-        $(widgetFile "admin-blogPost")
+        $(widgetFile "admin/blogPost")
 
 -- Handling the updated blog post
 postAdminBlogPostR :: ArticleId -> Handler ()

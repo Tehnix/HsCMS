@@ -1,5 +1,0 @@
-<h1> #{contentPageTitle contentPage}
-<article> #{contentPageContent contentPage}
-    
-<a href=@{ContentR} >< Back
-

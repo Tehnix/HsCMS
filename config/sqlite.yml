@@ -15,6 +15,6 @@ Staging:
   <<: *defaults
 
 Production:
-  database: HsCMS_production.sqlite3
+  database: /opt/keter/database/HsCMS_production.sqlite3
   poolsize: 100
   <<: *defaults

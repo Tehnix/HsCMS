@@ -10,7 +10,7 @@ getAdminR = do
     userEmail <- fmap usersEmail maybeAuth
     adminLayout $ do
         setTitle "Admin: Dashboard"
-        $(widgetFile "admin-dashboard")
+        $(widgetFile "admin/dashboard")
 
     
 

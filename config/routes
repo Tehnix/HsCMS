@@ -11,10 +11,6 @@
 /author/#T.Text AuthorR GET
 /archives ArchivesR GET
 
-/page ContentR GET
-/page/#ContentPageId ContentPageR GET
-
-
 
 /admin AdminR GET
 

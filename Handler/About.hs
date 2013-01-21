@@ -1,4 +1,4 @@
-module Handler.About ( getAboutR ) where
+module Handler.About where
 
 import Import
 

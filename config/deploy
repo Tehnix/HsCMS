@@ -15,4 +15,4 @@ rm -rf static/tmp/
 # # if you don't want to provide a normal user that access, you can split 
 # # the command and use sudo on the mv
 tar czfv HsCMS.keter dist/build/HsCMS/HsCMS config static
-sudo mv HsCMS.keter /opt/keter/incoming/
+mv HsCMS.keter /opt/keter/incoming/

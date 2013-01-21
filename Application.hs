@@ -21,7 +21,6 @@ import Network.HTTP.Conduit (newManager, def)
 import Handler.Admin
 import Handler.AdminBlog
 import Handler.Blog
-import Handler.Content
 import Handler.About
 
 -- This line actually creates our YesodDispatch instance. It is the second half
