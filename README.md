@@ -17,4 +17,5 @@ If you run into the problem of:
     yesod: readProcess: cabal-dev "buildopts" (exit 1): failed
 </pre>
 
-Then it should be fixed by running `cabal install cabal-dev cabal-install cabal` while standing in the project folder. Thanks to http://stackoverflow.com/questions/13659011/ghcinvocation-the-programversion-must-not-be-nothing for the solution.
+Then it should be fixed by running `cabal install cabal-dev cabal-install cabal` while standing in the project folder. 
+Thanks to [this stackoverflow question](http://stackoverflow.com/questions/13659011/ghcinvocation-the-programversion-must-not-be-nothing) for the solution.
