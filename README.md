@@ -2,7 +2,7 @@
 A Yesod/Haskell based CMS
 
 
-## Problems setting up ##
+### Problems setting up ###
 
 This assumes you're using cabal-dev.
 
