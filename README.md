@@ -1,6 +1,10 @@
 #HsCMS
 A Yesod/Haskell based CMS
 
+### License ###
+
+Free for use under the BSD license.
+
 
 ### Problems setting up ###
 
