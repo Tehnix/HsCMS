@@ -1,8 +1,8 @@
 #!/bin/bash -ex
 
-cabal clean
-cabal configure
-cabal build
+cabal-dev clean
+cabal-dev configure
+cabal-dev build
 
 strip dist/build/HsCMS/HsCMS
 

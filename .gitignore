@@ -12,3 +12,5 @@ cabal-dev
 *.sqlite3
 static/tmp/*
 HsCMS.keter
+static/.DS_STORE
+templates/.DS_STORE
