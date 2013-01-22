@@ -56,6 +56,7 @@ adminLayout :: GWidget App App () -> GHandler App App RepHtml
 adminLayout widget = do
     master <- getYesod
     mmsg <- getMessage
+    (title', parents) <- breadcrumbs
     userEmail <- fmap usersEmail maybeAuth
     emailHash <- fmap lowerEmailHash maybeAuth
     

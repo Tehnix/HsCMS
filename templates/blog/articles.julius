@@ -16,9 +16,12 @@ $(function(){
             offset = (page * perPage) - perPage;
             for (var i = 0; i < articles.length; i++) {
                 if (i < offset || i >= offset + perPage) {
-                    $(articles[i]).hide();
+                    $(articles[i]).removeClass("show last").addClass("hidden");
                 } else {
-                    $(articles[i]).show();
+                    $(articles[i]).removeClass("hidden last").addClass("show");
+                    if (i == offset + perPage - 1) {
+                        $(articles[i]).addClass("last");
+                    }
                 }
             }
             $("#pagination .pagination-page").removeClass("active");
@@ -31,10 +34,11 @@ $(function(){
         });
         // Run it for the first time...
         var initialize = function(hash) {
+            var newHashPage = null;
             if (hash.substr(3) > 0 && hash.substr(3) <= pages) {
                 newHashPage = hash.substr(3) - 1;
             }
-            if (hashPage != newHashPage) {
+            if (newHashPage != null && hashPage != newHashPage) {
                 hashPage = newHashPage;
                 activatePage($("#pagination .pagination-page")[hashPage]);
             } else if (hashPage == null) {

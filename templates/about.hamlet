@@ -1,6 +1,15 @@
 <div #about>
-    <a href=@{BlogR}>Home
-    > About
-    <br /><br />
+    <h1>
+        Soooo...
+    Just for the sake of actually writing something here (I'll get around to eventually writing some more comprehensive stuff), I can tell you that this blog is an experiment toying with Haskell, and the Yesod framework (Haskell-based obviously).
+    <br />
+    <h2>
+        What ya' doing here?
+    Well, this blog is mainly to jot down the things I learn, and as a place that I can reference when I later on forget what the hell I was doing at a time and place.
+    <br />
     
-    Don't worry, don't worry, I'm gonna get to it eventually! ;) ...
+    <h2>
+        A bit about me
+    Currently I'm toying around in university in Denmark, enjoying learning stuff and expanding my horizon. I usually prefer to learn stuff on my own hand, since, in the areas of my interest, lectures move a bit too slow for me.
+    <br />
+    I think that's about it for now though....

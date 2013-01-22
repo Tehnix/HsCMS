@@ -72,12 +72,7 @@ instance Yesod App where
     defaultLayout widget = do
         master <- getYesod
         mmsg <- getMessage
-
-        -- We break up the default layout into two components:
-        -- default-layout is the contents of the body tag, and
-        -- default-layout-wrapper is the entire page. Since the final
-        -- value passed to hamletToRepHtml cannot be a widget, this allows
-        -- you to use normal widget features in default-layout.
+        (title', parents) <- breadcrumbs
 
         pc <- widgetToPageContent $ do
             $(widgetFile "normalize")
@@ -153,6 +148,35 @@ instance YesodAuth App where
         $(widgetFile "login")
 
 
+instance YesodBreadcrumbs App where
+    -- Front-end breadcrumbs
+    breadcrumb BlogR = return ("Home", Nothing)
+    breadcrumb AboutR = return ("About", Just BlogR)
+    breadcrumb (AuthorR authorName) = do
+        crumb <- return $ T.pack $ "Author: " ++ (T.unpack authorName)
+        return (crumb, Just BlogR)
+    breadcrumb ArchivesR = return ("Archives", Just BlogR)
+    breadcrumb (ArticleR articleId) = do
+        article <- runDB $ get404 articleId
+        return (articleTitle article, Just BlogR)
+    
+    -- Admin panel breadcrumbs
+    breadcrumb AdminR = return ("Admin", Nothing)
+    breadcrumb AdminBlogR = return ("Admin Blog", Just AdminR)
+    breadcrumb AdminBlogNewR = return ("Admin Blog: New Post", Just AdminR)
+    breadcrumb (AdminBlogPostR articleId) = do
+        article <- runDB $ get404 articleId
+        crumb <- return $ T.pack $ "Admin Blog: " ++ (T.unpack (articleTitle article))
+        return (crumb, Just AdminR)
+    breadcrumb (AdminBlogDeleteR _) = do
+        return ("Delete", Just BlogR)
+    
+    -- These pages never call breadcrumb
+    breadcrumb FaviconR = return ("", Nothing)
+    breadcrumb StaticR{} = return ("", Nothing)
+    breadcrumb RobotsR = return ("", Nothing)
+    breadcrumb AuthR{} = return ("", Nothing)
+
 -- This instance is required to use forms. You can modify renderMessage to
 -- achieve customized and internationalized form validation messages.
 instance RenderMessage App FormMessage where
@@ -167,7 +191,7 @@ loginLayout :: GWidget Auth App () -> GHandler Auth App RepHtml
 loginLayout widget = do
     master <- getYesod
     mmsg <- getMessage
-    
+    (title', parents) <- breadcrumbs
     pc <- widgetToPageContent $ do
         $(widgetFile "normalize")
         addStylesheet $ StaticR css_bootstrap_css

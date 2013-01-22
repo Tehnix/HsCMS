@@ -1,8 +1,4 @@
 <div #archives>
-    <a href=@{BlogR}>Home
-    > Archives
-    <br /><br />
-    
     $if null articles
         <p> There are no articles yet...
     $else

@@ -59,6 +59,14 @@ pre {
     margin: 0 auto;
 }
 
+#breadcrumbs {
+    padding: 15px 30px 0px 30px;
+    font-size: 0.9em;
+    font-weight: 200;
+    line-height: 1.5em;
+    color: #444;
+}
+
 #footer {
     color: #999;
     font-size: 0.85em;

@@ -1,7 +1,12 @@
 <div #main.right role="main">
     <div #content>
         $maybe msg <- mmsg
-            <div #message>#{msg}
+            <div #message>
+                #{msg}
+        <div #breadcrumbs>
+            $forall p <- parents
+                <a href="@{fst p}">#{snd p}</a> > 
+            #{title'}
         ^{widget}
     <div .clear>
     <footer #footer>

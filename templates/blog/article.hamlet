@@ -1,8 +1,4 @@
 <section .article>
-    <a href=@{BlogR}>Home
-    > #{articleTitle article}
-    <br /><br />
-    
     <header .article-header>
             <h1>#{articleTitle article}
         <p .article-information>
