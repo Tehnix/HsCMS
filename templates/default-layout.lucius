@@ -34,6 +34,13 @@ pre {
 .required { margin: 1em 0; }
 .optional { margin: 1em 0; }
 
+.font-box {
+    color: #444;
+    font-size: 0.9em;
+    font-weight: 200;
+    line-height: 1.5em;
+}
+
 .container {
     position: relative;
     width: 100%;

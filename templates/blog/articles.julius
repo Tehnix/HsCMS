@@ -1,0 +1,60 @@
+$(function(){
+    function pagination(articles, perPage) {
+        $("#footer").before("<div id='pagination'></div>");
+        var $pagination = $("#pagination"),
+            pages = Math.floor(articles.length / perPage),
+            hashPage = null;
+        if (articles.length % perPage != 0) {
+            pages++;
+        }
+        for (var i = 1; i <= pages; i++) {
+            $pagination.append("<span class='pagination-page'>" + i + "</span>");
+        }
+        
+        var activatePage = function(elem) {
+            var page = $(elem).html();
+            offset = (page * perPage) - perPage;
+            for (var i = 0; i < articles.length; i++) {
+                if (i < offset || i >= offset + perPage) {
+                    $(articles[i]).hide();
+                } else {
+                    $(articles[i]).show();
+                }
+            }
+            $("#pagination .pagination-page").removeClass("active");
+            $(elem).addClass("active");
+            $(window).scrollTop(0);
+            window.location.hash = "!/" + page;
+        }
+        $("#pagination").on("click", ".pagination-page", function() {
+            activatePage(this);
+        });
+        // Run it for the first time...
+        var initialize = function(hash) {
+            if (hash.substr(3) > 0 && hash.substr(3) <= pages) {
+                newHashPage = hash.substr(3) - 1;
+            }
+            if (hashPage != newHashPage) {
+                hashPage = newHashPage;
+                activatePage($("#pagination .pagination-page")[hashPage]);
+            } else if (hashPage == null) {
+                activatePage($("#pagination .pagination-page")[0]);
+            }
+        }
+        var hashCheck = function() {
+            setTimeout(function() {
+                initialize(window.location.hash);
+                hashCheck();
+            }, 500);
+        }
+        initialize(window.location.hash);
+        hashCheck();
+    }
+    
+    var Articles = $("#content .article");
+    var ArticlesPerPage = 3;
+    if (Articles.length > 0) {
+        pagination(Articles, ArticlesPerPage);
+    }
+    
+});

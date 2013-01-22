@@ -24,3 +24,30 @@
 div#content section:last-child {
     border-bottom:0px;
 }
+
+#pagination {
+    color: #444;
+    font-size: 0.9em;
+    margin: 0px 30px 5px 30px;
+    padding: 5px 30px 5px 30px;
+    height: 30px;
+    line-height: 30px;
+    border-top: 1px solid #D2D2D2;
+    max-width: 800px;
+    margin: 0 auto;
+    .pagination-page {
+        cursor: pointer;
+        display: inline-block;
+        margin-right: 8px;
+    }
+    .pagination-page.active {
+        color: red;
+    }
+}
+
+/* iPhone [portrait + landscape] */
+@media only screen and (max-device-width: 480px) {
+    #pagination {
+        padding: 0px 0px 15px 0px;
+    }
+}

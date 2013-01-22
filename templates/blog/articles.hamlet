@@ -1,5 +1,6 @@
 $if null articles
-    <p> There are no articles yet...
+    <div .font-box>
+        <p> There are no articles yet...
 $else
     $forall Entity articleId article <- articles
         <section .article>
