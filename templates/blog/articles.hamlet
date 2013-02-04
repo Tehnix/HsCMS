@@ -2,6 +2,9 @@ $if null articles
     <div .font-box>
         <p> There are no articles yet...
 $else
+    <div #articles-sidebar>
+        <div #articles-sidebar-item-bottom>
+            <div .arrow-down>
     $forall Entity articleId article <- articles
         <section .article>
             <header .article-header>
