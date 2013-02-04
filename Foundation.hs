@@ -92,9 +92,9 @@ instance Yesod App where
     authRoute _ = Just $ AuthR LoginR
     
     -- Require admin priviliges
-    isAuthorized AdminR _ = fmap isAdmin maybeAuth
-    isAuthorized AdminBlogR _ = fmap isAdmin maybeAuth
-    isAuthorized AdminBlogNewR _ = fmap isAdmin maybeAuth
+    isAuthorized AdminR _ = return isAdmin
+    isAuthorized AdminBlogR _ = return isAdmin
+    isAuthorized AdminBlogNewR _ = return isAdmin
     
     -- Anyone can access all other pages
     isAuthorized _ _ = return Authorized
@@ -201,15 +201,24 @@ loginLayout widget = do
     hamletToRepHtml $(hamletFile "templates/login-layout-wrapper.hamlet")
 
 -- TODO: Use the admins value in settings.yml instead
-admins :: [T.Text]
-admins = ["christianlaustsen@gmail.com"]
+-- admins :: [T.Text]
+-- admins = ["christianlaustsen@gmail.com"]
 
 -- Check if a user is one of the pre-specified admin users
-isAdmin :: Maybe (Entity (UserGeneric backend)) -> AuthResult
-isAdmin (Just (Entity _ user)) | elem (userIdent user) admins = Authorized
-                               | otherwise                    = AuthenticationRequired
-isAdmin Nothing = AuthenticationRequired
+-- isAdmin :: Maybe (Entity (UserGeneric backend)) -> AuthResult
+-- isAdmin (Just (Entity _ user)) | elem (userIdent user) admins = Authorized
+--                                | otherwise                    = AuthenticationRequired
+-- isAdmin Nothing = AuthenticationRequired
 
+--isAdmin :: User -> AuthResult
+isAdmin = do
+  extra <- getExtra
+  mauth <- maybeAuth
+  case mauth of
+      Nothing -> return AuthenticationRequired
+      Just (Entity _ user) 
+          | userIdent user `elem` extraAdmins extra -> return Authorized
+          | otherwise                               -> return AuthenticationRequired
 -- Note: previous versions of the scaffolding included a deliver function to
 -- send emails. Unfortunately, there are too many different options for us to
 -- give a reasonable default. Instead, the information is available on the
