@@ -92,9 +92,9 @@ instance Yesod App where
     authRoute _ = Just $ AuthR LoginR
     
     -- Require admin priviliges
-    isAuthorized AdminR _ = return isAdmin
-    isAuthorized AdminBlogR _ = return isAdmin
-    isAuthorized AdminBlogNewR _ = return isAdmin
+    isAuthorized AdminR _ = isAdmin
+    isAuthorized AdminBlogR _ = isAdmin
+    isAuthorized AdminBlogNewR _ = isAdmin
     
     -- Anyone can access all other pages
     isAuthorized _ _ = return Authorized
@@ -211,6 +211,7 @@ loginLayout widget = do
 -- isAdmin Nothing = AuthenticationRequired
 
 --isAdmin :: User -> AuthResult
+isAdmin :: (GHandler s App AuthResult)
 isAdmin = do
   extra <- getExtra
   mauth <- maybeAuth
