@@ -1,10 +1,13 @@
 #HsCMS
 A Yesod/Haskell based CMS
 
+### Admins ###
+
+To be able to use the blog system, you need to add an admin email in settings.yml. This *must* be a gmail account (an account using google auth), since that's what's used for authentication.
+
 ### License ###
 
 Free for use under the BSD license.
-
 
 ### Problems setting up ###
 
