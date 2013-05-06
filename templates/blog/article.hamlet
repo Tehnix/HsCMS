@@ -4,9 +4,9 @@
         <p .article-information>
             Published 
             on #{formatTime defaultTimeLocale "%h %d, %Y" (articleAdded article)} 
-            by 
-            <a href=@{AuthorR (articleAuthor article)}>
-                #{splitByAt $ T.unpack $ articleAuthor article}
+            $# by 
+            $# <a href=@{AuthorR (articleAuthor article)}>
+            $#     #{splitByAt $ T.unpack $ articleAuthor article}
     <article .article-body>
         #{articleHtmlContent article}
     <div .clear>

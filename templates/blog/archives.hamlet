@@ -7,8 +7,8 @@
                 <tr>
                     <th .title>
                         Title
-                    <th .author>
-                        Author
+                    $# <th .author>
+                    $#     Author
                     <th .published>
                         Published
             <tbody>
@@ -17,8 +17,8 @@
                         <td .title>
                             <a .link href=@{ArticleR articleId}>
                                 #{articleTitle article}
-                        <td .author>
-                            #{splitByAt $ T.unpack $ articleAuthor article}
+                        $# <td .author>
+                        $#     #{splitByAt $ T.unpack $ articleAuthor article}
                         <td .published>
                             #{formatTime defaultTimeLocale "%h %d, %Y" (articleAdded article)}
                 
