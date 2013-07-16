@@ -1,6 +1,0 @@
-$(function(){
-    $("#archives-table tbody").on("click", "tr", function() {
-        window.location = $(".link", this).attr("href");
-    });
-    
-});

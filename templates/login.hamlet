@@ -1,5 +1,0 @@
-<div #login-box>
-    <h3>Login using
-    <form method="get" action="@{AuthR forwardUrl}" .button .google>
-        <input type="hidden" name="openid_identifier" value="https://www.google.com/accounts/o8/id">
-        <input type="submit" value="Login via Google">
