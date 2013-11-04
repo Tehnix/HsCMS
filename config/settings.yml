@@ -1,11 +1,13 @@
 Default: &defaults
-  host: "*4"
+  host: "*4" # any IPv4 host
   port: 3000
   approot: "http://localhost:3000"
   copyright: copyright tehnix 2012
   admins: ["christianlaustsen@gmail.com"]
 
 Development:
+  approot: "http://devel.codetalk.io"
+  analytics: UA-19146082-5
   <<: *defaults
 
 Testing:
@@ -16,4 +18,5 @@ Staging:
 
 Production:
   approot: "http://codetalk.io"
+  analytics: UA-19146082-5
   <<: *defaults

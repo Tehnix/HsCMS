@@ -1,8 +1,10 @@
+{-# LANGUAGE TupleSections, OverloadedStrings #-}
 module Handler.About where
 
 import Import
 
-getAboutR :: Handler RepHtml
+
+getAboutR :: Handler Html
 getAboutR = do
     defaultLayout $ do
         setTitle "About"

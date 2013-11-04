@@ -1,12 +1,5 @@
-module Handler.AdminBlog
-    ( getAdminBlogR
-    , getAdminBlogNewR
-    , postAdminBlogNewR
-    , getAdminBlogPostR
-    , postAdminBlogPostR
-    , postAdminBlogDeleteR
-    )
-where
+{-# LANGUAGE TupleSections, OverloadedStrings #-}
+module Handler.AdminBlog where
     
 import Import
 import Yesod.Auth
@@ -15,7 +8,7 @@ import System.Locale (defaultTimeLocale)
 
 
 -- The view showing the list of articles
-getAdminBlogR :: Handler RepHtml
+getAdminBlogR :: Handler Html
 getAdminBlogR = do
     maid <- maybeAuthId
     muser <- maybeAuth
@@ -26,7 +19,7 @@ getAdminBlogR = do
         $(widgetFile "admin/blog")
              
 -- The form page for posting a new blog post 
-getAdminBlogNewR :: Handler RepHtml
+getAdminBlogNewR :: Handler Html
 getAdminBlogNewR = do
     formroute <- return $ AdminBlogNewR
     marticle <- return $ Nothing
@@ -36,7 +29,7 @@ getAdminBlogNewR = do
 
 
 -- Handling the new posted blog post
-postAdminBlogNewR :: Handler ()
+postAdminBlogNewR :: Handler Html
 postAdminBlogNewR = do
     title <- runInputPost $ ireq textField "form-title-field"
     mdContent <- runInputPost $ ireq htmlField "form-mdcontent-field"
@@ -49,7 +42,7 @@ postAdminBlogNewR = do
     redirect AdminBlogR
 
 -- The form page for updating an existing blog post
-getAdminBlogPostR :: ArticleId -> Handler RepHtml
+getAdminBlogPostR :: ArticleId -> Handler Html
 getAdminBlogPostR articleId = do
     formroute <- return $ AdminBlogPostR articleId
     dbarticle <- runDB $ get404 articleId
@@ -59,7 +52,7 @@ getAdminBlogPostR articleId = do
         $(widgetFile "admin/blogPost")
 
 -- Handling the updated blog post
-postAdminBlogPostR :: ArticleId -> Handler ()
+postAdminBlogPostR :: ArticleId -> Handler Html
 postAdminBlogPostR articleId = do
     title <- runInputPost $ ireq textField "form-title-field"
     mdContent <- runInputPost $ ireq htmlField "form-mdcontent-field"
@@ -70,7 +63,7 @@ postAdminBlogPostR articleId = do
     redirect AdminBlogR
 
 -- Handling the updated blog post
-postAdminBlogDeleteR :: ArticleId -> Handler ()
+postAdminBlogDeleteR :: ArticleId -> Handler Html
 postAdminBlogDeleteR articleId = do
     runDB $ update articleId [ArticleVisible =. 0]
     setMessage $ "Post Deleted"

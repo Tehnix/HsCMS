@@ -1,7 +1,7 @@
 <div #welcome-menu >
     <ul>
         <li>
-            <b>Welcome back</b>, #{splitByAt $ T.unpack userEmail}
+            <b>Welcome back</b>, #{splitByAt userEmail}
         <li>
             <a href=@{AdminBlogNewR}><i class="icon-pencil"></i> New Post
         <li>

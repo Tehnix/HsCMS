@@ -4,16 +4,15 @@
 /favicon.ico FaviconR GET
 /robots.txt RobotsR GET
 
-/about AboutR GET
 
 / BlogR GET
 /blog/#ArticleId ArticleR GET
-/author/#T.Text AuthorR GET
+/author/#Text AuthorR GET
 /archives ArchivesR GET
+/about AboutR GET
 
 
 /admin AdminR GET
-
 /admin/blog/ AdminBlogR GET
 /admin/blog/post AdminBlogNewR GET POST
 /admin/blog/post/#ArticleId AdminBlogPostR GET POST

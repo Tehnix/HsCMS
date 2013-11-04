@@ -28,5 +28,5 @@ infixr 5 <>
 (<>) = mappend
 #endif
 
--- User defined imports
+-- Custom imports
 import           GeneralFunctions     as Import

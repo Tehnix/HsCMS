@@ -10,15 +10,17 @@ import Yesod.Default.Util (addStaticContentExternal)
 import Network.HTTP.Conduit (Manager)
 import qualified Settings
 import Settings.Development (development)
-import qualified Database.Persist.Store
+import qualified Database.Persist
+import Database.Persist.Sql (SqlPersistT)
 import Settings.StaticFiles
-import Database.Persist.GenericSql
 import Settings (widgetFile, Extra (..))
 import Model
 import Text.Jasmine (minifym)
-import Web.ClientSession (getKey)
 import Text.Hamlet (hamletFile)
-import qualified Data.Text as T
+import System.Log.FastLogger (Logger)
+
+-- Custom imports
+import Data.Text (Text, pack, unpack)
 
 -- | The site argument for your application. This can be a good place to
 -- keep settings and values requiring initialization before your application
@@ -27,9 +29,10 @@ import qualified Data.Text as T
 data App = App
     { settings :: AppConfig DefaultEnv Extra
     , getStatic :: Static -- ^ Settings for static file serving.
-    , connPool :: Database.Persist.Store.PersistConfigPool Settings.PersistConfig -- ^ Database connection pool.
+    , connPool :: Database.Persist.PersistConfigPool Settings.PersistConf -- ^ Database connection pool.
     , httpManager :: Manager
-    , persistConfig :: Settings.PersistConfig
+    , persistConfig :: Settings.PersistConf
+    , appLogger :: Logger
     }
 
 -- Set up i18n messages. See the message folder.
@@ -56,7 +59,7 @@ mkMessage "App" "messages" "en"
 -- split these actions into two functions and place them in separate files.
 mkYesodData "App" $(parseRoutesFile "config/routes")
 
-type Form x = Html -> MForm App App (FormResult x, Widget)
+type Form x = Html -> MForm (HandlerT App IO) (FormResult x, Widget)
 
 -- Please see the documentation for the Yesod typeclass. There are a number
 -- of settings which can be configured by overriding methods here.
@@ -65,23 +68,33 @@ instance Yesod App where
 
     -- Store session data on the client in encrypted cookies,
     -- default session idle timeout is 120 minutes
-    makeSessionBackend _ = do
-        key <- getKey "config/client_session_key.aes"
-        return . Just $ clientSessionBackend key 120
+    makeSessionBackend _ = fmap Just $ defaultClientSessionBackend
+        (120 * 60) -- 120 minutes
+        "config/client_session_key.aes"
 
     defaultLayout widget = do
         master <- getYesod
         mmsg <- getMessage
         (title', parents) <- breadcrumbs
 
+        -- We break up the default layout into two components:
+        -- default-layout is the contents of the body tag, and
+        -- default-layout-wrapper is the entire page. Since the final
+        -- value passed to hamletToRepHtml cannot be a widget, this allows
+        -- you to use normal widget features in default-layout.
+
         pc <- widgetToPageContent $ do
-            $(widgetFile "normalize")
-            addStylesheet $ StaticR css_bootstrap_css
-            addStylesheetRemote "/static/css/fonts.css"
-            addScriptRemote "/static/js/jquery.js"
+            $(combineStylesheets 'StaticR
+                [ css_normalize_css
+                , css_bootstrap_css
+                , css_fonts_css
+                ])
+            $(combineScripts 'StaticR
+                [ js_jquery_js
+                ])
             $(widgetFile "default-layout")
-        hamletToRepHtml $(hamletFile "templates/default-layout-wrapper.hamlet")
-        
+        giveUrlRenderer $(hamletFile "templates/default-layout-wrapper.hamlet")
+
     -- This is done to provide an optimization for serving static files from
     -- a separate domain. Please see the staticRoot setting in Settings.hs
     urlRenderOverride y (StaticR s) =
@@ -95,7 +108,6 @@ instance Yesod App where
     isAuthorized AdminR _ = isAdmin
     isAuthorized AdminBlogR _ = isAdmin
     isAuthorized AdminBlogNewR _ = isAdmin
-    
     -- Anyone can access all other pages
     isAuthorized _ _ = return Authorized
 
@@ -103,7 +115,13 @@ instance Yesod App where
     -- and names them based on a hash of their content. This allows
     -- expiration dates to be set far in the future without worry of
     -- users receiving stale content.
-    addStaticContent = addStaticContentExternal minifym base64md5 Settings.staticDir (StaticR . flip StaticRoute [])
+    addStaticContent =
+        addStaticContentExternal minifym genFileName Settings.staticDir (StaticR . flip StaticRoute [])
+      where
+        -- Generate a unique filename based on the content itself
+        genFileName lbs
+            | development = "autogen-" ++ base64md5 lbs
+            | otherwise   = base64md5 lbs
 
     -- Place Javascript at bottom of the body tag so the rest of the page loads first
     jsLoader _ = BottomOfBody
@@ -113,21 +131,20 @@ instance Yesod App where
     shouldLog _ _source level =
         development || level == LevelWarn || level == LevelError
 
+    makeLogger = return . appLogger
+
 -- How to run database actions.
 instance YesodPersist App where
-    type YesodPersistBackend App = SqlPersist
-    runDB f = do
-        master <- getYesod
-        Database.Persist.Store.runPool
-            (persistConfig master)
-            f
-            (connPool master)
+    type YesodPersistBackend App = SqlPersistT
+    runDB = defaultRunDB persistConfig connPool
+instance YesodPersistRunner App where
+    getDBRunner = defaultGetDBRunner connPool
 
 instance YesodAuth App where
     type AuthId App = UserId
 
     -- Where to send a user after successful login
-    loginDest _ = BlogR
+    loginDest _ = AdminR
     -- Where to send a user after logout
     logoutDest _ = BlogR
 
@@ -142,18 +159,16 @@ instance YesodAuth App where
     authPlugins _ = [authGoogleEmail]
 
     authHttpManager = httpManager
-    
     -- Overwrite the login handler
-    loginHandler = loginLayout $ do
-        $(widgetFile "login")
-
+    {-loginHandler = loginLayout $ do-}
+        {-$(widgetFile "login")-}
 
 instance YesodBreadcrumbs App where
     -- Front-end breadcrumbs
     breadcrumb BlogR = return ("Home", Nothing)
     breadcrumb AboutR = return ("About", Just BlogR)
     breadcrumb (AuthorR authorName) = do
-        crumb <- return $ T.pack $ "Author: " ++ (T.unpack authorName)
+        crumb <- return $ pack $ "Author: " ++ (unpack authorName)
         return (crumb, Just BlogR)
     breadcrumb ArchivesR = return ("Archives", Just BlogR)
     breadcrumb (ArticleR articleId) = do
@@ -166,7 +181,7 @@ instance YesodBreadcrumbs App where
     breadcrumb AdminBlogNewR = return ("Admin Blog: New Post", Just AdminR)
     breadcrumb (AdminBlogPostR articleId) = do
         article <- runDB $ get404 articleId
-        crumb <- return $ T.pack $ "Admin Blog: " ++ (T.unpack (articleTitle article))
+        crumb <- return $ pack $ "Admin Blog: " ++ (unpack (articleTitle article))
         return (crumb, Just AdminR)
     breadcrumb (AdminBlogDeleteR _) = do
         return ("Delete", Just BlogR)
@@ -183,24 +198,35 @@ instance RenderMessage App FormMessage where
     renderMessage _ _ = defaultFormMessage
 
 -- | Get the 'Extra' value, used to hold data from the settings.yml file.
-getExtra :: GHandler sub App Extra
+getExtra :: Handler Extra
 getExtra = fmap (appExtra . settings) getYesod
+-- Note: previous versions of the scaffolding included a deliver function to
+-- send emails. Unfortunately, there are too many different options for us to
+-- give a reasonable default. Instead, the information is available on the
+-- wiki:
+--
+-- https://github.com/yesodweb/yesod/wiki/Sending-email
 
 -- The layout for the login page
-loginLayout :: GWidget Auth App () -> GHandler Auth App RepHtml
-loginLayout widget = do
-    master <- getYesod
-    mmsg <- getMessage
-    (title', parents) <- breadcrumbs
-    pc <- widgetToPageContent $ do
-        $(widgetFile "normalize")
-        addStylesheet $ StaticR css_bootstrap_css
-        addStylesheetRemote "/static/css/fonts.css"
-        addScriptRemote "/static/js/jquery.js"
-        $(widgetFile "login-layout")
-    hamletToRepHtml $(hamletFile "templates/login-layout-wrapper.hamlet")
+{-loginLayout :: Widget -> Handler Html-}
+{-loginLayout widget = do-}
+    {-master <- getYesod-}
+    {-mmsg <- getMessage-}
+    {-(title', parents) <- breadcrumbs-}
+    {-pc <- widgetToPageContent $ do-}
+        {-$(combineStylesheets 'StaticR-}
+            {-[ css_normalize_css-}
+            {-, css_bootstrap_css-}
+            {-, css_fonts_css-}
+            {-])-}
+        {-$(combineScripts 'StaticR-}
+            {-[ js_jquery_js-}
+            {-])-}
+        {-$(widgetFile "login-layout")-}
+    {-giveUrlRenderer $(hamletFile "templates/login-layout-wrapper.hamlet")-}
 
-isAdmin :: GHandler s App AuthResult
+-- Check if a users email is present in the admins list in settings
+isAdmin :: Handler AuthResult
 isAdmin = do
   extra <- getExtra
   mauth <- maybeAuth
@@ -209,9 +235,5 @@ isAdmin = do
       Just (Entity _ user) 
           | userIdent user `elem` extraAdmins extra -> return Authorized
           | otherwise                               -> return AuthenticationRequired
--- Note: previous versions of the scaffolding included a deliver function to
--- send emails. Unfortunately, there are too many different options for us to
--- give a reasonable default. Instead, the information is available on the
--- wiki:
---
--- https://github.com/yesodweb/yesod/wiki/Sending-email
+
+
