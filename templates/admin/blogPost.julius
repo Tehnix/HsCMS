@@ -1,0 +1,59 @@
+$(function(){
+    // Convert the markdown, and put it into the hidden html textarea, and word count...
+    var converter = new Showdown.converter(),
+        previewContainer = $("#preview-content-container"),
+        titleField = $("#form-title-field"),
+        mdTextArea = $("#form-mdcontent-field"),
+        htmlTextArea = $("#form-htmlcontent-field"),
+        wordCount = $("#form-wordcount-field"),
+        wordCountDisplay = $("#word-count"),
+        permalinkText = $("#permalink-text");
+    
+    var titleFieldChanged = function() {
+        permalinkText.html(encodeURI(titleField.val().replace(/\s+/g, '-').toLowerCase()));
+    }
+    var mdTextAreaChanged = function() {
+        previewContainer.html(converter.makeHtml(mdTextArea.val()));
+        htmlTextArea.val(converter.makeHtml(mdTextArea.val()));
+        
+        var previewContainerText = previewContainer.text();
+        var count = previewContainerText.split(/[\s\.\(\),]+/).length;
+        if (previewContainerText == "") {
+            count = 0;
+        }
+        wordCount.val(count);
+        wordCountDisplay.html(count);
+    }
+    titleFieldChanged();
+    mdTextAreaChanged();
+    mdTextArea.keyup(function() {
+        mdTextAreaChanged();
+    });
+    titleField.keyup(function() {
+        titleFieldChanged();
+    });
+    
+    // Make sure the textarea expands and shrinks dynamically
+    mdTextArea.TextAreaExpander(mdTextArea.height());
+    
+    // Handle layout based on window size
+    var formContentPreview = $("#form-content-preview");
+    var formContent = $("#form-content");
+    var arrangement = 1;
+    var rearrange = function(width) {
+        if (arrangement != 1 && width > 700) {
+            arrangement = 1;
+            formContentPreview.removeClass("right-walled");
+            formContent.removeClass("full");
+        } else if (arrangement != 2 && width < 700) {
+            arrangement = 2;
+            formContentPreview.addClass("right-walled");
+            formContent.addClass("full");
+        }
+    }
+    
+    rearrange($(window).width());
+    $(window).resize(function() {
+        rearrange($(window).width());
+    });
+});

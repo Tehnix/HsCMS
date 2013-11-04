@@ -7,7 +7,7 @@ import Data.Time
 import System.Locale (defaultTimeLocale)
 
 
-getBlogR :: Handler RepHtml
+getBlogR :: Handler Html
 getBlogR = do
     maid <- maybeAuthId
     muser <- maybeAuth
@@ -17,14 +17,14 @@ getBlogR = do
         setTitle "Blog"
         $(widgetFile "blog/articles")
 
-getArticleR :: ArticleId -> Handler RepHtml
+getArticleR :: ArticleId -> Handler Html
 getArticleR articleId = do
     article <- runDB $ get404 articleId
     defaultLayout $ do
         setTitle $ toHtml $ articleTitle article
         $(widgetFile "blog/article")
 
-getArchivesR :: Handler RepHtml
+getArchivesR :: Handler Html
 getArchivesR = do
     maid <- maybeAuthId
     muser <- maybeAuth
@@ -34,7 +34,7 @@ getArchivesR = do
         setTitle "Archives"
         $(widgetFile "blog/archives")
 
-getAuthorR :: Text -> Handler RepHtml
+getAuthorR :: Text -> Handler Html
 getAuthorR author = do
     maid <- maybeAuthId
     muser <- maybeAuth
@@ -43,3 +43,4 @@ getAuthorR author = do
     defaultLayout $ do
         setTitle "Blog"
         $(widgetFile "blog/articles")
+

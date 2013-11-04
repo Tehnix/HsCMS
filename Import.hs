@@ -27,3 +27,6 @@ infixr 5 <>
 (<>) :: Monoid m => m -> m -> m
 (<>) = mappend
 #endif
+
+-- Custom imports
+import           GeneralFunctions     as Import

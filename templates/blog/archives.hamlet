@@ -1,0 +1,25 @@
+<div #archives>
+    $if null articles
+        <p> There are no articles yet...
+    $else
+        <table #archives-table .table.table-bordered.table-condensed.table-striped.table-hover>
+            <thead>
+                <tr>
+                    <th .title>
+                        Title
+                    $# <th .author>
+                    $#     Author
+                    <th .published>
+                        Published
+            <tbody>
+                $forall Entity articleId article <- articles
+                    <tr>
+                        <td .title>
+                            <a .link href=@{ArticleR articleId}>
+                                #{articleTitle article}
+                        $# <td .author>
+                        $#     #{splitByAt $ T.unpack $ articleAuthor article}
+                        <td .published>
+                            #{formatTime defaultTimeLocale "%h %d, %Y" (articleAdded article)}
+                
+

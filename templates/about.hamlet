@@ -1,0 +1,6 @@
+<div #about>
+    <h1>
+        Soooo...
+    Just for the sake of actually writing something here (I'll get around to eventually writing some more comprehensive stuff), I can tell you that this blog is an experiment toying with Haskell, and the Yesod framework (Haskell-based obviously).
+    <br />
+

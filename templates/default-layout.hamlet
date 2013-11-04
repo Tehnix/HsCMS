@@ -1,3 +1,21 @@
-$maybe msg <- mmsg
-    <div #message>#{msg}
-^{widget}
+<div #main.right role="main">
+    <div #content>
+        $maybe msg <- mmsg
+            <div #message>
+                #{msg}
+        <div #breadcrumbs>
+            $forall p <- parents
+                <a href="@{fst p}">#{snd p}</a> > 
+            #{title'}
+        ^{widget}
+    <div .clear>
+    <footer #footer>
+        <div .left-half>
+            <a href=@{AboutR}>about</a> the site
+            <br />
+            <a href=@{ArchivesR}>archives</a> of all posts
+        <div .right-half>
+            <a href="https://github.com/Tehnix">github</a> projects
+            <br />
+            <a href="https://twitter.com/ZealDev">twitter</a> feed
+    <div .clear>

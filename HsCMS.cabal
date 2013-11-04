@@ -19,6 +19,7 @@ library
                      Settings
                      Settings.StaticFiles
                      Settings.Development
+                     GeneralFunctions
                      Handler.About
                      Handler.Blog
                      Handler.Admin
@@ -73,6 +74,10 @@ library
                  , conduit                       >= 1.0
                  , monad-logger                  >= 0.3
                  , fast-logger                   >= 0.3
+                 , utf8-string
+                 , pureMD5
+                 , old-locale
+                 , time
 
 executable         HsCMS
     if flag(library-only)

@@ -1,0 +1,55 @@
+<div #content-list>
+    <div .padding>
+        <div .left>
+            Posts
+        <div .right>
+            <input #search-box type="text" />
+            <i .icon-search></i>
+        <div .clear>
+        <div .extra-padding>
+        $forall Entity articleId article <- articles
+            <div id="item-id-#{show articleId}" class="list-item">
+                <div .picture>
+                    ...
+                <div .information>
+                    <div .time>
+                        #{formatTime defaultTimeLocale "%d/%m/%Y" (articleAdded article)}
+                    <div .word-count>
+                        #{addSeparator $ show $ articleWordCount article}
+                    <a .edit-link.hide href=@{AdminBlogPostR articleId}>
+                    <a .view-link.hide href=@{ArticleR articleId}>
+                    <a .delete-link.hide href=@{AdminBlogDeleteR articleId}>
+                <article>
+                    <header>
+                        <hgroup>
+                            <h3 .title>
+                                #{articleTitle article}
+                    <div .content.hide>
+                        #{articleHtmlContent article}
+                    <footer>
+                        by 
+                        <span .author>
+                            #{articleAuthor article}
+                <div .right-arrow>
+                <div .right-arrow-background>
+            <div .clear>
+
+<div #content-preview>
+    <div #preview-right-arrow>
+        <img src="/static/img/right-arrow.png" alt="" />
+    <div .padding>
+        <div .left>
+            <div #title-container>
+        <div .right>
+            <a #delete-list-item href="#">
+                <i .icon-trash></i>
+            <i .delimiter></i>
+            <a #view-list-item href="#">
+                <i .icon-list-alt></i>
+            <i .delimiter></i>
+            <a #edit-list-item href="#">
+                <i .icon-pencil></i>
+        <div .clear>
+        <hr>
+        <div #content-preview-container>
+    <div .clear>

@@ -1,0 +1,13 @@
+<div #welcome-menu >
+    <ul>
+        <li>
+            <b>Welcome back</b>, #{splitByAt userEmail}
+        <li>
+            <a href=@{AdminBlogNewR}><i class="icon-pencil"></i> New Post
+        <li>
+            <i class="icon-user"></i> Authors
+        <li>
+            <i class="icon-calendar"></i> Analytics
+        <li>
+            <i class="icon-search"></i> Search
+

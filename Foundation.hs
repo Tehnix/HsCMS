@@ -19,6 +19,9 @@ import Text.Jasmine (minifym)
 import Text.Hamlet (hamletFile)
 import System.Log.FastLogger (Logger)
 
+-- Custom imports
+import Data.Text (Text, pack, unpack)
+
 -- | The site argument for your application. This can be a good place to
 -- keep settings and values requiring initialization before your application
 -- starts running, such as database connections. Every handler will have
@@ -86,7 +89,9 @@ instance Yesod App where
                 , css_bootstrap_css
                 , css_fonts_css
                 ])
-            addScriptRemote "/static/js/jquery.js"
+            $(combineScripts 'StaticR
+                [ js_jquery_js
+                ])
             $(widgetFile "default-layout")
         giveUrlRenderer $(hamletFile "templates/default-layout-wrapper.hamlet")
 
@@ -139,9 +144,9 @@ instance YesodAuth App where
     type AuthId App = UserId
 
     -- Where to send a user after successful login
-    loginDest _ = HomeR
+    loginDest _ = AdminR
     -- Where to send a user after logout
-    logoutDest _ = HomeR
+    logoutDest _ = BlogR
 
     getAuthId creds = runDB $ do
         x <- getBy $ UniqueUser $ credsIdent creds
@@ -151,19 +156,19 @@ instance YesodAuth App where
                 fmap Just $ insert $ User (credsIdent creds) Nothing
 
     -- You can add other plugins like BrowserID, email or OAuth here
-    authPlugins _ = [authBrowserId def, authGoogleEmail]
+    authPlugins _ = [authGoogleEmail]
 
     authHttpManager = httpManager
     -- Overwrite the login handler
-    loginHandler = loginLayout $ do
-        $(widgetFile "login")
+    {-loginHandler = loginLayout $ do-}
+        {-$(widgetFile "login")-}
 
 instance YesodBreadcrumbs App where
     -- Front-end breadcrumbs
     breadcrumb BlogR = return ("Home", Nothing)
     breadcrumb AboutR = return ("About", Just BlogR)
     breadcrumb (AuthorR authorName) = do
-        crumb <- return $ T.pack $ "Author: " ++ (T.unpack authorName)
+        crumb <- return $ pack $ "Author: " ++ (unpack authorName)
         return (crumb, Just BlogR)
     breadcrumb ArchivesR = return ("Archives", Just BlogR)
     breadcrumb (ArticleR articleId) = do
@@ -176,7 +181,7 @@ instance YesodBreadcrumbs App where
     breadcrumb AdminBlogNewR = return ("Admin Blog: New Post", Just AdminR)
     breadcrumb (AdminBlogPostR articleId) = do
         article <- runDB $ get404 articleId
-        crumb <- return $ T.pack $ "Admin Blog: " ++ (T.unpack (articleTitle article))
+        crumb <- return $ pack $ "Admin Blog: " ++ (unpack (articleTitle article))
         return (crumb, Just AdminR)
     breadcrumb (AdminBlogDeleteR _) = do
         return ("Delete", Just BlogR)
@@ -195,21 +200,32 @@ instance RenderMessage App FormMessage where
 -- | Get the 'Extra' value, used to hold data from the settings.yml file.
 getExtra :: Handler Extra
 getExtra = fmap (appExtra . settings) getYesod
+-- Note: previous versions of the scaffolding included a deliver function to
+-- send emails. Unfortunately, there are too many different options for us to
+-- give a reasonable default. Instead, the information is available on the
+-- wiki:
+--
+-- https://github.com/yesodweb/yesod/wiki/Sending-email
 
 -- The layout for the login page
-loginLayout :: Widget -> Handler Html
-loginLayout widget = do
-    master <- getYesod
-    mmsg <- getMessage
-    (title', parents) <- breadcrumbs
-    pc <- widgetToPageContent $ do
-        $(widgetFile "normalize")
-        addStylesheet $ StaticR css_bootstrap_css
-        addStylesheetRemote "/static/css/fonts.css"
-        addScriptRemote "/static/js/jquery.js"
-        $(widgetFile "login-layout")
-    hamletToRepHtml $(hamletFile "templates/login-layout-wrapper.hamlet")
+{-loginLayout :: Widget -> Handler Html-}
+{-loginLayout widget = do-}
+    {-master <- getYesod-}
+    {-mmsg <- getMessage-}
+    {-(title', parents) <- breadcrumbs-}
+    {-pc <- widgetToPageContent $ do-}
+        {-$(combineStylesheets 'StaticR-}
+            {-[ css_normalize_css-}
+            {-, css_bootstrap_css-}
+            {-, css_fonts_css-}
+            {-])-}
+        {-$(combineScripts 'StaticR-}
+            {-[ js_jquery_js-}
+            {-])-}
+        {-$(widgetFile "login-layout")-}
+    {-giveUrlRenderer $(hamletFile "templates/login-layout-wrapper.hamlet")-}
 
+-- Check if a users email is present in the admins list in settings
 isAdmin :: Handler AuthResult
 isAdmin = do
   extra <- getExtra
@@ -220,9 +236,4 @@ isAdmin = do
           | userIdent user `elem` extraAdmins extra -> return Authorized
           | otherwise                               -> return AuthenticationRequired
 
--- Note: previous versions of the scaffolding included a deliver function to
--- send emails. Unfortunately, there are too many different options for us to
--- give a reasonable default. Instead, the information is available on the
--- wiki:
---
--- https://github.com/yesodweb/yesod/wiki/Sending-email
+

@@ -47,12 +47,12 @@ splitByAt :: Text -> Text
 splitByAt t = pack $ takeWhile (/='@') (unpack t)
 
 -- Convert the user email to lowercase and md5 hash it
-lowerEmailHash :: Maybe (Entity (UserGeneric backend)) -> String
-lowerEmailHash (Just (Entity _ user)) = show $ md5 . L.fromString $ unpack $ toLower $ userIdent user
+lowerEmailHash :: Maybe (Entity User) -> Text
+lowerEmailHash (Just (Entity _ user)) = pack $ show $ md5 . L.fromString $ unpack $ toLower $ userIdent user
 lowerEmailHash Nothing = ""
 
 -- Get the users email
-usersEmail :: Maybe (Entity (UserGeneric backend)) -> Text
+usersEmail :: Maybe (Entity User) -> Text
 usersEmail (Just (Entity _ user)) = userIdent user
 usersEmail Nothing = "Unknown"
 
@@ -63,16 +63,19 @@ adminLayout widget = do
     (title', parents) <- breadcrumbs
     userEmail <- fmap usersEmail maybeAuth
     emailHash <- fmap lowerEmailHash maybeAuth
-    
     pc <- widgetToPageContent $ do
-        $(widgetFile "normalize")
-        addStylesheet $ StaticR css_bootstrap_css
-        addStylesheetRemote "/static/css/fonts.css"
-        addScriptRemote "/static/js/jquery.js"
-        addScriptRemote "/static/js/bootstrap.min.js"
-        addScriptRemote "/static/js/textAreaExpander.js"
-        addScriptRemote "/static/js/showdown.js"
-        addScriptRemote "/static/js/extensions/github.js"
+        $(combineStylesheets 'StaticR
+            [ css_normalize_css
+            , css_bootstrap_css
+            , css_fonts_css
+            ])
+        $(combineScripts 'StaticR
+            [ js_jquery_js
+            , js_bootstrap_min_js
+            , js_textAreaExpander_js
+            , js_showdown_js
+            , js_extensions_github_js
+            ])
         $(widgetFile "admin/admin-layout")
-    hamletToRepHtml $(hamletFile "templates/admin/admin-layout-wrapper.hamlet")
+    giveUrlRenderer $(hamletFile "templates/admin/admin-layout-wrapper.hamlet")
  
