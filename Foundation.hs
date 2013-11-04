@@ -4,7 +4,6 @@ import Prelude
 import Yesod
 import Yesod.Static
 import Yesod.Auth
-import Yesod.Auth.BrowserId
 import Yesod.Auth.GoogleEmail
 import Yesod.Default.Config
 import Yesod.Default.Util (addStaticContentExternal)
@@ -73,6 +72,7 @@ instance Yesod App where
     defaultLayout widget = do
         master <- getYesod
         mmsg <- getMessage
+        (title', parents) <- breadcrumbs
 
         -- We break up the default layout into two components:
         -- default-layout is the contents of the body tag, and
@@ -84,7 +84,9 @@ instance Yesod App where
             $(combineStylesheets 'StaticR
                 [ css_normalize_css
                 , css_bootstrap_css
+                , css_fonts_css
                 ])
+            addScriptRemote "/static/js/jquery.js"
             $(widgetFile "default-layout")
         giveUrlRenderer $(hamletFile "templates/default-layout-wrapper.hamlet")
 
@@ -96,6 +98,13 @@ instance Yesod App where
 
     -- The page to be redirected to when authentication is required.
     authRoute _ = Just $ AuthR LoginR
+    
+    -- Require admin priviliges
+    isAuthorized AdminR _ = isAdmin
+    isAuthorized AdminBlogR _ = isAdmin
+    isAuthorized AdminBlogNewR _ = isAdmin
+    -- Anyone can access all other pages
+    isAuthorized _ _ = return Authorized
 
     -- This function creates static content files in the static folder
     -- and names them based on a hash of their content. This allows
@@ -145,6 +154,38 @@ instance YesodAuth App where
     authPlugins _ = [authBrowserId def, authGoogleEmail]
 
     authHttpManager = httpManager
+    -- Overwrite the login handler
+    loginHandler = loginLayout $ do
+        $(widgetFile "login")
+
+instance YesodBreadcrumbs App where
+    -- Front-end breadcrumbs
+    breadcrumb BlogR = return ("Home", Nothing)
+    breadcrumb AboutR = return ("About", Just BlogR)
+    breadcrumb (AuthorR authorName) = do
+        crumb <- return $ T.pack $ "Author: " ++ (T.unpack authorName)
+        return (crumb, Just BlogR)
+    breadcrumb ArchivesR = return ("Archives", Just BlogR)
+    breadcrumb (ArticleR articleId) = do
+        article <- runDB $ get404 articleId
+        return (articleTitle article, Just BlogR)
+    
+    -- Admin panel breadcrumbs
+    breadcrumb AdminR = return ("Admin", Nothing)
+    breadcrumb AdminBlogR = return ("Admin Blog", Just AdminR)
+    breadcrumb AdminBlogNewR = return ("Admin Blog: New Post", Just AdminR)
+    breadcrumb (AdminBlogPostR articleId) = do
+        article <- runDB $ get404 articleId
+        crumb <- return $ T.pack $ "Admin Blog: " ++ (T.unpack (articleTitle article))
+        return (crumb, Just AdminR)
+    breadcrumb (AdminBlogDeleteR _) = do
+        return ("Delete", Just BlogR)
+    
+    -- These pages never call breadcrumb
+    breadcrumb FaviconR = return ("", Nothing)
+    breadcrumb StaticR{} = return ("", Nothing)
+    breadcrumb RobotsR = return ("", Nothing)
+    breadcrumb AuthR{} = return ("", Nothing)
 
 -- This instance is required to use forms. You can modify renderMessage to
 -- achieve customized and internationalized form validation messages.
@@ -154,6 +195,30 @@ instance RenderMessage App FormMessage where
 -- | Get the 'Extra' value, used to hold data from the settings.yml file.
 getExtra :: Handler Extra
 getExtra = fmap (appExtra . settings) getYesod
+
+-- The layout for the login page
+loginLayout :: Widget -> Handler Html
+loginLayout widget = do
+    master <- getYesod
+    mmsg <- getMessage
+    (title', parents) <- breadcrumbs
+    pc <- widgetToPageContent $ do
+        $(widgetFile "normalize")
+        addStylesheet $ StaticR css_bootstrap_css
+        addStylesheetRemote "/static/css/fonts.css"
+        addScriptRemote "/static/js/jquery.js"
+        $(widgetFile "login-layout")
+    hamletToRepHtml $(hamletFile "templates/login-layout-wrapper.hamlet")
+
+isAdmin :: Handler AuthResult
+isAdmin = do
+  extra <- getExtra
+  mauth <- maybeAuth
+  case mauth of
+      Nothing -> return AuthenticationRequired
+      Just (Entity _ user) 
+          | userIdent user `elem` extraAdmins extra -> return Authorized
+          | otherwise                               -> return AuthenticationRequired
 
 -- Note: previous versions of the scaffolding included a deliver function to
 -- send emails. Unfortunately, there are too many different options for us to
