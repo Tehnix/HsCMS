@@ -34,13 +34,17 @@ $(function(){
     });
     
     // Make sure the textarea expands and shrinks dynamically
-    mdTextArea.TextAreaExpander(mdTextArea.height());
+    //mdTextArea.TextAreaExpander(mdTextArea.height());
     
     // Handle layout based on window size
-    var formContentPreview = $("#form-content-preview");
-    var formContent = $("#form-content");
-    var arrangement = 1;
-    var rearrange = function(width) {
+    var formContentPreview = $("#form-content-preview"),
+        formContent = $("#form-content"),
+        padFormContent = $($("#form-content .padding")[0]),
+        formPreviewContainer = $("#preview-content-container"),
+        bottomBarHeight = $("#bottom-bar").height(),
+        formTitleHeight = $("#form-title").height(),
+        arrangement = 1;
+    var rearrange = function(width, height) {
         if (arrangement != 1 && width > 700) {
             arrangement = 1;
             formContentPreview.removeClass("right-walled");
@@ -50,10 +54,15 @@ $(function(){
             formContentPreview.addClass("right-walled");
             formContent.addClass("full");
         }
+        // Adjust height of content and preview area
+        newHeight = height - bottomBarHeight - formTitleHeight - 20 - 10;
+        //padFormContent.height(newHeight);
+        formPreviewContainer.height(newHeight - 40);
+        mdTextArea.height(newHeight - 35);
     }
     
-    rearrange($(window).width());
+    rearrange($(window).width(), $(window).height());
     $(window).resize(function() {
-        rearrange($(window).width());
+        rearrange($(window).width(), $(window).height());
     });
 });

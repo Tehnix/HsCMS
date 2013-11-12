@@ -1,9 +1,9 @@
 <div #content-list>
     <div .padding>
-        <div .left>
+        <div .left.red>
             Posts
         <div .right>
-            <input #search-box type="text" />
+            <input #search-box type="text" placeholder="Search titles..." />
             <i .icon-search></i>
         <div .clear>
         <div .extra-padding>
@@ -33,12 +33,14 @@
                 <div .right-arrow>
                 <div .right-arrow-background>
             <div .clear>
+        $if (length articles) == 0
+            <div>
+                NO ARTICLES HERE! D:
+            <div .clear>
 
-<div #content-preview>
-    <div #preview-right-arrow>
-        <img src="/static/img/right-arrow.png" alt="" />
+<div #content-preview.not-used>
     <div .padding>
-        <div .left>
+        <div .left.red>
             <div #title-container>
         <div .right>
             <a #delete-list-item href="#">

@@ -208,22 +208,22 @@ getExtra = fmap (appExtra . settings) getYesod
 -- https://github.com/yesodweb/yesod/wiki/Sending-email
 
 -- The layout for the login page
-{-loginLayout :: Widget -> Handler Html-}
-{-loginLayout widget = do-}
-    {-master <- getYesod-}
-    {-mmsg <- getMessage-}
-    {-(title', parents) <- breadcrumbs-}
-    {-pc <- widgetToPageContent $ do-}
-        {-$(combineStylesheets 'StaticR-}
-            {-[ css_normalize_css-}
-            {-, css_bootstrap_css-}
-            {-, css_fonts_css-}
-            {-])-}
-        {-$(combineScripts 'StaticR-}
-            {-[ js_jquery_js-}
-            {-])-}
-        {-$(widgetFile "login-layout")-}
-    {-giveUrlRenderer $(hamletFile "templates/login-layout-wrapper.hamlet")-}
+loginLayout :: Widget -> Handler Html
+loginLayout widget = do
+    master <- getYesod
+    mmsg <- getMessage
+    (title', parents) <- breadcrumbs
+    pc <- widgetToPageContent $ do
+        $(combineStylesheets 'StaticR
+            [ css_normalize_css
+            , css_bootstrap_css
+            , css_fonts_css
+            ])
+        $(combineScripts 'StaticR
+            [ js_jquery_js
+            ])
+        $(widgetFile "login-layout")
+    giveUrlRenderer $(hamletFile "templates/login-layout-wrapper.hamlet")
 
 -- Check if a users email is present in the admins list in settings
 isAdmin :: Handler AuthResult

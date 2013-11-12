@@ -28,6 +28,7 @@ $(function(){
         $viewLink = $("#view-list-item"),
         $deleteLink = $("#delete-list-item");
     var fillInContent = function(elem) {
+        formContentPreview.removeClass("not-used");
         var title = $($('article header .title', elem)[0]).html(),
             content = $($('article .content', elem)[0]).html(),
             author = $($('footer .author', elem)[0]).html(),
@@ -44,8 +45,10 @@ $(function(){
     }
     
     // Initial select of the first element
-    $(items[0]).addClass('selected');
-    fillInContent($(items[0]));
+    if (items.length > 0) {
+        $(items[0]).addClass('selected');
+        fillInContent($(items[0]));
+    }
     
     $("#content-list").on("click", ".list-item", function() {
         if (!$(this).hasClass("selected")) {

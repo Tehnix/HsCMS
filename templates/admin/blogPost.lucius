@@ -2,9 +2,24 @@
 @navTopMargin: 10px; /* Top margin for the elements in the navigation bar */
 @sideSpacing: 15px; /* The spacing between the sides of the window and elements */
 @innerSpacing: 10px; /* The inner padding of elements */
+@navLeftWidth: 88px; /* The width of the nav bar (NOTE: it's 2px lower than the width) */
+
+#permalink {
+    display: none;
+}
+
 
 #form-form {
+    margin: 0;
     height: 100%;
+    position: relative;
+    background: #fff;
+}
+
+#content-preview-container {
+    display: table;
+    width: 100%;
+    position: relative;
 }
 
 #bottom-bar {
@@ -15,6 +30,10 @@
     background: #292929;
     height: #{topMargin};
     line-height: #{topMargin};
+    
+    .spacing {
+        margin-right:90px;
+    }
 }
 #form-title {
     font-weight: 100;
@@ -22,7 +41,9 @@
     position: relative;
     background: #fff;
     padding: 5px #{innerSpacing} 5px #{innerSpacing};
-    margin-bottom: 10px;
+    margin-right:90px;
+    border-bottom: 1px solid #eee;
+
     input {
         font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
         font-weight: 100;
@@ -36,25 +57,40 @@
         padding: 0;
     }
 }
+#form-title-field::-webkit-input-placeholder { /* WebKit browsers */
+    padding-top:5px;
+}
+#form-title-field:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+    padding-top:5px;
+}
+#form-title-field::-moz-placeholder { /* Mozilla Firefox 19+ */
+    padding-top:5px;
+}
+#form-title-field:-ms-input-placeholder { /* Internet Explorer 10+ */
+    padding-top:5px;
+}
 
 #form-content textarea, #form-title input, #preview-content-container {
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     color: #000;
 }
 #form-content textarea {
+    height: auto;
+    width: 100%;
     font-family: "TeXGyreCursorRegular"
 }
 #form-content {
     position: relative;
-    width: 49%;
-    min-height: 82%;
-    float:left;
-    margin-top: 10px;
-    padding-bottom: 60px;
+    width: 45%;
+    display: table-cell;
+    vertical-align: top;
+    border-right: 1px solid #eee;
+
+    .padding {
+        min-height: 0;
+    }
 
     textarea {
-        width: 100%;
-        min-height: 415px;
         border: none;
         background: none;
         box-shadow: none;
@@ -62,25 +98,27 @@
     }
 }
 #form-content.full {
-    width: 95%;
+    width: 100%;
+    .padding {
+        margin-right: #{navLeftWidth};
+    }
 }
 #form-content-preview {
     position: relative;
-    float:right;
-    width: 49%;
-    min-height: 82%;
-    margin-top: 10px;
-    
-    #preview-right-arrow {
-        display: none;
-        position: absolute;
-        top: 50%;
-        left: 6px;
-        margin-top: -12px;
-        img {
-            height: 24px;
-            width: 18px;
-        }
+    display: table-cell;
+    vertical-align: top;
+    -ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=95)";
+    filter: alpha(opacity=95);
+    -moz-opacity:0.95;
+    -khtml-opacity: 0.95;
+    opacity: 0.95;
+
+    .padding {
+        margin-right: #{navLeftWidth};
+        min-height: 0;
+    }
+    #preview-content-container {
+        overflow: auto;
     }
 }
 #form-content-preview.right-walled {
@@ -88,8 +126,5 @@
     margin-right: -15px;
     .padding {
         display:none;
-    }
-    #preview-right-arrow {
-        display: block;
     }
 }

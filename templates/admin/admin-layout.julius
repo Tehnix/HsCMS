@@ -1,0 +1,6 @@
+var msg = $("#message");
+if (msg) {
+    setTimeout(function() {
+        msg.fadeOut();
+    }, 2 * 1000);
+}

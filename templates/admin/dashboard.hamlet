@@ -1,13 +1,25 @@
-<div #welcome-menu >
-    <ul>
-        <li>
-            <b>Welcome back</b>, #{splitByAt userEmail}
-        <li>
-            <a href=@{AdminBlogNewR}><i class="icon-pencil"></i> New Post
-        <li>
-            <i class="icon-user"></i> Authors
-        <li>
-            <i class="icon-calendar"></i> Analytics
-        <li>
-            <i class="icon-search"></i> Search
+<div #dashboard-container>
+    <div #first-row>
+        <div #widget-analytics.widget>
+            <div .widget-title.red>
+                Analytics
+            <div .widget-content>
+                Some analytics jazz...
+        <div #widget-authors.widget>
+            <div .widget-title.red>
+                Author Statistics
+            <div .widget-content>
+                Some info about authors...
 
+    <div #second-row>
+        <div #widget-comments.widget>
+            <div .widget-title.red>
+                Recent Comments
+            <div .widget-content>
+                Showing some comments from posts?...
+        <div #widget-something.widget>
+            <div .widget-title.red>
+                Something
+            <div .widget-content>
+                Dunno what's here yet :/ ...
+                

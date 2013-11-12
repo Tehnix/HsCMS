@@ -9,37 +9,33 @@
     <div #permalink>
         <b>Permalink</b> http://domain.com/article/<b><span id="permalink-text">The-post-title</span></b>/
     
-    <div #form-content>
-        <div .padding>
-            <div .left>
-                Markdown
-            <div .right>
-                ?
-            <div .clear>
-            <hr>
-            $maybe article <- marticle
-                <textarea #form-mdcontent-field name="form-mdcontent-field" placeholder="Some nice content to go with that title, ey ;)...">
-                    #{articleMdContent article}
-            $nothing
-                <textarea #form-mdcontent-field name="form-mdcontent-field" placeholder="Some nice content to go with that title, ey ;)...">
-    <div #form-content-preview>
-        <div #preview-right-arrow>
-            <img src="/static/img/right-arrow.png" alt="" />
-        <div .padding>
-            <div .left>
-                Preview
-            <div .right>
-                <span #word-count>
-                    0
-                words
-            <div .clear>
-            <hr>
-            <div #preview-content-container>
-    <div .clear>
-    <div #bottom-bar>
-        <div .spacing>
-            <div .left>
-                <button .btn.btn-inverse><i class="icon-tag icon-white"></i> News, Category
-            <div .right>
-                <input .btn.btn-primary type=submit value="Save Draft">
-                <input .btn.btn-danger type=submit value="Publish">
+    <div #content-preview-container>
+        <div #form-content>
+            <div .padding>
+                <div .left.red>
+                    Markdown
+                <div .right.red>
+                    <b>?
+                <div .clear>
+                <hr>
+                $maybe article <- marticle
+                    <textarea #form-mdcontent-field name="form-mdcontent-field" placeholder="Some nice content to go with that title, ey ;)...">
+                        #{articleMdContent article}
+                $nothing
+                    <textarea #form-mdcontent-field name="form-mdcontent-field" placeholder="Some nice content to go with that title, ey ;)...">
+        <div #form-content-preview>
+            <div .padding>
+                <div .left.red>
+                    Preview
+                <div .right.red>
+                    <span #word-count>
+                        0
+                    words
+                <div .clear>
+                <hr>
+                <div #preview-content-container>
+        <div .clear>
+        <div #bottom-bar>
+            <div .spacing>
+                <div .right>
+                    <input .btn.btn-danger type=submit value="Publish">

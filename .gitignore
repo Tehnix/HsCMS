@@ -10,3 +10,5 @@ yesod-devel/
 *.DS_Store
 .ghci
 cabal-dev/
+
+*.swp

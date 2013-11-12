@@ -4,6 +4,7 @@ module Handler.AdminBlog where
 import Import
 import Yesod.Auth
 import Data.Time
+{-import Data.Maybe (fromJust)-}
 import System.Locale (defaultTimeLocale)
 
 
@@ -12,6 +13,9 @@ getAdminBlogR :: Handler Html
 getAdminBlogR = do
     maid <- maybeAuthId
     muser <- maybeAuth
+    -- #{userIdent userData} <-- using userData in hamlet
+    {-userId <- requireAuthId-}
+    {-Entity _ userData <- runDB $ selectFirst [UserId ==. userId] [] >>= return.fromJust-}
     -- Get the list of articles inside the database
     articles <- runDB $ selectList [] [Desc ArticleAdded]
     adminLayout $ do
@@ -48,7 +52,9 @@ getAdminBlogPostR articleId = do
     dbarticle <- runDB $ get404 articleId
     marticle <- return $ Just dbarticle
     adminLayout $ do
-        setTitle "Admin: New Post"
+        case marticle of
+            Just _ -> setTitle "Admin: Update post"
+            Nothing -> setTitle "Admin: New Post"
         $(widgetFile "admin/blogPost")
 
 -- Handling the updated blog post
@@ -59,7 +65,7 @@ postAdminBlogPostR articleId = do
     htmlContent <- runInputPost $ ireq htmlField "form-htmlcontent-field"
     wordCount <- runInputPost $ ireq intField "form-wordcount-field"
     runDB $ update articleId [ArticleTitle =. title, ArticleMdContent =. mdContent, ArticleHtmlContent =. htmlContent, ArticleWordCount =. wordCount]
-    setMessage $ "Post Update"
+    setMessage $ "Post Updated"
     redirect AdminBlogR
 
 -- Handling the updated blog post
@@ -68,3 +74,4 @@ postAdminBlogDeleteR articleId = do
     runDB $ update articleId [ArticleVisible =. 0]
     setMessage $ "Post Deleted"
     redirect AdminBlogR
+

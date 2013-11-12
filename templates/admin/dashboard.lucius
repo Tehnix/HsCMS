@@ -1,0 +1,49 @@
+#dashboard-container {
+    display: table;
+    height: 100%;
+    width: 100%;
+    vertical-align: top;
+
+    #first-row {
+        display: table-row;
+        vertical-align: top;
+        #widget-analytics {
+            display: table-cell;
+            width:45%;
+        }
+        #widget-authors {
+            display: table-cell;
+            .widget-title, .widget-content {
+                margin-right: 115px;
+            }
+        }
+    }
+    #second-row {
+        display: table-row;
+        vertical-align: top;
+        #widget-comments {
+            display: table-cell;
+            width:45%;
+        }
+        #widget-something {
+            display: table-cell;
+            .widget-title, .widget-content {
+                margin-right: 115px;
+            }
+        }
+    }
+    .widget {
+        background: #fff;
+        border-right: 1px solid #eee;
+        border-bottom: 1px solid #eee;
+        .widget-title {
+            margin: 10px 15px 0px 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        .widget-content {
+            padding: 15px;
+        }
+    }
+}
+
