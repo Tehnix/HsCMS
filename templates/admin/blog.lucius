@@ -35,6 +35,15 @@
         font-size:1em;
         color: #AEAEAE;
     }
+    #no-content {
+        font-size: 25px;
+        color: #202020;
+        font-weight: bold;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        margin-left: -25%;
+    }
     .list-item {
         position: relative;
         cursor: pointer;

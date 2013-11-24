@@ -34,8 +34,8 @@
                 <div .right-arrow-background>
             <div .clear>
         $if (length articles) == 0
-            <div>
-                NO ARTICLES HERE! D:
+            <div #no-content>
+                No articles yet! :(
             <div .clear>
 
 <div #content-preview.not-used>

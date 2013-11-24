@@ -28,10 +28,6 @@ modules:
     filename: Settings/Development.hs
   Foundation:
     filename: Foundation.hs
-  TestImport:
-    filename: tests/TestImport.hs
-  Main(tests/main.hs):
-    filename: tests/main.hs
   Handler.Admin:
     filename: Handler/Admin.hs
   Model:
@@ -48,8 +44,6 @@ modules:
     filename: Handler/About.hs
   Settings.StaticFiles:
     filename: Settings/StaticFiles.hs
-  HomeTest:
-    filename: tests/HomeTest.hs
   Main(devel.hs):
     filename: devel.hs
 version: 1

@@ -11,6 +11,7 @@ Development:
   <<: *defaults
 
 Testing:
+  port: 80
   <<: *defaults
 
 Staging:
