@@ -6,7 +6,8 @@ Default: &defaults
   admins: ["christianlaustsen@gmail.com"]
 
 Development:
-  approot: "http://devel.codetalk.io"
+  #approot: "http://devel.codetalk.io"
+  approot: "http://192.168.199.130:3000"
   analytics: UA-19146082-5
   <<: *defaults
 

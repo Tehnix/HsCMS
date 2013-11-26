@@ -1,0 +1,25 @@
+#login-box {
+    position: relative;
+    width: 400px;
+    height: 200px;
+    margin: 0 auto;
+    margin-top: 200px;
+    padding: 25px;
+    
+    #google-logo {
+        pointer-events:none;
+        position: absolute;
+        top: 35px;
+        left: 35px;
+    }
+    #login-button {
+        background: #fff;
+        border: none;
+        width: 400px;
+        height: 120px;
+        padding-left: 100px;
+        font-size: 35px;
+        font-weight: 100;
+        border: 1px solid rgb(223, 219, 219);
+    }
+}

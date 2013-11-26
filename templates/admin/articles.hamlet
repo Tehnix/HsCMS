@@ -16,9 +16,9 @@
                         #{formatTime defaultTimeLocale "%d/%m/%Y" (articleAdded article)}
                     <div .word-count>
                         #{addSeparator $ show $ articleWordCount article}
-                    <a .edit-link.hide href=@{AdminBlogPostR articleId}>
+                    <a .edit-link.hide href=@{AdminUpdateArticleR articleId}>
                     <a .view-link.hide href=@{ArticleR articleId}>
-                    <a .delete-link.hide href=@{AdminBlogDeleteR articleId}>
+                    <a .delete-link.hide href=@{AdminDeleteArticleR articleId}>
                 <article>
                     <header>
                         <hgroup>

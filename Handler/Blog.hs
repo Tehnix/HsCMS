@@ -7,22 +7,12 @@ import Data.Time
 import System.Locale (defaultTimeLocale)
 
 
-getBlogR :: Handler Html
-getBlogR = do
-    maid <- maybeAuthId
-    muser <- maybeAuth
-    -- Get the list of articles inside the database
-    articles <- runDB $ selectList [] [Desc ArticleAdded]
-    defaultLayout $ do
-        setTitle "Blog"
-        $(widgetFile "blog/articles")
-
 getArticleR :: ArticleId -> Handler Html
 getArticleR articleId = do
     article <- runDB $ get404 articleId
     defaultLayout $ do
         setTitle $ toHtml $ articleTitle article
-        $(widgetFile "blog/article")
+        $(widgetFile "blog/single-article")
 
 getArchivesR :: Handler Html
 getArchivesR = do
@@ -33,6 +23,16 @@ getArchivesR = do
     defaultLayout $ do
         setTitle "Archives"
         $(widgetFile "blog/archives")
+
+getArticlesR :: Handler Html
+getArticlesR = do
+    maid <- maybeAuthId
+    muser <- maybeAuth
+    -- Get the list of articles inside the database
+    articles <- runDB $ selectList [] [Desc ArticleAdded]
+    defaultLayout $ do
+        setTitle "Blog"
+        $(widgetFile "blog/articles")
 
 getAuthorR :: Text -> Handler Html
 getAuthorR author = do

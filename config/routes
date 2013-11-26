@@ -5,15 +5,15 @@
 /robots.txt RobotsR GET
 
 
-/ BlogR GET
+/ ArticlesR GET
 /blog/#ArticleId ArticleR GET
 /author/#Text AuthorR GET
 /archives ArchivesR GET
 /about AboutR GET
 
 
-/admin AdminR GET
-/admin/blog/ AdminBlogR GET
-/admin/blog/post AdminBlogNewR GET POST
-/admin/blog/post/#ArticleId AdminBlogPostR GET POST
-/admin/blog/delete/#ArticleId AdminBlogDeleteR POST
+/admin AdminDashboardR GET
+/admin/blog/ AdminShowArticlesR GET
+/admin/blog/post AdminNewArticleR GET POST
+/admin/blog/post/#ArticleId AdminUpdateArticleR GET POST
+/admin/blog/delete/#ArticleId AdminDeleteArticleR POST

@@ -92,8 +92,8 @@ instance Yesod App where
             $(combineScripts 'StaticR
                 [ js_jquery_js
                 ])
-            $(widgetFile "default-layout")
-        giveUrlRenderer $(hamletFile "templates/default-layout-wrapper.hamlet")
+            $(widgetFile "layouts/default-layout")
+        giveUrlRenderer $(hamletFile "templates/layouts/default-layout-wrapper.hamlet")
 
     -- This is done to provide an optimization for serving static files from
     -- a separate domain. Please see the staticRoot setting in Settings.hs
@@ -105,9 +105,11 @@ instance Yesod App where
     authRoute _ = Just $ AuthR LoginR
     
     -- Require admin priviliges
-    isAuthorized AdminR _ = isAdmin
-    isAuthorized AdminBlogR _ = isAdmin
-    isAuthorized AdminBlogNewR _ = isAdmin
+    isAuthorized AdminDashboardR _ = isAdmin
+    isAuthorized AdminShowArticlesR _ = isAdmin
+    isAuthorized AdminNewArticleR _ = isAdmin
+    isAuthorized (AdminUpdateArticleR _) _ = isAdmin
+    isAuthorized (AdminDeleteArticleR _) _ = isAdmin
     -- Anyone can access all other pages
     isAuthorized _ _ = return Authorized
 
@@ -144,9 +146,9 @@ instance YesodAuth App where
     type AuthId App = UserId
 
     -- Where to send a user after successful login
-    loginDest _ = AdminR
+    loginDest _ = AdminDashboardR
     -- Where to send a user after logout
-    logoutDest _ = BlogR
+    logoutDest _ = ArticlesR
 
     getAuthId creds = runDB $ do
         x <- getBy $ UniqueUser $ credsIdent creds
@@ -160,31 +162,30 @@ instance YesodAuth App where
 
     authHttpManager = httpManager
     -- Overwrite the login handler
-    {-loginHandler = loginLayout $ do-}
-        {-$(widgetFile "login")-}
+    loginHandler = lift $ loginLayout $ do
+        $(widgetFile "pages/login")
 
 instance YesodBreadcrumbs App where
     -- Front-end breadcrumbs
-    breadcrumb BlogR = return ("Home", Nothing)
-    breadcrumb AboutR = return ("About", Just BlogR)
+    breadcrumb ArticlesR = return ("Home", Nothing)
+    breadcrumb AboutR = return ("About", Just ArticlesR)
     breadcrumb (AuthorR authorName) = do
         crumb <- return $ pack $ "Author: " ++ (unpack authorName)
-        return (crumb, Just BlogR)
-    breadcrumb ArchivesR = return ("Archives", Just BlogR)
+        return (crumb, Just ArticlesR)
+    breadcrumb ArchivesR = return ("Archives", Just ArticlesR)
     breadcrumb (ArticleR articleId) = do
         article <- runDB $ get404 articleId
-        return (articleTitle article, Just BlogR)
+        return (articleTitle article, Just ArticlesR)
     
     -- Admin panel breadcrumbs
-    breadcrumb AdminR = return ("Admin", Nothing)
-    breadcrumb AdminBlogR = return ("Admin Blog", Just AdminR)
-    breadcrumb AdminBlogNewR = return ("Admin Blog: New Post", Just AdminR)
-    breadcrumb (AdminBlogPostR articleId) = do
+    breadcrumb AdminDashboardR = return ("Dashboard", Nothing)
+    breadcrumb AdminShowArticlesR = return ("Articles", Just AdminDashboardR)
+    breadcrumb AdminNewArticleR = return ("New Article", Just AdminDashboardR)
+    breadcrumb (AdminUpdateArticleR articleId) = do
         article <- runDB $ get404 articleId
-        crumb <- return $ pack $ "Admin Blog: " ++ (unpack (articleTitle article))
-        return (crumb, Just AdminR)
-    breadcrumb (AdminBlogDeleteR _) = do
-        return ("Delete", Just BlogR)
+        crumb <- return $ pack $ "Article: " ++ (unpack (articleTitle article))
+        return (crumb, Just AdminDashboardR)
+    breadcrumb (AdminDeleteArticleR _) = return ("Deleted", Just AdminDashboardR)
     
     -- These pages never call breadcrumb
     breadcrumb FaviconR = return ("", Nothing)
@@ -212,7 +213,6 @@ loginLayout :: Widget -> Handler Html
 loginLayout widget = do
     master <- getYesod
     mmsg <- getMessage
-    (title', parents) <- breadcrumbs
     pc <- widgetToPageContent $ do
         $(combineStylesheets 'StaticR
             [ css_normalize_css
@@ -222,8 +222,8 @@ loginLayout widget = do
         $(combineScripts 'StaticR
             [ js_jquery_js
             ])
-        $(widgetFile "login-layout")
-    giveUrlRenderer $(hamletFile "templates/login-layout-wrapper.hamlet")
+        $(widgetFile "layouts/login-layout")
+    giveUrlRenderer $(hamletFile "templates/layouts/login-layout-wrapper.hamlet")
 
 -- Check if a users email is present in the admins list in settings
 isAdmin :: Handler AuthResult

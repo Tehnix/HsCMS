@@ -7,11 +7,11 @@
                 <a href=@{AuthR LogoutR}>Logout
     <ul #navigation>
         <li>
-            <a href=@{AdminR}>Dashboard
+            <a href=@{AdminDashboardR}>Dashboard
         <li>
-            <a href=@{AdminBlogR}>Posts
+            <a href=@{AdminShowArticlesR}>Posts
         <li>
-            <a href=@{AdminBlogNewR}>New Post
+            <a href=@{AdminNewArticleR}>New Post
     
     
 <div #main role="main">

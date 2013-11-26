@@ -1,3 +1,8 @@
+#no-articles {
+    margin: 80px 0 80px 30px;
+    font-size: 30px;
+}
+
 #archives {
     padding: 30px 30px 15px 30px;
     font-size: 0.9em;

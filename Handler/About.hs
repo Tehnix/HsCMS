@@ -8,4 +8,4 @@ getAboutR :: Handler Html
 getAboutR = do
     defaultLayout $ do
         setTitle "About"
-        $(widgetFile "about")
+        $(widgetFile "pages/about")

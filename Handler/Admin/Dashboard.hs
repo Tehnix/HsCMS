@@ -1,12 +1,12 @@
 {-# LANGUAGE TupleSections, OverloadedStrings #-}
-module Handler.Admin where
+module Handler.Admin.Dashboard where
 
 import Import
 import Yesod.Auth
 
 
-getAdminR :: Handler Html
-getAdminR = do
+getAdminDashboardR :: Handler Html
+getAdminDashboardR = do
     userEmail <- fmap usersEmail maybeAuth
     adminLayout $ do
         setTitle "Admin: Dashboard"

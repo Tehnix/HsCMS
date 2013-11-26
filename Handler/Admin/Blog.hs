@@ -1,5 +1,5 @@
 {-# LANGUAGE TupleSections, OverloadedStrings #-}
-module Handler.AdminBlog where
+module Handler.Admin.Blog where
     
 import Import
 import Yesod.Auth
@@ -9,8 +9,8 @@ import System.Locale (defaultTimeLocale)
 
 
 -- The view showing the list of articles
-getAdminBlogR :: Handler Html
-getAdminBlogR = do
+getAdminShowArticlesR :: Handler Html
+getAdminShowArticlesR = do
     maid <- maybeAuthId
     muser <- maybeAuth
     -- #{userIdent userData} <-- using userData in hamlet
@@ -20,21 +20,21 @@ getAdminBlogR = do
     articles <- runDB $ selectList [] [Desc ArticleAdded]
     adminLayout $ do
         setTitle "Admin: Blog Posts"
-        $(widgetFile "admin/blog")
+        $(widgetFile "admin/articles")
              
 -- The form page for posting a new blog post 
-getAdminBlogNewR :: Handler Html
-getAdminBlogNewR = do
-    formroute <- return $ AdminBlogNewR
+getAdminNewArticleR :: Handler Html
+getAdminNewArticleR = do
+    formroute <- return $ AdminNewArticleR
     marticle <- return $ Nothing
     adminLayout $ do
         setTitle "Admin: New Post"
-        $(widgetFile "admin/blogPost")
+        $(widgetFile "admin/create-article")
 
 
 -- Handling the new posted blog post
-postAdminBlogNewR :: Handler Html
-postAdminBlogNewR = do
+postAdminNewArticleR :: Handler Html
+postAdminNewArticleR = do
     title <- runInputPost $ ireq textField "form-title-field"
     mdContent <- runInputPost $ ireq htmlField "form-mdcontent-field"
     htmlContent <- runInputPost $ ireq htmlField "form-htmlcontent-field"
@@ -43,35 +43,35 @@ postAdminBlogNewR = do
     author <- fmap usersEmail maybeAuth
     _ <- runDB $ insert $ Article title mdContent htmlContent wordCount added author 1
     setMessage $ "Post Created"
-    redirect AdminBlogR
+    redirect AdminShowArticlesR
 
 -- The form page for updating an existing blog post
-getAdminBlogPostR :: ArticleId -> Handler Html
-getAdminBlogPostR articleId = do
-    formroute <- return $ AdminBlogPostR articleId
+getAdminUpdateArticleR :: ArticleId -> Handler Html
+getAdminUpdateArticleR articleId = do
+    formroute <- return $ AdminUpdateArticleR articleId
     dbarticle <- runDB $ get404 articleId
     marticle <- return $ Just dbarticle
     adminLayout $ do
         case marticle of
             Just _ -> setTitle "Admin: Update post"
             Nothing -> setTitle "Admin: New Post"
-        $(widgetFile "admin/blogPost")
+        $(widgetFile "admin/create-article")
 
 -- Handling the updated blog post
-postAdminBlogPostR :: ArticleId -> Handler Html
-postAdminBlogPostR articleId = do
+postAdminUpdateArticleR :: ArticleId -> Handler Html
+postAdminUpdateArticleR articleId = do
     title <- runInputPost $ ireq textField "form-title-field"
     mdContent <- runInputPost $ ireq htmlField "form-mdcontent-field"
     htmlContent <- runInputPost $ ireq htmlField "form-htmlcontent-field"
     wordCount <- runInputPost $ ireq intField "form-wordcount-field"
     runDB $ update articleId [ArticleTitle =. title, ArticleMdContent =. mdContent, ArticleHtmlContent =. htmlContent, ArticleWordCount =. wordCount]
     setMessage $ "Post Updated"
-    redirect AdminBlogR
+    redirect AdminShowArticlesR
 
 -- Handling the updated blog post
-postAdminBlogDeleteR :: ArticleId -> Handler Html
-postAdminBlogDeleteR articleId = do
+postAdminDeleteArticleR :: ArticleId -> Handler Html
+postAdminDeleteArticleR articleId = do
     runDB $ update articleId [ArticleVisible =. 0]
     setMessage $ "Post Deleted"
-    redirect AdminBlogR
+    redirect AdminShowArticlesR
 

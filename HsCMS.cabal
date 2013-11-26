@@ -22,8 +22,8 @@ library
                      GeneralFunctions
                      Handler.About
                      Handler.Blog
-                     Handler.Admin
-                     Handler.AdminBlog
+                     Handler.Admin.Dashboard
+                     Handler.Admin.Blog
 
     if flag(dev) || flag(library-only)
         cpp-options:   -DDEVELOPMENT

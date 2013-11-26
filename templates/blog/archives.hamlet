@@ -1,7 +1,8 @@
-<div #archives>
-    $if null articles
-        <p> There are no articles yet...
-    $else
+$if null articles
+    <div .font-box>
+        <p #no-articles> There are no articles yet :(...
+$else
+    <div #archives>
         <table #archives-table .table.table-bordered.table-condensed.table-striped.table-hover>
             <thead>
                 <tr>

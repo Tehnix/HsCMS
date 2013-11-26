@@ -76,6 +76,6 @@ adminLayout widget = do
             , js_showdown_js
             , js_extensions_github_js
             ])
-        $(widgetFile "admin/admin-layout")
-    giveUrlRenderer $(hamletFile "templates/admin/admin-layout-wrapper.hamlet")
+        $(widgetFile "layouts/admin-layout")
+    giveUrlRenderer $(hamletFile "templates/layouts/admin-layout-wrapper.hamlet")
  
