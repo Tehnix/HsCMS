@@ -1,14 +1,20 @@
+# Compilation files
 dist*
-static/tmp/
-config/client_session_key.aes
 *.hi
 *.o
-*.sqlite3
+static/tmp/
+
+# Development files
 .hsenv*
 yesod-devel/
-
-*.DS_Store
 .ghci
 cabal-dev/
+cabal.sandbox.config
+.cabal-sandbox/
+*.sqlite3
 
+# Auto generated files
 *.swp
+._*
+*.DS_Store
+config/client_session_key.aes
