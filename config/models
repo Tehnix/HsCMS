@@ -14,8 +14,9 @@ Article
     htmlContent Html
     wordCount Int
     added UTCTime
-    author Text
-    visible Int
+    author UserId
+    visible Bool
+    trash Bool
     deriving
 	
  -- By default this file is used in Model.hs (which is imported by Foundation.hs)

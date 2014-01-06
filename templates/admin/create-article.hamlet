@@ -38,4 +38,14 @@
         <div #bottom-bar>
             <div .spacing>
                 <div .right>
-                    <input .btn.btn-danger type=submit value="Publish">
+                    <input type="checkbox" value="true" name="form-publish" #form-publish-box .hide>
+                    <input type="checkbox" value="true" name="form-unpublish" #form-unpublish-box .hide>
+                    $maybe article <- marticle
+                        <input #form-save-btn .btn.btn-primary.extra-padding type="submit" value="Update">
+                        $if (articleVisible article)
+                            <input #form-unpublish-btn .btn.btn-danger type="submit" value="Unpublish">
+                        $else
+                            <input #form-publish-btn .btn.btn-success type="submit" value="Publish">
+                    $nothing
+                        <input #form-save-btn .btn.btn-primary.extra-padding type="submit" value="Save Draft">
+                        <input #form-publish-btn .btn.btn-success type="submit" value="Publish">

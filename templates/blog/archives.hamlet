@@ -8,18 +8,18 @@ $else
                 <tr>
                     <th .title>
                         Title
-                    $# <th .author>
-                    $#     Author
+                    $#<th .author>
+                    $#    Author
                     <th .published>
                         Published
             <tbody>
-                $forall Entity articleId article <- articles
+                $forall (Entity articleId article, Entity userId user) <- articles
                     <tr>
                         <td .title>
                             <a .link href=@{ArticleR articleId}>
                                 #{articleTitle article}
-                        $# <td .author>
-                        $#     #{splitByAt $ T.unpack $ articleAuthor article}
+                        $#<td .author>
+                        $#    #{splitByAt $ userIdent user}
                         <td .published>
                             #{formatTime defaultTimeLocale "%h %d, %Y" (articleAdded article)}
                 

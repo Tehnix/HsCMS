@@ -33,6 +33,16 @@ $(function(){
         titleFieldChanged();
     });
     
+    $("#form-save-btn").click(function() {
+        $("#form-publish-box").attr('checked', false);
+    });
+    $("#form-publish-btn").click(function() {
+        $("#form-publish-box").attr('checked', true);
+    });
+    $("#form-unpublish-btn").click(function() {
+        $("#form-unpublish-box").attr('checked', true);
+    });
+    
     // Make sure the textarea expands and shrinks dynamically
     //mdTextArea.TextAreaExpander(mdTextArea.height());
     

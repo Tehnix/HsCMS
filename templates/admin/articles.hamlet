@@ -1,14 +1,17 @@
 <div #content-list>
     <div .padding>
         <div .left.red>
-            Posts
+            $if isTrashRoute
+                Trashed Posts
+            $else
+                Posts
         <div .right>
             <input #search-box type="text" placeholder="Search titles..." />
             <i .icon-search></i>
         <div .clear>
         <div .extra-padding>
-        $forall Entity articleId article <- articles
-            <div id="item-id-#{show articleId}" class="list-item">
+        $forall (Entity articleId article, Entity userId user) <- articles
+            <div :not (articleVisible article):.unpublished.list-item>
                 <div .picture>
                     ...
                 <div .information>
@@ -16,9 +19,13 @@
                         #{formatTime defaultTimeLocale "%d/%m/%Y" (articleAdded article)}
                     <div .word-count>
                         #{addSeparator $ show $ articleWordCount article}
+                    <span .visible-status.hide>
+                        #{articleVisible article}
                     <a .edit-link.hide href=@{AdminUpdateArticleR articleId}>
                     <a .view-link.hide href=@{ArticleR articleId}>
-                    <a .delete-link.hide href=@{AdminDeleteArticleR articleId}>
+                    <a .unpublish-link.hide href=@{AdminUnpublishArticleR articleId}>
+                    <a .publish-link.hide href=@{AdminPublishArticleR articleId}>
+                    <a .delete-link.hide href=@{AdminTrashArticleR articleId}>
                 <article>
                     <header>
                         <hgroup>
@@ -29,13 +36,16 @@
                     <footer>
                         by 
                         <span .author>
-                            #{articleAuthor article}
+                            #{userIdent user}
                 <div .right-arrow>
                 <div .right-arrow-background>
             <div .clear>
-        $if (length articles) == 0
+        $if null articles
             <div #no-content>
-                No articles yet! :(
+                $if isTrashRoute
+                    No trash yet :)
+                $else
+                    No articles yet! :(
             <div .clear>
 
 <div #content-preview.not-used>
@@ -43,13 +53,19 @@
         <div .left.red>
             <div #title-container>
         <div .right>
-            <a #delete-list-item href="#">
-                <i .icon-trash></i>
+            $if not isTrashRoute
+                <form method="post" #delete-list-item-form .remove-submit-style action="#">
+                    <input type="submit" value="" alt="Delete Post" #delete-list-item.remove-submit-style.icon-trash>
             <i .delimiter></i>
-            <a #view-list-item href="#">
+            <form method="post" #unpublish-list-item-form .remove-submit-style action="#">
+                <input type="submit" value="" alt="Unpublish Post" #unpublish-list-item .remove-submit-style.icon-eye-close>
+            <form method="post" #publish-list-item-form .hide.remove-submit-style action="#">
+                <input type="submit" value="" alt="Publish Post" #publish-list-item .remove-submit-style.icon-eye-open>
+            <i .delimiter></i>
+            <a #view-list-item href="#" alt="View Post">
                 <i .icon-list-alt></i>
             <i .delimiter></i>
-            <a #edit-list-item href="#">
+            <a #edit-list-item href="#" alt="Edit Post">
                 <i .icon-pencil></i>
         <div .clear>
         <hr>

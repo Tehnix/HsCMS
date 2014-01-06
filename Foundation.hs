@@ -17,10 +17,10 @@ import Settings (widgetFile, Extra (..))
 import Model
 import Text.Jasmine (minifym)
 import Text.Hamlet (hamletFile)
-import System.Log.FastLogger (Logger)
+import Yesod.Core.Types (Logger)
 
 -- Custom imports
-import Data.Text (Text, pack, unpack)
+import Data.Text (pack, unpack)
 
 -- | The site argument for your application. This can be a good place to
 -- keep settings and values requiring initialization before your application
@@ -108,8 +108,9 @@ instance Yesod App where
     isAuthorized AdminDashboardR _ = isAdmin
     isAuthorized AdminShowArticlesR _ = isAdmin
     isAuthorized AdminNewArticleR _ = isAdmin
+    isAuthorized AdminShowTrashArticlesR _ = isAdmin
     isAuthorized (AdminUpdateArticleR _) _ = isAdmin
-    isAuthorized (AdminDeleteArticleR _) _ = isAdmin
+    isAuthorized (AdminTrashArticleR _) _ = isAdmin
     -- Anyone can access all other pages
     isAuthorized _ _ = return Authorized
 
@@ -169,8 +170,9 @@ instance YesodBreadcrumbs App where
     -- Front-end breadcrumbs
     breadcrumb ArticlesR = return ("Home", Nothing)
     breadcrumb AboutR = return ("About", Just ArticlesR)
-    breadcrumb (AuthorR authorName) = do
-        crumb <- return $ pack $ "Author: " ++ (unpack authorName)
+    breadcrumb (AuthorR authorId) = do
+        user <- runDB $ get404 authorId
+        crumb <- return $ pack $ "Author: " ++ (takeWhile (/='@') (unpack (userIdent user)))
         return (crumb, Just ArticlesR)
     breadcrumb ArchivesR = return ("Archives", Just ArticlesR)
     breadcrumb (ArticleR articleId) = do
@@ -180,12 +182,24 @@ instance YesodBreadcrumbs App where
     -- Admin panel breadcrumbs
     breadcrumb AdminDashboardR = return ("Dashboard", Nothing)
     breadcrumb AdminShowArticlesR = return ("Articles", Just AdminDashboardR)
+    breadcrumb AdminShowTrashArticlesR = return ("Trashed Articles", Just AdminDashboardR)
     breadcrumb AdminNewArticleR = return ("New Article", Just AdminDashboardR)
     breadcrumb (AdminUpdateArticleR articleId) = do
         article <- runDB $ get404 articleId
         crumb <- return $ pack $ "Article: " ++ (unpack (articleTitle article))
         return (crumb, Just AdminDashboardR)
-    breadcrumb (AdminDeleteArticleR _) = return ("Deleted", Just AdminDashboardR)
+    breadcrumb (AdminTrashArticleR articleId) = do
+        article <- runDB $ get404 articleId
+        crumb <- return $ pack $ "Trashed: " ++ (unpack (articleTitle article))
+        return (crumb, Just AdminDashboardR)
+    breadcrumb (AdminUnpublishArticleR articleId) = do
+        article <- runDB $ get404 articleId
+        crumb <- return $ pack $ "Unpublish: " ++ (unpack (articleTitle article))
+        return (crumb, Just AdminDashboardR)
+    breadcrumb (AdminPublishArticleR articleId) = do
+        article <- runDB $ get404 articleId
+        crumb <- return $ pack $ "Publish: " ++ (unpack (articleTitle article))
+        return (crumb, Just AdminDashboardR)
     
     -- These pages never call breadcrumb
     breadcrumb FaviconR = return ("", Nothing)

@@ -1,19 +1,22 @@
 /static StaticR Static getStatic
 /auth   AuthR   Auth   getAuth
 
-/favicon.ico FaviconR GET
-/robots.txt RobotsR GET
+/favicon.ico    FaviconR    GET
+/robots.txt     RobotsR     GET
 
 
-/ ArticlesR GET
-/blog/#ArticleId ArticleR GET
-/author/#Text AuthorR GET
-/archives ArchivesR GET
-/about AboutR GET
+/                       ArticlesR   GET
+/blog/post/#ArticleId   ArticleR    GET
+/author/#UserId         AuthorR     GET
+/archives               ArchivesR   GET
+/about                  AboutR      GET
 
 
-/admin AdminDashboardR GET
-/admin/blog/ AdminShowArticlesR GET
-/admin/blog/post AdminNewArticleR GET POST
-/admin/blog/post/#ArticleId AdminUpdateArticleR GET POST
-/admin/blog/delete/#ArticleId AdminDeleteArticleR POST
+/admin                                  AdminDashboardR         GET
+/admin/blog/show                        AdminShowArticlesR      GET
+/admin/blog/post/create                 AdminNewArticleR        GET POST
+/admin/blog/post/update/#ArticleId      AdminUpdateArticleR     GET POST
+/admin/blog/post/unpublish/#ArticleId   AdminUnpublishArticleR      POST
+/admin/blog/post/publish/#ArticleId     AdminPublishArticleR        POST
+/admin/blog/trash                       AdminShowTrashArticlesR GET
+/admin/blog/trash/put/#ArticleId        AdminTrashArticleR          POST

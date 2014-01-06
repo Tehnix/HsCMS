@@ -4,6 +4,11 @@
 @innerSpacing: 10px; /* The inner padding of elements */
 @navLeftWidth: 88px; /* The width of the nav bar (NOTE: it's 2px lower than the width) */
 
+#nav #bottom-navigation li {
+    border-left: 1px solid #646464;
+    padding-left: 9px !important;
+}
+
 #permalink {
     display: none;
 }
@@ -33,6 +38,9 @@
     
     .spacing {
         margin-right:90px;
+    }
+    .extra-padding {
+        margin-right: 11px;
     }
 }
 #form-title {

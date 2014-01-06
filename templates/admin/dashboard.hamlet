@@ -9,7 +9,8 @@
             <div .widget-title.red>
                 Author Statistics
             <div .widget-content>
-                Some info about authors...
+                $forall (Entity userId user, count) <- postCount
+                    #{userIdent user} : #{show count}
 
     <div #second-row>
         <div #widget-comments.widget>

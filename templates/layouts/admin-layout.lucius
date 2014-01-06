@@ -84,6 +84,7 @@ a:visited { color: #878787; }
     right: 0;
     background: #292929;
     height: 100%;
+    min-height: 386px;
     width: #{navLeftWidth};
     padding-top: 40px;
     
@@ -95,11 +96,11 @@ a:visited { color: #878787; }
     #user-image {
         margin-right: 8px;
         border: 1px solid #878787;
-        width: 35px;
-        height: 35px;
+        width: 68px;
+        height: 68px;
     }
     
-    #navigation {
+    #navigation, #bottom-navigation {
         /*display: inline;*/
         list-style: none;
         margin: 0 0 10px 0;
@@ -121,63 +122,15 @@ a:visited { color: #878787; }
             color: #FFFFFF;
         }
     }
-    .dropdown.open .dropdown-toggle {
-        background: none;
+    #bottom-navigation {
+        position: absolute;
+        bottom: 29px;
+        width: 100%;
     }
-    .user-dropdown {
+    .user-image {
         padding-left: #{navLeftMargin};
-        padding-bottom: 30px;
-        margin-bottom: 20px;
-        /*border-bottom: 1px solid #646464;*/
-        .dropdown-toggle {
-            color: #878787;
-            color: #878787;
-        }
-        .caret {
-            margin-top: 2px;
-            border-top-color: #fff;
-            border-bottom-color: #fff;
-            border-width: 8px 8px 0 8px;
-        }
-        .dropdown-menu {
-            margin-top: 5px;
-            border: 1px solid #CCC;
-            border: 1px solid rgba(0, 0, 0, 0.2);
-            -webkit-border-radius: 6px;
-            -moz-border-radius: 6px;
-            border-radius: 6px;
-            -webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-            -moz-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-            -webkit-background-clip: padding-box;
-            -moz-background-clip: padding;
-            background-clip: padding-box;
-        }
-        .dropdown-menu::before {
-            position: absolute;
-            top: -7px;
-            left: 9px;
-            display: inline-block;
-            border-right: 7px solid transparent;
-            border-bottom: 7px solid #CCC;
-            border-left: 7px solid transparent;
-            border-bottom-color: rgba(0, 0, 0, 0.2);
-            content: '';
-            right: 12px;
-            left: auto;
-        }
-        .dropdown-menu::after {
-            position: absolute;
-            top: -6px;
-            left: 10px;
-            display: inline-block;
-            border-right: 6px solid transparent;
-            border-bottom: 6px solid white;
-            border-left: 6px solid transparent;
-            content: '';
-            right: 13px;
-            left: auto;
-        }
+        padding-bottom: 20px;
+        margin-bottom: 0px;
     }
 }
 

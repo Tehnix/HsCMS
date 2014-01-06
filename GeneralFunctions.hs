@@ -72,7 +72,6 @@ adminLayout widget = do
         $(combineScripts 'StaticR
             [ js_jquery_js
             , js_bootstrap_min_js
-            , js_textAreaExpander_js
             , js_showdown_js
             , js_extensions_github_js
             ])

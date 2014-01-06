@@ -12,12 +12,17 @@ import Yesod.Default.Config
 import Yesod.Default.Main
 import Yesod.Default.Handlers
 import Network.Wai.Middleware.RequestLogger
+    ( mkRequestLogger, outputFormat, OutputFormat (..), IPAddrSource (..), destination
+    )
+import qualified Network.Wai.Middleware.RequestLogger as RequestLogger
 import qualified Database.Persist
 import Database.Persist.Sql (runMigration)
-import Network.HTTP.Conduit (newManager, def)
+import Network.HTTP.Conduit (newManager, conduitManagerSettings)
 import Control.Monad.Logger (runLoggingT)
-import System.IO (stdout)
-import System.Log.FastLogger (mkLogger)
+import System.Log.FastLogger (newLoggerSet, defaultBufSize)
+import Network.Wai.Logger (clockDateCacher)
+import Data.Default (def)
+import Yesod.Core.Types (loggerSet, Logger (Logger))
 
 -- Import all relevant handler modules here.
 -- Don't forget to add new modules to your cabal file!
@@ -45,7 +50,7 @@ makeApplication conf = do
             if development
                 then Detailed True
                 else Apache FromSocket
-        , destination = Logger $ appLogger foundation
+        , destination = RequestLogger.Logger $ loggerSet $ appLogger foundation
         }
 
     -- Create the WAI application and apply middlewares
@@ -56,14 +61,18 @@ makeApplication conf = do
 -- performs some initialization.
 makeFoundation :: AppConfig DefaultEnv Extra -> IO App
 makeFoundation conf = do
-    manager <- newManager def
+    manager <- newManager conduitManagerSettings
     s <- staticSite
     dbconf <- withYamlEnvironment "config/sqlite.yml" (appEnv conf)
               Database.Persist.loadConfig >>=
               Database.Persist.applyEnv
     p <- Database.Persist.createPoolConfig (dbconf :: Settings.PersistConf)
-    logger <- mkLogger True stdout
-    let foundation = App conf s p manager dbconf logger
+
+    loggerSet' <- newLoggerSet defaultBufSize Nothing
+    (getter, _) <- clockDateCacher
+
+    let logger = Yesod.Core.Types.Logger loggerSet' getter
+        foundation = App conf s p manager dbconf logger
 
     -- Perform database migration using our application's logging settings.
     runLoggingT

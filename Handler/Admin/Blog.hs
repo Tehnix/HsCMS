@@ -4,20 +4,28 @@ module Handler.Admin.Blog where
 import Import
 import Yesod.Auth
 import Data.Time
-{-import Data.Maybe (fromJust)-}
 import System.Locale (defaultTimeLocale)
+import qualified Database.Esqueleto as E
 
+
+-- import Data.Maybe (fromJust)
+-- #{userIdent user} <-- using userData in hamlet
+-- #{articleAuthor article} <-- the original one
+-- userId <- requireAuthId
+-- Entity _ user <- runDB $ selectFirst [UserId ==. userId] [] >>= return.fromJust
+
+-- Fetch all articles with their author info
+pullArticles trash = E.from $ \(a, u) -> do
+    E.where_ (a E.^. ArticleAuthor E.==. u E.^. UserId E.&&. a E.^. ArticleTrash E.==. E.val trash)
+    E.orderBy [E.desc (a E.^. ArticleAdded)]
+    return (a, u)
 
 -- The view showing the list of articles
 getAdminShowArticlesR :: Handler Html
 getAdminShowArticlesR = do
-    maid <- maybeAuthId
-    muser <- maybeAuth
-    -- #{userIdent userData} <-- using userData in hamlet
-    {-userId <- requireAuthId-}
-    {-Entity _ userData <- runDB $ selectFirst [UserId ==. userId] [] >>= return.fromJust-}
-    -- Get the list of articles inside the database
-    articles <- runDB $ selectList [] [Desc ArticleAdded]
+    let isTrashRoute = False 
+    articles <- runDB $ E.select $ pullArticles False
+    -- articles <- runDB $ selectList [ArticleTrash ==. False] [Desc ArticleAdded]
     adminLayout $ do
         setTitle "Admin: Blog Posts"
         $(widgetFile "admin/articles")
@@ -39,11 +47,18 @@ postAdminNewArticleR = do
     mdContent <- runInputPost $ ireq htmlField "form-mdcontent-field"
     htmlContent <- runInputPost $ ireq htmlField "form-htmlcontent-field"
     wordCount <- runInputPost $ ireq intField "form-wordcount-field"
+    publish <- runInputPost $ iopt boolField "form-publish"
     added <- liftIO getCurrentTime
-    author <- fmap usersEmail maybeAuth
-    _ <- runDB $ insert $ Article title mdContent htmlContent wordCount added author 1
-    setMessage $ "Post Created"
-    redirect AdminShowArticlesR
+    userId <- requireAuthId
+    case publish of
+        Nothing -> do
+            articleId <- runDB $ insert $ Article title mdContent htmlContent wordCount added userId False False
+            setMessage $ "Post Saved"
+            redirect (AdminUpdateArticleR articleId)
+        Just _ -> do
+            _ <- runDB $ insert $ Article title mdContent htmlContent wordCount added userId True False
+            setMessage $ "Post Created"
+            redirect AdminShowArticlesR
 
 -- The form page for updating an existing blog post
 getAdminUpdateArticleR :: ArticleId -> Handler Html
@@ -64,14 +79,49 @@ postAdminUpdateArticleR articleId = do
     mdContent <- runInputPost $ ireq htmlField "form-mdcontent-field"
     htmlContent <- runInputPost $ ireq htmlField "form-htmlcontent-field"
     wordCount <- runInputPost $ ireq intField "form-wordcount-field"
-    runDB $ update articleId [ArticleTitle =. title, ArticleMdContent =. mdContent, ArticleHtmlContent =. htmlContent, ArticleWordCount =. wordCount]
-    setMessage $ "Post Updated"
-    redirect AdminShowArticlesR
+    publish <- runInputPost $ iopt boolField "form-publish"
+    unpublish <- runInputPost $ iopt boolField "form-unpublish"
+    publishStatus <- case unpublish of 
+        Nothing -> return True
+        Just _ -> return False
+    case publish of
+        Nothing -> do
+            runDB $ update articleId [ArticleTitle =. title, ArticleMdContent =. mdContent, ArticleHtmlContent =. htmlContent, ArticleWordCount =. wordCount]
+            setMessage $ "Post Saved"
+            redirect (AdminUpdateArticleR articleId)
+        Just _ -> do
+            runDB $ update articleId [ArticleVisible =. publishStatus, ArticleTitle =. title, ArticleMdContent =. mdContent, ArticleHtmlContent =. htmlContent, ArticleWordCount =. wordCount]
+            if publishStatus then setMessage $ "Post Published"
+                else setMessage $ "Post Unpublished"
+            redirect AdminShowArticlesR
 
--- Handling the updated blog post
-postAdminDeleteArticleR :: ArticleId -> Handler Html
-postAdminDeleteArticleR articleId = do
-    runDB $ update articleId [ArticleVisible =. 0]
+getAdminShowTrashArticlesR :: Handler Html
+getAdminShowTrashArticlesR = do
+    let isTrashRoute = True
+    articles <- runDB $ E.select $ pullArticles True
+    -- articles <- runDB $ selectList [ArticleTrash ==. True] [Desc ArticleAdded]
+    adminLayout $ do
+        setTitle "Admin: Blog Posts"
+        $(widgetFile "admin/articles")
+
+-- Deleting a blog post
+postAdminTrashArticleR :: ArticleId -> Handler Html
+postAdminTrashArticleR articleId = do
+    runDB $ update articleId [ArticleTrash =. True]
     setMessage $ "Post Deleted"
+    redirect AdminShowArticlesR
+    
+-- Unpublish the blog post
+postAdminUnpublishArticleR :: ArticleId -> Handler Html
+postAdminUnpublishArticleR articleId = do
+    runDB $ update articleId [ArticleVisible =. False]
+    setMessage $ "Post Unpublished"
+    redirect AdminShowArticlesR   
+
+-- Publish the blog post
+postAdminPublishArticleR :: ArticleId -> Handler Html
+postAdminPublishArticleR articleId = do
+    runDB $ update articleId [ArticleVisible =. True]
+    setMessage $ "Post Published"
     redirect AdminShowArticlesR
 
