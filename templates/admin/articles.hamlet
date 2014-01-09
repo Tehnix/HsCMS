@@ -10,7 +10,7 @@
             <i .icon-search></i>
         <div .clear>
         <div .extra-padding>
-        $forall (Entity articleId article, Entity userId user) <- articles
+        $forall (Entity articleId article, Entity _ user) <- articles
             <div :not (articleVisible article):.unpublished.list-item>
                 <div .picture>
                     ...

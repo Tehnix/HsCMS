@@ -21,6 +21,7 @@ import Yesod.Core.Types (Logger)
 
 -- Custom imports
 import Data.Text (pack, unpack)
+import Data.Monoid ((<>))
 
 -- | The site argument for your application. This can be a good place to
 -- keep settings and values requiring initialization before your application
@@ -186,19 +187,19 @@ instance YesodBreadcrumbs App where
     breadcrumb AdminNewArticleR = return ("New Article", Just AdminDashboardR)
     breadcrumb (AdminUpdateArticleR articleId) = do
         article <- runDB $ get404 articleId
-        crumb <- return $ pack $ "Article: " ++ (unpack (articleTitle article))
+        crumb <- return $ "Article: " <> (articleTitle article)
         return (crumb, Just AdminDashboardR)
     breadcrumb (AdminTrashArticleR articleId) = do
         article <- runDB $ get404 articleId
-        crumb <- return $ pack $ "Trashed: " ++ (unpack (articleTitle article))
+        crumb <- return $ "Trashed: " <> (articleTitle article)
         return (crumb, Just AdminDashboardR)
     breadcrumb (AdminUnpublishArticleR articleId) = do
         article <- runDB $ get404 articleId
-        crumb <- return $ pack $ "Unpublish: " ++ (unpack (articleTitle article))
+        crumb <- return $ "Unpublish: " <> (articleTitle article)
         return (crumb, Just AdminDashboardR)
     breadcrumb (AdminPublishArticleR articleId) = do
         article <- runDB $ get404 articleId
-        crumb <- return $ pack $ "Publish: " ++ (unpack (articleTitle article))
+        crumb <- return $ "Publish: " <> (articleTitle article)
         return (crumb, Just AdminDashboardR)
     
     -- These pages never call breadcrumb

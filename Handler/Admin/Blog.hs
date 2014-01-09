@@ -1,6 +1,6 @@
 {-# LANGUAGE TupleSections, OverloadedStrings #-}
 module Handler.Admin.Blog where
-    
+
 import Import
 import Yesod.Auth
 import Data.Time
@@ -23,14 +23,14 @@ pullArticles trash = E.from $ \(a, u) -> do
 -- The view showing the list of articles
 getAdminShowArticlesR :: Handler Html
 getAdminShowArticlesR = do
-    let isTrashRoute = False 
+    let isTrashRoute = False
     articles <- runDB $ E.select $ pullArticles False
     -- articles <- runDB $ selectList [ArticleTrash ==. False] [Desc ArticleAdded]
     adminLayout $ do
         setTitle "Admin: Blog Posts"
         $(widgetFile "admin/articles")
-             
--- The form page for posting a new blog post 
+
+-- The form page for posting a new blog post
 getAdminNewArticleR :: Handler Html
 getAdminNewArticleR = do
     formroute <- return $ AdminNewArticleR
@@ -38,7 +38,6 @@ getAdminNewArticleR = do
     adminLayout $ do
         setTitle "Admin: New Post"
         $(widgetFile "admin/create-article")
-
 
 -- Handling the new posted blog post
 postAdminNewArticleR :: Handler Html
@@ -53,11 +52,11 @@ postAdminNewArticleR = do
     case publish of
         Nothing -> do
             articleId <- runDB $ insert $ Article title mdContent htmlContent wordCount added userId False False
-            setMessage $ "Post Saved"
+            setMessage $ "Saved Post: " <> (toHtml title)
             redirect (AdminUpdateArticleR articleId)
         Just _ -> do
             _ <- runDB $ insert $ Article title mdContent htmlContent wordCount added userId True False
-            setMessage $ "Post Created"
+            setMessage $ "Created Post: " <> (toHtml title)
             redirect AdminShowArticlesR
 
 -- The form page for updating an existing blog post
@@ -81,18 +80,18 @@ postAdminUpdateArticleR articleId = do
     wordCount <- runInputPost $ ireq intField "form-wordcount-field"
     publish <- runInputPost $ iopt boolField "form-publish"
     unpublish <- runInputPost $ iopt boolField "form-unpublish"
-    publishStatus <- case unpublish of 
+    publishStatus <- case unpublish of
         Nothing -> return True
         Just _ -> return False
     case publish of
         Nothing -> do
             runDB $ update articleId [ArticleTitle =. title, ArticleMdContent =. mdContent, ArticleHtmlContent =. htmlContent, ArticleWordCount =. wordCount]
-            setMessage $ "Post Saved"
+            setMessage $ "Saved Post: " <> (toHtml title)
             redirect (AdminUpdateArticleR articleId)
         Just _ -> do
             runDB $ update articleId [ArticleVisible =. publishStatus, ArticleTitle =. title, ArticleMdContent =. mdContent, ArticleHtmlContent =. htmlContent, ArticleWordCount =. wordCount]
-            if publishStatus then setMessage $ "Post Published"
-                else setMessage $ "Post Unpublished"
+            if publishStatus then setMessage $ "Published Post: " <> (toHtml title)
+                else setMessage $ "Unpublished Post: " <> (toHtml title)
             redirect AdminShowArticlesR
 
 getAdminShowTrashArticlesR :: Handler Html
@@ -108,20 +107,23 @@ getAdminShowTrashArticlesR = do
 postAdminTrashArticleR :: ArticleId -> Handler Html
 postAdminTrashArticleR articleId = do
     runDB $ update articleId [ArticleTrash =. True]
-    setMessage $ "Post Deleted"
+    article <- runDB $ get404 articleId
+    setMessage $ "Deleted Post: " <> (toHtml (articleTitle article))
     redirect AdminShowArticlesR
-    
+
 -- Unpublish the blog post
 postAdminUnpublishArticleR :: ArticleId -> Handler Html
 postAdminUnpublishArticleR articleId = do
     runDB $ update articleId [ArticleVisible =. False]
-    setMessage $ "Post Unpublished"
-    redirect AdminShowArticlesR   
+    article <- runDB $ get404 articleId
+    setMessage $ "Unpublished Post: " <> (toHtml (articleTitle article))
+    redirect AdminShowArticlesR
 
 -- Publish the blog post
 postAdminPublishArticleR :: ArticleId -> Handler Html
 postAdminPublishArticleR articleId = do
     runDB $ update articleId [ArticleVisible =. True]
-    setMessage $ "Post Published"
+    article <- runDB $ get404 articleId
+    setMessage $ "Published Post: " <> (toHtml (articleTitle article))
     redirect AdminShowArticlesR
 

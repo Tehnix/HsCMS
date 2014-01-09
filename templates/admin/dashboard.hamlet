@@ -9,7 +9,7 @@
             <div .widget-title.red>
                 Author Statistics
             <div .widget-content>
-                $forall (Entity userId user, count) <- postCount
+                $forall (Entity _ user, count) <- postCount
                     #{userIdent user} : #{show count}
 
     <div #second-row>

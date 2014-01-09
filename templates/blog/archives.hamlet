@@ -13,7 +13,7 @@ $else
                     <th .published>
                         Published
             <tbody>
-                $forall (Entity articleId article, Entity userId user) <- articles
+                $forall (Entity articleId article, Entity _ _) <- articles
                     <tr>
                         <td .title>
                             <a .link href=@{ArticleR articleId}>
