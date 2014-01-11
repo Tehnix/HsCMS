@@ -1,9 +1,9 @@
 Only google auth is used throughout the system, and therefore a google account is needed to use the admin facilities.
 
-## Settings ##
+### Settings ###
 There are several settings values that allow you to customize the system.
 
-### Required ###
+#### Required ####
 <pre>
     admins: ["example@gmail.com", "otheradmin@gmail.com"]
 </pre>
@@ -16,7 +16,7 @@ The `admins` settings is a list of all the emails that are allowed in the admin 
 __(NOT WORKING YET)__ The `theme` setting allows you to use your own custom theme for the front-end, instead of the prepackaged ones. To make a new theme, place a folder at `templates/theme/your_theme_name/` and change the theme value to `your_theme_name`. This assumes that you've implemented all the files that are used (the compiler will tell you if some are missing).
 
 
-### Optional ###
+#### Optional ####
 <pre>
     disqus: your_disqus_shortname
 </pre>
