@@ -12,9 +12,11 @@ cabal-dev/
 cabal.sandbox.config
 .cabal-sandbox/
 *.sqlite3
+config/settings.yml
 
 # Auto generated files
 *.swp
 ._*
+*._*
 *.DS_Store
 config/client_session_key.aes
