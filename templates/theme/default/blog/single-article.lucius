@@ -21,4 +21,9 @@
     .article-body {
         margin-bottom: 10px;
     }
+    #disqus_thread {
+        margin-top: 70px;
+    }
 }
+
+

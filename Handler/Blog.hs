@@ -3,19 +3,26 @@ module Handler.Blog where
 
 import Import
 import Yesod.Auth
+import Yesod.Default.Config (appExtra)
 import Data.Time
 import System.Locale (defaultTimeLocale)
 import qualified Database.Esqueleto as E
 
+get404' key = do
+    mres <- runDB $ get key
+    case mres of
+        Nothing -> notFound
+        Just res -> return res
 
 getArticleR :: ArticleId -> Handler Html
 getArticleR articleId = do
+    master <- getYesod
     article <- runDB $ get404 articleId
     if not (articleVisible article)
-        then notFound 
+        then notFound
         else defaultLayout $ do
             setTitle $ toHtml $ articleTitle article
-            $(widgetFile "blog/single-article")
+            $(widgetFile "theme/default/blog/single-article")
 
 -- Fetch all articles with their author info
 pullArticles :: Handler [(Entity Article, Entity User)]
@@ -32,7 +39,7 @@ getArticlesR = do
     articles <- pullArticles
     defaultLayout $ do
         setTitle "Blog"
-        $(widgetFile "blog/articles")
+        $(widgetFile "theme/default/blog/articles")
 
 getArchivesR :: Handler Html
 getArchivesR = do
@@ -41,7 +48,7 @@ getArchivesR = do
     articles <- pullArticles
     defaultLayout $ do
         setTitle "Archives"
-        $(widgetFile "blog/archives")
+        $(widgetFile "theme/default/blog/archives")
 
 getAuthorR :: UserId -> Handler Html
 getAuthorR author = do
@@ -50,5 +57,5 @@ getAuthorR author = do
     articles <- pullArticles
     defaultLayout $ do
         setTitle "Blog"
-        $(widgetFile "blog/articles")
+        $(widgetFile "theme/default/blog/articles")
 

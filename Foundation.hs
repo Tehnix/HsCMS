@@ -104,7 +104,7 @@ instance Yesod App where
 
     -- The page to be redirected to when authentication is required.
     authRoute _ = Just $ AuthR LoginR
-    
+
     -- Require admin priviliges
     isAuthorized AdminDashboardR _ = isAdmin
     isAuthorized AdminShowArticlesR _ = isAdmin
@@ -165,7 +165,7 @@ instance YesodAuth App where
     authHttpManager = httpManager
     -- Overwrite the login handler
     loginHandler = lift $ loginLayout $ do
-        $(widgetFile "pages/login")
+        $(widgetFile "theme/default/pages/login")
 
 instance YesodBreadcrumbs App where
     -- Front-end breadcrumbs
@@ -179,7 +179,7 @@ instance YesodBreadcrumbs App where
     breadcrumb (ArticleR articleId) = do
         article <- runDB $ get404 articleId
         return (articleTitle article, Just ArticlesR)
-    
+
     -- Admin panel breadcrumbs
     breadcrumb AdminDashboardR = return ("Dashboard", Nothing)
     breadcrumb AdminShowArticlesR = return ("Articles", Just AdminDashboardR)
@@ -201,7 +201,7 @@ instance YesodBreadcrumbs App where
         article <- runDB $ get404 articleId
         crumb <- return $ "Publish: " <> (articleTitle article)
         return (crumb, Just AdminDashboardR)
-    
+
     -- These pages never call breadcrumb
     breadcrumb FaviconR = return ("", Nothing)
     breadcrumb StaticR{} = return ("", Nothing)
@@ -247,7 +247,7 @@ isAdmin = do
   mauth <- maybeAuth
   case mauth of
       Nothing -> return AuthenticationRequired
-      Just (Entity _ user) 
+      Just (Entity _ user)
           | userIdent user `elem` extraAdmins extra -> return Authorized
           | otherwise                               -> return AuthenticationRequired
 

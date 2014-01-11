@@ -34,7 +34,7 @@
                     <div .content.hide>
                         #{articleHtmlContent article}
                     <footer>
-                        by 
+                        by
                         <span .author>
                             #{userIdent user}
                 <div .right-arrow>
