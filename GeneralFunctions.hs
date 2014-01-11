@@ -8,7 +8,7 @@ module GeneralFunctions where
 import           Prelude              as Import hiding (head, init, last, readFile, tail, writeFile)
 import           Yesod                as Import hiding (Route (..))
 -- import           Control.Applicative  as Import (pure, (<$>), (<*>))
-import           Data.Text            as Import (Text, append, pack, unpack, toLower)
+import           Data.Text            as Import (Text, pack, unpack, toLower)
 import           Foundation           as Import
 import           Model                as Import
 import           Settings             as Import
@@ -29,7 +29,6 @@ import Yesod.Default.Config (appExtra)
 import Data.Digest.Pure.MD5
 import Data.ByteString.Lazy.UTF8 as L
 import qualified Prelude as P
-import Data.Monoid ((<>))
 
 
 -- themeFile :: Text -> Text

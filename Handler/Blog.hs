@@ -8,12 +8,8 @@ import Data.Time
 import System.Locale (defaultTimeLocale)
 import qualified Database.Esqueleto as E
 
-get404' key = do
-    mres <- runDB $ get key
-    case mres of
-        Nothing -> notFound
-        Just res -> return res
 
+-- Fetch a specific article
 getArticleR :: ArticleId -> Handler Html
 getArticleR articleId = do
     master <- getYesod

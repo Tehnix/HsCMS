@@ -79,6 +79,9 @@ library
                  , pureMD5
                  , old-locale
                  , time
+                 , HTTP
+                 , network
+                 , blaze-html
 
 executable         HsCMS
     if flag(library-only)

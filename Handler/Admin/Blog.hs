@@ -4,15 +4,48 @@ module Handler.Admin.Blog where
 import Import
 import Yesod.Auth
 import Data.Time
+import Data.Text (unpack)
 import System.Locale (defaultTimeLocale)
 import qualified Database.Esqueleto as E
+import Text.Blaze.Html.Renderer.Text (renderHtml)
+import qualified Data.Text.Lazy as B
+import qualified Network.HTTP as HTTP
+import Network.URI (parseURI)
 
 
--- import Data.Maybe (fromJust)
--- #{userIdent user} <-- using userData in hamlet
--- #{articleAuthor article} <-- the original one
--- userId <- requireAuthId
--- Entity _ user <- runDB $ selectFirst [UserId ==. userId] [] >>= return.fromJust
+-- https://gist.github.com/caspyin/2288960 http://developer.github.com/v3/gists/ http://developer.github.com/v3/auth/
+-- Perform a HTTP POST request
+submitPostRequest url githubKey body =
+  case parseURI url of
+    Nothing -> return "URL Syntax Error"
+    Just uri -> HTTP.simpleHTTP rq >>= HTTP.getResponseBody
+      where
+        rq = HTTP.Request
+             { HTTP.rqURI = uri
+             , HTTP.rqMethod = HTTP.POST
+             , HTTP.rqHeaders = [ HTTP.Header HTTP.HdrContentType "application/x-www-form-urlencoded"
+                           , HTTP.Header HTTP.HdrUserAgent HTTP.defaultUserAgent
+                           , HTTP.Header HTTP.HdrContentLength (show (length body))
+                           , HTTP.Header (HTTP.HdrCustom "x-oauth-basic") githubKey
+                           ]
+             , HTTP.rqBody = body
+             }
+
+-- Create a gist
+createGist body = do
+    extra <- getExtra
+    res <- case (extraGithubKey extra) of
+        Nothing -> return "URL Syntax Error"
+        Just gkey -> return $ submitPostRequest "https://api.github.com/gists" (unpack gkey) body
+    return res
+
+-- Update a gist from a given id
+updateGist gistId body = do
+    extra <- getExtra
+    res <- case (extraGithubKey extra) of
+        Nothing -> return "URL Syntax Error"
+        Just gkey -> return $ submitPostRequest ("https://api.github.com/gists" ++ gistId) (unpack gkey) body
+    return res
 
 -- Fetch all articles with their author info
 pullArticles trash = E.from $ \(a, u) -> do
@@ -55,6 +88,7 @@ postAdminNewArticleR = do
             setMessage $ "Saved Post: " <> (toHtml title)
             redirect (AdminUpdateArticleR articleId)
         Just _ -> do
+            res <- return $ createGist $ "{'description': '" ++ (unpack title) ++ "', 'public': 'true', 'files': {'" ++ (unpack title) ++ ".md': {'content': '" ++ (B.unpack (renderHtml mdContent)) ++ "'}}"
             _ <- runDB $ insert $ Article title mdContent htmlContent wordCount added userId True False
             setMessage $ "Created Post: " <> (toHtml title)
             redirect AdminShowArticlesR
