@@ -12,7 +12,7 @@ cabal-dev/
 cabal.sandbox.config
 .cabal-sandbox/
 *.sqlite3
-config/settings.yml
+
 
 # Auto generated files
 *.swp
