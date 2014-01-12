@@ -82,6 +82,7 @@ library
                  , HTTP
                  , network
                  , blaze-html
+                 , http-types
 
 executable         HsCMS
     if flag(library-only)

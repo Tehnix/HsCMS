@@ -8,43 +8,51 @@ import Data.Text (unpack)
 import System.Locale (defaultTimeLocale)
 import qualified Database.Esqueleto as E
 import Text.Blaze.Html.Renderer.Text (renderHtml)
-import qualified Data.Text.Lazy as B
-import qualified Network.HTTP as HTTP
-import Network.URI (parseURI)
+import qualified Data.Text.Lazy as TL
+
+import qualified Network.HTTP.Conduit as HTTP
+import qualified Data.ByteString as BS
+import qualified Data.ByteString.Lazy as BL
+import qualified Network.HTTP.Types.Header as HT
+import Data.ByteString.Internal (unpackBytes)
+import qualified Data.ByteString.Char8 as C
+import GHC.Word (Word8)
 
 
--- https://gist.github.com/caspyin/2288960 http://developer.github.com/v3/gists/ http://developer.github.com/v3/auth/
--- Perform a HTTP POST request
-submitPostRequest :: String -> String -> String -> IO String
-submitPostRequest url githubKey body =
-  case parseURI url of
-    Nothing -> return "URL Syntax Error"
-    Just uri -> HTTP.simpleHTTP rq >>= HTTP.getResponseBody
-      where
-        rq = HTTP.Request
-             { HTTP.rqURI = uri
-             , HTTP.rqMethod = HTTP.POST
-             , HTTP.rqHeaders = [ HTTP.Header HTTP.HdrContentType "application/x-www-form-urlencoded"
-                           , HTTP.Header HTTP.HdrUserAgent HTTP.defaultUserAgent
-                           , HTTP.Header HTTP.HdrContentLength (show (length body))
-                           , HTTP.Header (HTTP.HdrCustom "x-oauth-basic") githubKey
-                           ]
-             , HTTP.rqBody = body
-             }
+testingGist = False
+
+strToWord8s :: String -> [Word8]
+strToWord8s = unpackBytes . C.pack 
+
+submitPostRequest :: (MonadIO m, MonadBaseControl IO m) => String -> String -> String -> m BL.ByteString
+submitPostRequest urlString githubKey body =
+  case HTTP.parseUrl urlString of
+    Nothing -> return $ "URL Syntax Error"
+    Just initReq -> HTTP.withManager $ \manager -> do
+        let customHeader = if testingGist then ("x-oauth-basic", "TEST!" ) else ("x-oauth-basic", (BS.pack (strToWord8s githubKey)) )
+        let req = initReq { HTTP.secure = not testingGist -- Turn on https
+                           , HTTP.method = "POST"
+                           , HTTP.requestHeaders = [customHeader, ("User-Agent", "HsCMS")]
+                           , HTTP.requestBody = HTTP.RequestBodyBS (BS.pack (strToWord8s body))
+                           }
+        --let req = (flip HTTP.urlEncodedBody) req' $ [ ("", (BS.pack (strToWord8s body))) ]
+        res <- HTTP.httpLbs req manager
+        return $ HTTP.responseBody res
 
 -- Create a gist
-createGist :: Maybe Text -> String -> IO String
+createGist :: (MonadIO m, MonadBaseControl IO m) => Maybe Text -> String -> m BL.ByteString
 createGist githubKey body = do
-    case githubKey of
-        Nothing -> return "URL Syntax Error"
-        Just gkey -> submitPostRequest "https://api.github.com/gists" (unpack gkey) body
+   case githubKey of
+       Nothing -> return $ "URL Syntax Error"
+       Just gkey -> if testingGist then submitPostRequest "http://www.posttestserver.com/post.php?dir=Testing" (unpack gkey) body
+           else submitPostRequest "https://api.github.com/gists" (unpack gkey) body
 
 -- Update a gist from a given id
-updateGist :: Maybe Text -> Int -> String -> IO String
+updateGist :: (MonadIO m, MonadBaseControl IO m) => Maybe Text -> String -> String -> m BL.ByteString
 updateGist githubKey gistId body = do
-    case githubKey of
-        Nothing -> return "URL Syntax Error"
-        Just gkey -> submitPostRequest ("https://api.github.com/gists" ++ (show gistId)) (unpack gkey) body
+   case githubKey of
+       Nothing -> return $ "URL Syntax Error"
+       Just gkey -> submitPostRequest ("https://api.github.com/gists/" ++ gistId) (unpack gkey) body
 
 -- Fetch all articles with their author info
 pullArticles trash = E.from $ \(a, u) -> do
@@ -88,8 +96,8 @@ postAdminNewArticleR = do
             redirect (AdminUpdateArticleR articleId)
         Just _ -> do
             extra <- getExtra
-            res <- return $ createGist (extraGithubKey extra) $ "{'description': '" ++ (unpack title) ++ "', 'public': 'true', 'files': {'" ++ (unpack title) ++ ".md': {'content': '" ++ (B.unpack (renderHtml mdContent)) ++ "'}}"
-            liftIO $ res >>= print -- DEBUGGING!
+            res <- createGist (extraGithubKey extra) $ "{\"description\": \"" ++ (unpack title) ++ "\", \"public\": \"true\", \"files\": {\"" ++ (unpack title) ++ ".md\": {\"content\": \"" ++ (TL.unpack (renderHtml mdContent)) ++ "\"}}"
+            liftIO $ BL.putStrLn res -- DEBUGGING!
             _ <- runDB $ insert $ Article title mdContent htmlContent wordCount added userId Nothing True False
             setMessage $ "Created Post: " <> (toHtml title)
             redirect AdminShowArticlesR
