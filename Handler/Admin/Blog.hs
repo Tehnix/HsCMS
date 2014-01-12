@@ -15,6 +15,7 @@ import Network.URI (parseURI)
 
 -- https://gist.github.com/caspyin/2288960 http://developer.github.com/v3/gists/ http://developer.github.com/v3/auth/
 -- Perform a HTTP POST request
+submitPostRequest :: String -> String -> String -> IO String
 submitPostRequest url githubKey body =
   case parseURI url of
     Nothing -> return "URL Syntax Error"
@@ -32,20 +33,18 @@ submitPostRequest url githubKey body =
              }
 
 -- Create a gist
-createGist body = do
-    extra <- getExtra
-    res <- case (extraGithubKey extra) of
+createGist :: Maybe Text -> String -> IO String
+createGist githubKey body = do
+    case githubKey of
         Nothing -> return "URL Syntax Error"
-        Just gkey -> return $ submitPostRequest "https://api.github.com/gists" (unpack gkey) body
-    return res
+        Just gkey -> submitPostRequest "https://api.github.com/gists" (unpack gkey) body
 
 -- Update a gist from a given id
-updateGist gistId body = do
-    extra <- getExtra
-    res <- case (extraGithubKey extra) of
+updateGist :: Maybe Text -> Int -> String -> IO String
+updateGist githubKey gistId body = do
+    case githubKey of
         Nothing -> return "URL Syntax Error"
-        Just gkey -> return $ submitPostRequest ("https://api.github.com/gists" ++ gistId) (unpack gkey) body
-    return res
+        Just gkey -> submitPostRequest ("https://api.github.com/gists" ++ (show gistId)) (unpack gkey) body
 
 -- Fetch all articles with their author info
 pullArticles trash = E.from $ \(a, u) -> do
@@ -84,12 +83,14 @@ postAdminNewArticleR = do
     userId <- requireAuthId
     case publish of
         Nothing -> do
-            articleId <- runDB $ insert $ Article title mdContent htmlContent wordCount added userId False False
+            articleId <- runDB $ insert $ Article title mdContent htmlContent wordCount added userId Nothing False False
             setMessage $ "Saved Post: " <> (toHtml title)
             redirect (AdminUpdateArticleR articleId)
         Just _ -> do
-            res <- return $ createGist $ "{'description': '" ++ (unpack title) ++ "', 'public': 'true', 'files': {'" ++ (unpack title) ++ ".md': {'content': '" ++ (B.unpack (renderHtml mdContent)) ++ "'}}"
-            _ <- runDB $ insert $ Article title mdContent htmlContent wordCount added userId True False
+            extra <- getExtra
+            res <- return $ createGist (extraGithubKey extra) $ "{'description': '" ++ (unpack title) ++ "', 'public': 'true', 'files': {'" ++ (unpack title) ++ ".md': {'content': '" ++ (B.unpack (renderHtml mdContent)) ++ "'}}"
+            liftIO $ res >>= print -- DEBUGGING!
+            _ <- runDB $ insert $ Article title mdContent htmlContent wordCount added userId Nothing True False
             setMessage $ "Created Post: " <> (toHtml title)
             redirect AdminShowArticlesR
 
@@ -108,6 +109,7 @@ getAdminUpdateArticleR articleId = do
 -- Handling the updated blog post
 postAdminUpdateArticleR :: ArticleId -> Handler Html
 postAdminUpdateArticleR articleId = do
+    dbarticle <- runDB $ get404 articleId
     title <- runInputPost $ ireq textField "form-title-field"
     mdContent <- runInputPost $ ireq htmlField "form-mdcontent-field"
     htmlContent <- runInputPost $ ireq htmlField "form-htmlcontent-field"
@@ -117,6 +119,7 @@ postAdminUpdateArticleR articleId = do
     publishStatus <- case unpublish of
         Nothing -> return True
         Just _ -> return False
+    -- res <- return $ createGist $ "{'description': '" ++ (unpack title) ++ "', 'files': {'" ++ (unpack (articleTitle dbarticle)) ++ ".md': {'filename': '" ++ (unpack title) ++ "', 'content': '" ++ (B.unpack (renderHtml mdContent)) ++ "'}}"
     case publish of
         Nothing -> do
             runDB $ update articleId [ArticleTitle =. title, ArticleMdContent =. mdContent, ArticleHtmlContent =. htmlContent, ArticleWordCount =. wordCount]
