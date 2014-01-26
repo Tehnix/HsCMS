@@ -1,20 +1,35 @@
 {-# LANGUAGE TupleSections, OverloadedStrings, DeriveGeneric, FlexibleContexts #-}
--- | Simple access to the GitHub gist API, allowing creation and updating of gists.
+{-|
+  Simple access to some parts of the GitHub gist API, mainly creating and updating gists.
+
+  An example of creating an anonymous gist using 'createGist',
+
+  @
+  createGist Nothing $ Gist \"Description...\" True $ fromList [(\"File.md\", (GistContent \"Some Content!\" Nothing))]
+  @
+
+  And a gist tied to a user,
+   
+  @
+  createGist (Just (GitHubToken \"The token\")) $ Gist \"Description...\" True $ fromList [(\"File.md\", (GistContent \"Some Content!\" Nothing))]
+  @
+-}
 module Gist (
-      GistContent
-    , Gist
-    , GistResponse
-    , createGist
+      createGist
     , updateGist
+    , GitHubToken(..)
+    , GistContent(..)
+    , Gist(..)
+    , GistResponse(..)
   ) where
 
 import           Import
 import           Data.Monoid ((<>))
 import           Data.Text (Text, unpack, pack)
 import           Data.Text.Encoding (encodeUtf8)
-import qualified Data.ByteString as BS
-import qualified Data.ByteString.Lazy as BL
+import           Data.ByteString.Lazy (ByteString, toChunks, toStrict)
 import           Network.HTTP.Conduit
+import           Network.HTTP.Types.Header (RequestHeaders)
 import           Data.Conduit
 import           Control.Monad.IO.Class
 import           Data.Aeson
@@ -24,10 +39,15 @@ import           GHC.Generics
 import           Data.HashMap.Strict
 
 
+-- | Container for the GitHub Personal Access Token.
+data GitHubToken = GitHubToken
+    { token :: Text -- ^ The GitHub Personal Access Token.
+    } deriving (Show)
+
 -- | Container for the gist data.
 data GistContent = GistContent
-    { filename :: Maybe Text -- ^ The new filename of the gist. Only used with 'updateGist'.
-    , content :: Text        -- ^ The content of the gist.
+    { content :: Text        -- ^ The content of the gist.
+    , filename :: Maybe Text -- ^ The new filename of the gist. Only used with 'updateGist'.
     } deriving (Show, Generic)
 
 instance ToJSON GistContent
@@ -50,22 +70,22 @@ instance FromJSON GistResponse where
     parseJSON (Object v) = GistResponse <$> v .: "id"
     parseJSON _ = mzero
 
--- | Convert a lazy 'BL.ByteString' to a strict 'BS.ByteString'.
-toStrict :: BL.ByteString -> BS.ByteString
-toStrict = BS.concat . BL.toChunks
+-- | Convert the GitHub Personal Access Token to a 'x-oauth-basic' header value pair
+getTokenHeader :: GitHubToken -> RequestHeaders
+getTokenHeader (GitHubToken tk) = [("Authorization", "token " <> (encodeUtf8 tk))]
 
 {-|
-  'submitPostRequest' sends the POST request to the url parameter, and return the response as a 'BL.ByteString' wrapped in 'MonadIO' or 'MonadBaseControl IO'.
+  'submitPostRequest' sends the POST request to the url parameter, and return the response as a 'ByteString' wrapped in 'MonadIO' or 'MonadBaseControl IO'.
 -}
-submitPostRequest :: (MonadIO m, MonadBaseControl IO m) => String -> Text -> BL.ByteString -> m BL.ByteString
-submitPostRequest urlString githubKey body =
+submitPostRequest :: (MonadIO m, MonadBaseControl IO m) => String -> Maybe GitHubToken -> ByteString -> m ByteString
+submitPostRequest urlString githubToken body = do
+    let tokenHeader = maybe [] getTokenHeader githubToken
     case parseUrl urlString of
         Nothing -> return $ "URL Syntax Error"
         Just initReq -> withManager $ \manager -> do
             let req = initReq { secure = True
                               , method = "POST"
-                              , requestHeaders = [("x-oauth-basic", (encodeUtf8 githubKey))]
-                                                 <> [("User-Agent", "HsCMS")]
+                              , requestHeaders = tokenHeader <> [("User-Agent", "HsCMS")]
                               , requestBody = RequestBodyBS (toStrict body)
                               , checkStatus = \_ _ _ -> Nothing
                               }
@@ -73,29 +93,26 @@ submitPostRequest urlString githubKey body =
             return $ responseBody res
 
 {-|
-  The 'createGist' function sends a POST request to the 'https://api.github.com/gists' with the description, title and content as a JSON encoded body, and returns the id of the gist that was created.
-  If the github key supplied is 'Nothing' then it will post an anonymous gist. If there is a value, it'll use that token to tie the gist to a specific user (it assumes the github key token has gist scope).
+  Sends a POST request to the https://api.github.com/gists with the gist as a JSON encoded body, and returns the id of the gist that was created.
+  If the GitHub Personal Access Token supplied is 'Nothing' then it will post an anonymous gist. If there is a value, it'll use that token to tie the gist to a specific user (it assumes the GitHub token has gist scope).
 -}
-createGist :: (MonadIO m, MonadBaseControl IO m) => Maybe Text -> Text -> Text -> Text -> m (Maybe GistResponse)
-createGist githubKey desc title con = do
-    case githubKey of
-        Nothing -> return Nothing
-        Just gkey -> do
-            let body = encode $ toJSON $ Gist desc True (fromList [(title, GistContent Nothing con)])
-            res <- submitPostRequest "https://api.github.com/gists" gkey body
-            case (eitherDecode res) of
-                Left _ -> return Nothing
-                Right gist -> return $ Just gist
-
-
-{-|
-  The 'updateGist' function sends a POST request to the 'https://api.github.com/gists' with the description, the new title and old title (allowing title change) and content as a JSON encoded body, and returns the id of the gist that was updated.
-  Unlike 'createGist', this requires that a github key is supplied since you can't update an anonymous gist.
--}
-updateGist :: (MonadIO m, MonadBaseControl IO m) => Text -> Text -> Text -> Text -> Text -> Text -> m (Maybe GistResponse)
-updateGist githubKey gId desc oldTitle newTitle con = do
-    let body = encode $ toJSON $ Gist desc True (fromList [(oldTitle, GistContent (Just newTitle) con)])
-    res <- submitPostRequest ("https://api.github.com/gists/" ++ (unpack gId)) githubKey body
+createGist :: (MonadIO m, MonadBaseControl IO m) => Maybe GitHubToken -> Gist -> m (Maybe GistResponse)
+createGist githubToken gist = do
+    let body = encode $ toJSON gist
+    res <- submitPostRequest "https://api.github.com/gists" githubToken body
     case (eitherDecode res) of
         Left _ -> return Nothing
-        Right gist -> return $ Just gist
+        Right gistResponse -> return $ Just gistResponse
+
+{-|
+  Sends a POST request to the https://api.github.com/gists with the gist as a JSON encoded body, and returns the id of the gist that was updated.
+  Unlike 'createGist', this requires that a GitHub Personal Access Token is supplied since you can't update an anonymous gist.
+-}
+updateGist :: (MonadIO m, MonadBaseControl IO m) => GitHubToken -> Text -> Gist -> m (Maybe GistResponse)
+updateGist githubToken gId gist = do
+    let body = encode $ toJSON gist
+    let url = "https://api.github.com/gists/" ++ (unpack gId)
+    res <- submitPostRequest url (Just githubToken) body
+    case (eitherDecode res) of
+        Left _ -> return Nothing
+        Right gistResponse -> return $ Just gistResponse

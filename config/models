@@ -15,7 +15,7 @@ Article
     wordCount Int
     added UTCTime
     author UserId
-    gistId Int Maybe
+    gistId Text Maybe
     visible Bool
     trash Bool
     deriving
