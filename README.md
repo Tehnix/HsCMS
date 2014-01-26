@@ -1,6 +1,6 @@
 Only google auth is used throughout the system, and therefore a google account is needed to use the admin facilities.
 
-### Settings ###
+## Settings ##
 There are several settings values that allow you to customize the system.
 
 #### Required ####
@@ -24,6 +24,6 @@ The `disqus` setting allows you to set it to your disqus name, and, via that, in
 
 
 <pre>
-    githubKey: your_github_personal_access_key
+    githubToken: your_github_personal_access_key
 </pre>
-__(NOT WORKING YET)__ The `githubKey` setting is really a novelty feature. It allows for automatic gist creation of your blog posts, and also updates them when you update your posts, effectively giving you a history of revisions. The gist is created the first time you publish your post, and is updated everytime you update the post. It isn't deleted or hidden when if you later on unpublish your post, but is deleted when you deleted your post.
+The `githubToken` setting is really a novelty feature. It allows for automatic gist creation of your blog posts, and also updates them when you update your posts, effectively giving you a history of revisions. The gist is created the first time you publish your post, and is updated everytime you update the post. It isn't deleted or hidden if you later on unpublish your post.
