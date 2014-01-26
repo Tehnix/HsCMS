@@ -1,60 +1,29 @@
 {-# LANGUAGE TupleSections, OverloadedStrings #-}
-module Handler.Admin.Blog where
+module Handler.Admin.Blog (
+      getAdminShowArticlesR
+    , getAdminNewArticleR
+    , postAdminNewArticleR
+    , getAdminUpdateArticleR
+    , postAdminUpdateArticleR
+    , getAdminShowTrashArticlesR
+    , postAdminTrashArticleR
+    , postAdminUnpublishArticleR
+    , postAdminPublishArticleR
+  ) where
 
-import Import
-import Yesod.Auth
-import Data.Time
-import Data.Text (unpack)
-import System.Locale (defaultTimeLocale)
+import           Import
+import           Yesod.Auth
+import           Data.Time
+import           System.Locale (defaultTimeLocale)
 import qualified Database.Esqueleto as E
-import Text.Blaze.Html.Renderer.Text (renderHtml)
-import qualified Data.Text.Lazy as TL
+import qualified Database.Esqueleto.Internal.Language as EI
 
-import qualified Network.HTTP.Conduit as HTTP
-import qualified Data.ByteString as BS
-import qualified Data.ByteString.Lazy as BL
-import qualified Network.HTTP.Types.Header as HT
-import Data.ByteString.Internal (unpackBytes)
-import qualified Data.ByteString.Char8 as C
-import GHC.Word (Word8)
-
-
-testingGist = False
-
-strToWord8s :: String -> [Word8]
-strToWord8s = unpackBytes . C.pack 
-
-submitPostRequest :: (MonadIO m, MonadBaseControl IO m) => String -> String -> String -> m BL.ByteString
-submitPostRequest urlString githubKey body =
-  case HTTP.parseUrl urlString of
-    Nothing -> return $ "URL Syntax Error"
-    Just initReq -> HTTP.withManager $ \manager -> do
-        let customHeader = if testingGist then ("x-oauth-basic", "TEST!" ) else ("x-oauth-basic", (BS.pack (strToWord8s githubKey)) )
-        let req = initReq { HTTP.secure = not testingGist -- Turn on https
-                           , HTTP.method = "POST"
-                           , HTTP.requestHeaders = [customHeader, ("User-Agent", "HsCMS")]
-                           , HTTP.requestBody = HTTP.RequestBodyBS (BS.pack (strToWord8s body))
-                           }
-        --let req = (flip HTTP.urlEncodedBody) req' $ [ ("", (BS.pack (strToWord8s body))) ]
-        res <- HTTP.httpLbs req manager
-        return $ HTTP.responseBody res
-
--- Create a gist
-createGist :: (MonadIO m, MonadBaseControl IO m) => Maybe Text -> String -> m BL.ByteString
-createGist githubKey body = do
-   case githubKey of
-       Nothing -> return $ "URL Syntax Error"
-       Just gkey -> if testingGist then submitPostRequest "http://www.posttestserver.com/post.php?dir=Testing" (unpack gkey) body
-           else submitPostRequest "https://api.github.com/gists" (unpack gkey) body
-
--- Update a gist from a given id
-updateGist :: (MonadIO m, MonadBaseControl IO m) => Maybe Text -> String -> String -> m BL.ByteString
-updateGist githubKey gistId body = do
-   case githubKey of
-       Nothing -> return $ "URL Syntax Error"
-       Just gkey -> submitPostRequest ("https://api.github.com/gists/" ++ gistId) (unpack gkey) body
+import           Text.Blaze.Html.Renderer.Text (renderHtml)
+import           Data.Text.Lazy (toStrict)
+import           Gist (createGist, updateGist)
 
 -- Fetch all articles with their author info
+pullArticles :: (EI.From query expr backend (expr (Entity Article)), EI.From query expr backend (expr (Entity User))) => Bool -> query (expr (Entity Article), expr (Entity User))
 pullArticles trash = E.from $ \(a, u) -> do
     E.where_ (a E.^. ArticleAuthor E.==. u E.^. UserId E.&&. a E.^. ArticleTrash E.==. E.val trash)
     E.orderBy [E.desc (a E.^. ArticleAdded)]
@@ -96,8 +65,8 @@ postAdminNewArticleR = do
             redirect (AdminUpdateArticleR articleId)
         Just _ -> do
             extra <- getExtra
-            res <- createGist (extraGithubKey extra) $ "{\"description\": \"" ++ (unpack title) ++ "\", \"public\": \"true\", \"files\": {\"" ++ (unpack title) ++ ".md\": {\"content\": \"" ++ (TL.unpack (renderHtml mdContent)) ++ "\"}}"
-            liftIO $ BL.putStrLn res -- DEBUGGING!
+            res <- createGist (extraGithubKey extra) title title $ toStrict (renderHtml mdContent)
+            liftIO $ print res -- DEBUGGING!
             _ <- runDB $ insert $ Article title mdContent htmlContent wordCount added userId Nothing True False
             setMessage $ "Created Post: " <> (toHtml title)
             redirect AdminShowArticlesR
@@ -117,17 +86,23 @@ getAdminUpdateArticleR articleId = do
 -- Handling the updated blog post
 postAdminUpdateArticleR :: ArticleId -> Handler Html
 postAdminUpdateArticleR articleId = do
-    dbarticle <- runDB $ get404 articleId
     title <- runInputPost $ ireq textField "form-title-field"
     mdContent <- runInputPost $ ireq htmlField "form-mdcontent-field"
     htmlContent <- runInputPost $ ireq htmlField "form-htmlcontent-field"
     wordCount <- runInputPost $ ireq intField "form-wordcount-field"
     publish <- runInputPost $ iopt boolField "form-publish"
     unpublish <- runInputPost $ iopt boolField "form-unpublish"
+    -- dbarticle <- runDB $ get404 articleId
+    -- extra <- getExtra
+    -- res <- createGist (extraGithubKey extra) title title (renderHtml mdContent)
+    -- liftIO $ BL.putStrLn res -- DEBUGGING!
     publishStatus <- case unpublish of
-        Nothing -> return True
-        Just _ -> return False
-    -- res <- return $ createGist $ "{'description': '" ++ (unpack title) ++ "', 'files': {'" ++ (unpack (articleTitle dbarticle)) ++ ".md': {'filename': '" ++ (unpack title) ++ "', 'content': '" ++ (B.unpack (renderHtml mdContent)) ++ "'}}"
+        Nothing -> do
+            setMessage $ "Published Post: " <> (toHtml title)
+            return True
+        Just _ -> do
+            setMessage $ "Unpublished Post: " <> (toHtml title)
+            return False
     case publish of
         Nothing -> do
             runDB $ update articleId [ArticleTitle =. title, ArticleMdContent =. mdContent, ArticleHtmlContent =. htmlContent, ArticleWordCount =. wordCount]
@@ -135,8 +110,6 @@ postAdminUpdateArticleR articleId = do
             redirect (AdminUpdateArticleR articleId)
         Just _ -> do
             runDB $ update articleId [ArticleVisible =. publishStatus, ArticleTitle =. title, ArticleMdContent =. mdContent, ArticleHtmlContent =. htmlContent, ArticleWordCount =. wordCount]
-            if publishStatus then setMessage $ "Published Post: " <> (toHtml title)
-                else setMessage $ "Unpublished Post: " <> (toHtml title)
             redirect AdminShowArticlesR
 
 getAdminShowTrashArticlesR :: Handler Html

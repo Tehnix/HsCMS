@@ -31,12 +31,6 @@ import Data.ByteString.Lazy.UTF8 as L
 import qualified Prelude as P
 
 
--- themeFile :: Text -> Text
-themeFile f = do
-    extra <- getExtra
-    -- (extraTheme extra)
-    return $ "theme/" ++ "default" ++ "/" ++ f
-
 -- Extract a key from persistent
 extractKey :: KeyBackend backend entity -> String
 extractKey = extractKey' . unKey

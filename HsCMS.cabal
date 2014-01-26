@@ -1,5 +1,5 @@
 name:              HsCMS
-version:           0.3.0
+version:           0.4.0
 cabal-version:     >= 1.8
 build-type:        Simple
 
@@ -20,6 +20,7 @@ library
                      Settings.StaticFiles
                      Settings.Development
                      GeneralFunctions
+                     Gist
                      Handler.About
                      Handler.Blog
                      Handler.Admin.Dashboard
@@ -83,6 +84,8 @@ library
                  , network
                  , blaze-html
                  , http-types
+                 , transformers
+                 , unordered-containers
 
 executable         HsCMS
     if flag(library-only)
