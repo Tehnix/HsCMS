@@ -6,7 +6,7 @@ Default: &defaults
   admins: []
   theme: default
   #disqus: disqus_shortname_for_testing
-  #githubKey: githuh_key_with_gist_scope
+  #githubToken: githuh_personal_accesss_token_with_gist_scope
 
 Development:
   <<: *defaults
