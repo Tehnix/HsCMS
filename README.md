@@ -1,3 +1,4 @@
+# HsCMS (Haskell Content Management System)
 * [Setup](#setup)
 * [Authentication](#authentication)
 * [Deployment](#deployment)
