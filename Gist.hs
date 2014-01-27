@@ -23,28 +23,26 @@ module Gist (
     , GistResponse(..)
   ) where
 
-import           Import
-import           Data.Monoid ((<>))
-import           Data.Text (Text, unpack, pack)
-import           Data.Text.Encoding (encodeUtf8)
-import           Data.ByteString.Lazy (ByteString, toChunks, toStrict)
-import           Network.HTTP.Conduit
-import           Network.HTTP.Types.Header (RequestHeaders)
-import           Data.Conduit
-import           Control.Monad.IO.Class
-import           Data.Aeson
-import           Control.Applicative
-import           Control.Monad
-import           GHC.Generics
-import           Data.HashMap.Strict
+import Prelude hiding (head, init, last, readFile, tail, writeFile)
+import GHC.Generics (Generic)
+import Data.Text (Text, unpack)
+import Data.Text.Encoding (encodeUtf8)
+import Data.ByteString.Lazy (ByteString, toChunks, toStrict)
+import Data.HashMap.Strict
+import Data.Conduit (MonadBaseControl)
+import Data.Monoid ((<>))
+import Data.Aeson
+import Network.HTTP.Conduit
+import Network.HTTP.Types.Header (RequestHeaders)
+import Control.Monad.IO.Class (MonadIO)
+import Control.Applicative ((<$>))
+import Control.Monad (mzero)
 
 
--- | Container for the GitHub Personal Access Token.
-data GitHubToken = GitHubToken
-    { token :: Text -- ^ The GitHub Personal Access Token.
-    } deriving (Show)
+-- | The GitHub Personal Access Token.
+data GitHubToken = GitHubToken Text deriving (Show)
 
--- | Container for the gist data.
+-- | The filename and file content of a gist.
 data GistContent = GistContent
     { content :: Text        -- ^ The content of the gist.
     , filename :: Maybe Text -- ^ The new filename of the gist. Only used with 'updateGist'.
@@ -52,7 +50,7 @@ data GistContent = GistContent
 
 instance ToJSON GistContent
 
--- | Container for the gist.
+-- | The gist data and metadata.
 data Gist = Gist
     { description :: Text -- ^ The description of the gist.
     , public      :: Bool -- ^ Only used with 'createGist'. If set to 'False' the gist will be secret, else it will be public.
@@ -61,7 +59,7 @@ data Gist = Gist
 
 instance ToJSON Gist
 
--- | Container for the response returned from the GitHub API.
+-- | The response returned from the GitHub API.
 data GistResponse = GistResponse 
     { gistId :: Text -- ^ The id of the created/updated gist.
     } deriving (Show, Generic)
