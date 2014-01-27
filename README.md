@@ -1,3 +1,11 @@
+## Quick-View
+
+* [Setup](#setup)
+* [Authentication](#authentication)
+* [Deployment](#deployment)
+* [Settings](#settings)
+
+
 ## Setup
 I assume you are somewhat familiar with the [yesod](http://www.yesodweb.com) framework, and have it installed. Else you can do `cabal install yesod-platform` and `cabal install yesod-bin` to get going (or use the cabal sandbox feature).
 
@@ -7,6 +15,8 @@ From there on out, it works as a simple [yesod web app](http://www.yesodweb.com)
 
 ## Authentication
 Only google authentication is used throughout the system, and therefore a google account is needed to use the admin facilities.
+
+The reason for this is quite simply that I'd prefer not to have any login credentials or other things stored on the server, and would rather move that concern to a third-party (in this case google).
 
 ## Deployment
 The preferred method of deployment is using the tool called [keter](https://github.com/snoyberg/keter). There is included a standard `keter.yml` settings file in the root directory, same as with `settings.yml`, this needs to be copied into the `config` folder. 
