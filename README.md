@@ -13,7 +13,7 @@ The preferred method of deployment is using the tool called [keter](https://gith
 
 Alter the settings to what you need, and then you can generate a `keter` bundle `yesod keter`. You can then move this to where your `keter` service expects it to be (you can also use the `copy-to` feature in the `keter.yml` file to do this last step automatically).
 
-If you need to run `keter` alongside `nginx`, there is also a good  [guide for that here](https://github.com/yesodweb/yesod/wiki/Deploying-via-Keter-alongside-Nginx#wiki-double-proxy).
+If you need to run `keter` alongside `nginx`, there is also a good  [guide for that here](https://github.com/yesodweb/yesod/wiki/Deploying-via-Keter-alongside-Nginx).
 
 ## Settings
 There are several settings that allow you to customize the system a bit.
