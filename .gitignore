@@ -6,6 +6,9 @@ static/tmp/
 static/combined/
 deploy/
 
+# i18n messages
+messages
+
 # Development files
 .hsenv*
 yesod-devel/
