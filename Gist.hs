@@ -1,6 +1,6 @@
 {-# LANGUAGE TupleSections, OverloadedStrings, DeriveGeneric, FlexibleContexts #-}
 {-|
-  Simple access to some parts of the GitHub gist API, mainly creating and updating gists.
+  Simple access to some parts of the GitHub gist API, mainly creating and updating gists. It still requires you to create a Personal Access Token on GitHub by yourself (atleast if you want authentication to work).
 
   An example of creating an anonymous gist using 'createGist',
 
@@ -70,9 +70,9 @@ instance FromJSON GistResponse where
     parseJSON (Object v) = GistResponse <$> v .: "id"
     parseJSON _ = mzero
 
--- | Convert the GitHub Personal Access Token to a 'x-oauth-basic' header value pair
+-- | Convert the GitHub Personal Access Token to a basic authorization header
 getTokenHeader :: GitHubToken -> RequestHeaders
-getTokenHeader (GitHubToken tk) = [("Authorization", "token " <> (encodeUtf8 tk))]
+getTokenHeader (GitHubToken tk) = [("Authorization", "Basic " <> (encodeUtf8 tk))]
 
 {-|
   'submitPostRequest' sends the POST request to the url parameter, and return the response as a 'ByteString' wrapped in 'MonadIO' or 'MonadBaseControl IO'.
