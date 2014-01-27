@@ -1,13 +1,13 @@
 ### Setup
 Simply copy the `settings.yml` file into the `config` folder and then set it up following the information under [settings](#settings).
 
-From there on out, it works as a simple `Yesod` web app (it uses the scaffold structure).
+From there on out, it works as a simple [yesod web app](http://www.yesodweb.com) (it uses the [scaffold structure](http://www.yesodweb.com/book/scaffolding-and-the-site-template)).
 
 ### Authentication 
-Only google auth is used throughout the system, and therefore a google account is needed to use the admin facilities.
+Only google authentication is used throughout the system, and therefore a google account is needed to use the admin facilities.
 
 ### Settings 
-There are several settings values that allow you to customize the system.
+There are several settings that allow you to customize the system a bit.
 
 #### Required 
 <pre>
@@ -19,7 +19,9 @@ The `admins` settings is a list of all the emails that are allowed in the admin 
 <pre>
     theme: default
 </pre>
-__(NOT WORKING YET)__ The `theme` setting allows you to use your own custom theme for the front-end, instead of the prepackaged ones. To make a new theme, place a folder at `templates/theme/your_theme_name/` and change the theme value to `your_theme_name`. This assumes that you've implemented all the files that are used (the compiler will tell you if some are missing).
+__(under development)__ The `theme` setting allows you to use your own custom theme for the front-end, instead of the prepackaged ones. To make a new theme, place a folder at `templates/theme/your_theme_name/` and change the theme value to `your_theme_name`. 
+
+This assumes that you've implemented all the files that are used (the compiler will tell you if some are missing).
 
 
 #### Optional 
