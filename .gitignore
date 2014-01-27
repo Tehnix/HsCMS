@@ -4,6 +4,7 @@ dist*
 *.o
 static/tmp/
 static/combined/
+deploy/
 
 # Development files
 .hsenv*
