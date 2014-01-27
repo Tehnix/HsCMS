@@ -27,7 +27,7 @@ import Prelude hiding (head, init, last, readFile, tail, writeFile)
 import GHC.Generics (Generic)
 import Data.Text (Text, unpack)
 import Data.Text.Encoding (encodeUtf8)
-import Data.ByteString.Lazy (ByteString, toChunks, toStrict)
+import Data.ByteString.Lazy (ByteString, toStrict)
 import Data.HashMap.Strict
 import Data.Conduit (MonadBaseControl)
 import Data.Monoid ((<>))
