@@ -3,6 +3,7 @@ dist*
 *.hi
 *.o
 static/tmp/
+static/combined/
 
 # Development files
 .hsenv*
@@ -12,7 +13,9 @@ cabal-dev/
 cabal.sandbox.config
 .cabal-sandbox/
 *.sqlite3
+*.keter
 config/settings.yml
+config/keter.yml
 
 # Auto generated files
 *.swp
