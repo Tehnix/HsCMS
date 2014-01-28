@@ -40,7 +40,7 @@ import Control.Monad (mzero)
 
 
 -- | The GitHub Personal Access Token.
-data GitHubToken = GitHubToken Text deriving (Show)
+newtype GitHubToken = GitHubToken Text deriving (Show)
 
 -- | The filename and file content of a gist.
 data GistContent = GistContent
