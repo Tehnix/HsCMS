@@ -8,7 +8,7 @@
 ## Setup
 I assume you are somewhat familiar with the [yesod](http://www.yesodweb.com) framework, and have it installed. Else, you can do `cabal install yesod-platform` and `cabal install yesod-bin` to get going (or use the cabal sandbox feature).
 
-Simply copy the `settings.yml` file into the `config` folder and then set it up following the information under [settings](#settings).
+Simply copy the `config/default-settings.yml` file, rename it to `config/settings.yml` and then set it up following the information under [settings](#settings).
 
 From there on out, it works as a simple [yesod web app](http://www.yesodweb.com) (it uses the [scaffold structure](http://www.yesodweb.com/book/scaffolding-and-the-site-template)).
 
@@ -20,7 +20,7 @@ The reason for this is quite simply that I'd prefer not to have any login creden
 
 
 ## Deployment
-The preferred method of deployment is using the tool called [keter](https://github.com/snoyberg/keter). There is included a standard `keter.yml` settings file in the root directory, same as with `settings.yml`, this needs to be copied into the `config` folder. 
+The preferred method of deployment is using the tool called [keter](https://github.com/snoyberg/keter). There is included a standard `config/default-keter.yml` settings file in the root directory, same as with `config/settings.yml`, this needs to be copied and renamed to `config/keter.yml`. 
 
 Alter the settings to what you need, and then you can generate a `keter` bundle `yesod keter`. You can then move this to where your `keter` service expects it to be (you can also use the `copy-to` feature in the `keter.yml` file to do this last step automatically).
 
