@@ -20,7 +20,7 @@ import Text.Hamlet (hamletFile)
 import Yesod.Core.Types (Logger)
 
 -- Custom imports
-import Data.Text (pack, unpack)
+import Data.Text (Text, pack, unpack)
 import Data.Monoid ((<>))
 
 
@@ -146,9 +146,6 @@ instance YesodAuth App where
     authPlugins _ = [authGoogleEmail]
 
     authHttpManager = httpManager
-    -- Overwrite the login handler
-    loginHandler = lift $ loginLayout $ do
-        $(widgetFile "theme/default/pages/login")
 
 instance YesodBreadcrumbs App where
     -- Front-end breadcrumbs
@@ -205,23 +202,6 @@ getExtra = fmap (appExtra . settings) getYesod
 -- wiki:
 --
 -- https://github.com/yesodweb/yesod/wiki/Sending-email
-
--- The layout for the login page
-loginLayout :: Widget -> Handler Html
-loginLayout widget = do
-    master <- getYesod
-    mmsg <- getMessage
-    pc <- widgetToPageContent $ do
-        $(combineStylesheets 'StaticR
-            [ css_normalize_css
-            , css_bootstrap_css
-            , css_fonts_css
-            ])
-        $(combineScripts 'StaticR
-            [ js_jquery_js
-            ])
-        $(widgetFile "layouts/login-layout")
-    giveUrlRenderer $(hamletFile "templates/layouts/login-layout-wrapper.hamlet")
 
 -- Check if a users email is present in the admins list in settings
 isAdmin :: Handler AuthResult

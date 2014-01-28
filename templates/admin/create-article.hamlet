@@ -3,34 +3,37 @@
     <textarea #form-htmlcontent-field.hide name="form-htmlcontent-field">
     <div #form-title>
         $maybe article <- marticle
-            <input #form-title-field name="form-title-field" type="text" placeholder="The post title" required="" value="#{articleTitle article}">
+            <input #form-title-field name="form-title-field" type="text" placeholder="_{MsgArticleTitlePlaceholder}" required="" value="#{articleTitle article}">
         $nothing
-            <input #form-title-field name="form-title-field" type="text" placeholder="The post title" required="" value="">
+            <input #form-title-field name="form-title-field" type="text" placeholder="_{MsgArticleTitlePlaceholder}" required="" value="">
     <div #permalink>
-        <b>Permalink</b> http://domain.com/article/<b><span id="permalink-text">The-post-title</span></b>/
+        <b>Permalink</b> http://domain.com/article/<b><span id="permalink-text">_{MsgDashedArticleTitle}</span></b>/
     
     <div #content-preview-container>
         <div #form-content>
             <div .padding>
                 <div .left.red>
-                    Markdown
+                    _{MsgMarkdown}
                 <div .right.red>
                     <b>?
                 <div .clear>
                 <hr>
                 $maybe article <- marticle
-                    <textarea #form-mdcontent-field name="form-mdcontent-field" placeholder="Some nice content to go with that title, ey ;)...">
+                    <textarea #form-mdcontent-field name="form-mdcontent-field" placeholder="_{MsgContentPlaceholder}">
                         #{articleMdContent article}
                 $nothing
-                    <textarea #form-mdcontent-field name="form-mdcontent-field" placeholder="Some nice content to go with that title, ey ;)...">
+                    <textarea #form-mdcontent-field name="form-mdcontent-field" placeholder="_{MsgContentPlaceholder}">
         <div #form-content-preview>
             <div .padding>
                 <div .left.red>
-                    Preview
+                    _{MsgPreview}
                 <div .right.red>
                     <span #word-count>
                         0
-                    words
+                    <span #word-count-plural>
+                        _{MsgLowerWords}
+                    <span #word-count-single.hide>
+                        _{MsgLowerWord}
                 <div .clear>
                 <hr>
                 <div #preview-content-container>
@@ -41,11 +44,11 @@
                     <input type="checkbox" value="true" name="form-publish" #form-publish-box .hide>
                     <input type="checkbox" value="true" name="form-unpublish" #form-unpublish-box .hide>
                     $maybe article <- marticle
-                        <input #form-save-btn .btn.btn-primary.extra-padding type="submit" value="Update">
+                        <input #form-save-btn .btn.btn-primary.extra-padding type="submit" value="_{MsgUpdate}">
                         $if (articleVisible article)
-                            <input #form-unpublish-btn .btn.btn-danger type="submit" value="Unpublish">
+                            <input #form-unpublish-btn .btn.btn-danger type="submit" value="_{MsgUnpublish}">
                         $else
                             <input #form-publish-btn .btn.btn-success type="submit" value="Publish">
                     $nothing
-                        <input #form-save-btn .btn.btn-primary.extra-padding type="submit" value="Save Draft">
-                        <input #form-publish-btn .btn.btn-success type="submit" value="Publish">
+                        <input #form-save-btn .btn.btn-primary.extra-padding type="submit" value="_{MsgSaveDraft}">
+                        <input #form-publish-btn .btn.btn-success type="submit" value="_{MsgPublish}">

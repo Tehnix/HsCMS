@@ -3,18 +3,18 @@
         <img id="user-image" src="//www.gravatar.com/avatar/#{emailHash}?s=68">
     <ul #navigation>
         <li>
-            <a href=@{AdminDashboardR}>Dashboard
+            <a href=@{AdminDashboardR}>_{MsgDashboard}
         <li>
-            <a href=@{AdminShowArticlesR}>Posts
+            <a href=@{AdminShowArticlesR}>_{MsgArticles}
         <li>
-            <a href=@{AdminNewArticleR}>New Post
+            <a href=@{AdminNewArticleR}>_{MsgNewArticle}
         <li>
-            <a href="#">Settings
+            <a href="#">_{MsgSettings}
         <li>
-            <a href=@{AdminShowTrashArticlesR}>Trash
+            <a href=@{AdminShowTrashArticlesR}>_{MsgTrash}
     <ul #bottom-navigation>
         <li>
-            <a href=@{AuthR LogoutR}>Logout
+            <a href=@{AuthR LogoutR}>_{MsgLogout}
     
     
 <div #main role="main">

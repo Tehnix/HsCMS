@@ -6,7 +6,9 @@ $(function(){
         mdTextArea = $("#form-mdcontent-field"),
         htmlTextArea = $("#form-htmlcontent-field"),
         wordCount = $("#form-wordcount-field"),
-        wordCountDisplay = $("#word-count"),
+        wordCountDisplay = $("#word-count")
+        wordCountDisplaySingle = $("#word-count-single")
+        wordCountDisplayPlural = $("#word-count-plural"),
         permalinkText = $("#permalink-text");
     
     var titleFieldChanged = function() {
@@ -16,13 +18,20 @@ $(function(){
         previewContainer.html(converter.makeHtml(mdTextArea.val()));
         htmlTextArea.val(converter.makeHtml(mdTextArea.val()));
         
-        var previewContainerText = previewContainer.text();
+        var previewContainerText = $.trim(previewContainer.text());
         var count = previewContainerText.split(/[\s\.\(\),]+/).length;
         if (previewContainerText == "") {
             count = 0;
         }
         wordCount.val(count);
         wordCountDisplay.html(count);
+        if (count != 1) {
+            wordCountDisplaySingle.hide();
+            wordCountDisplayPlural.show();
+        } else {
+            wordCountDisplaySingle.show();
+            wordCountDisplayPlural.hide();
+        }
     }
     titleFieldChanged();
     mdTextAreaChanged();

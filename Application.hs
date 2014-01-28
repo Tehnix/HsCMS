@@ -19,7 +19,7 @@ import qualified Database.Persist
 import Database.Persist.Sql (runMigration)
 import Network.HTTP.Conduit (newManager, conduitManagerSettings)
 import Control.Monad.Logger (runLoggingT)
-import System.Log.FastLogger (newLoggerSet, defaultBufSize)
+import System.Log.FastLogger (newStdoutLoggerSet, defaultBufSize)
 import Network.Wai.Logger (clockDateCacher)
 import Data.Default (def)
 import Yesod.Core.Types (loggerSet, Logger (Logger))
@@ -68,7 +68,7 @@ makeFoundation conf = do
               Database.Persist.applyEnv
     p <- Database.Persist.createPoolConfig (dbconf :: Settings.PersistConf)
 
-    loggerSet' <- newLoggerSet defaultBufSize Nothing
+    loggerSet' <- newStdoutLoggerSet defaultBufSize
     (getter, _) <- clockDateCacher
 
     let logger = Yesod.Core.Types.Logger loggerSet' getter

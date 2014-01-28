@@ -36,7 +36,7 @@ getAdminShowArticlesR = do
     articles <- runDB $ E.select $ pullArticles False
     -- articles <- runDB $ selectList [ArticleTrash ==. False] [Desc ArticleAdded]
     adminLayout $ do
-        setTitle "Admin: Blog Posts"
+        setTitleI MsgTitleAdminBlogArticles
         $(widgetFile "admin/articles")
 
 -- The form page for posting a new blog post
@@ -45,7 +45,7 @@ getAdminNewArticleR = do
     formroute <- return $ AdminNewArticleR
     marticle <- return $ Nothing
     adminLayout $ do
-        setTitle "Admin: New Post"
+        setTitleI MsgTitleAdminNewArticle
         $(widgetFile "admin/create-article")
 
 -- Handling the new posted blog post
@@ -63,10 +63,10 @@ postAdminNewArticleR = do
     case publish of
         Nothing -> do
             articleId <- runDB $ insert $ Article title mdContent htmlContent wordCount added userId Nothing False False
-            setMessage $ "Saved Post: " <> (toHtml title)
+            setMessageI $ MsgMsgSavedArticle $ title
             redirect (AdminUpdateArticleR articleId)
         Just _ -> do
-            setMessage $ "Created Post: " <> (toHtml title)
+            setMessageI $ MsgMsgCreatedArticle $ title
             
             -- Create a gist of the post if the GitHub PA Token is set
             extra <- getExtra
@@ -77,7 +77,7 @@ postAdminNewArticleR = do
                     res <- createGist (Just (GitHubToken gToken)) $ Gist title True $ fromList [(title, (GistContent mdCont Nothing))]
                     case res of
                         Nothing -> do
-                            setMessage $ "Created Post: " <> (toHtml title) <> "<br> Something went wrong creating the gist!"
+                            setMessageI $ MsgMsgCreatedArticleGistError $ title
                             return Nothing
                         Just (GistResponse gId) -> return $ Just gId
             
@@ -92,8 +92,8 @@ getAdminUpdateArticleR articleId = do
     marticle <- return $ Just dbarticle
     adminLayout $ do
         case marticle of
-            Just _ -> setTitle "Admin: Update post"
-            Nothing -> setTitle "Admin: New Post"
+            Just _ -> setTitleI MsgTitleAdminUpdateArticle
+            Nothing -> setTitleI MsgTitleAdminNewArticle
         $(widgetFile "admin/create-article")
 
 -- Handling the updated blog post
@@ -126,17 +126,17 @@ postAdminUpdateArticleR articleId = do
     -- Set the Bool and message depending on whether the post is published or unpublished
     publishStatus <- case unpublish of
         Nothing -> do
-            setMessage $ "Published Post: " <> (toHtml title)
+            setMessageI $ MsgMsgPublishedArticle $ title
             return True
         Just _ -> do
-            setMessage $ "Unpublished Post: " <> (toHtml title)
+            setMessageI $ MsgMsgUnpublishedArticle $ title
             return False
     
     -- Either save the post (ignoring if it's published or not), or change the publish status of the post
     case publish of
         Nothing -> do
             runDB $ update articleId [ArticleGistId =. gistIdent, ArticleTitle =. title, ArticleMdContent =. mdContent, ArticleHtmlContent =. htmlContent, ArticleWordCount =. wordCount]
-            setMessage $ "Saved Post: " <> (toHtml title)
+            setMessageI $ MsgMsgSavedArticle $ title
             redirect (AdminUpdateArticleR articleId)
         Just _ -> do
             runDB $ update articleId [ArticleGistId =. gistIdent, ArticleVisible =. publishStatus, ArticleTitle =. title, ArticleMdContent =. mdContent, ArticleHtmlContent =. htmlContent, ArticleWordCount =. wordCount]
@@ -148,7 +148,7 @@ getAdminShowTrashArticlesR = do
     articles <- runDB $ E.select $ pullArticles True
     -- articles <- runDB $ selectList [ArticleTrash ==. True] [Desc ArticleAdded]
     adminLayout $ do
-        setTitle "Admin: Blog Posts"
+        setTitleI MsgTitleAdminTrashArticles
         $(widgetFile "admin/articles")
 
 -- Deleting a blog post
@@ -156,7 +156,7 @@ postAdminTrashArticleR :: ArticleId -> Handler Html
 postAdminTrashArticleR articleId = do
     runDB $ update articleId [ArticleTrash =. True]
     article <- runDB $ get404 articleId
-    setMessage $ "Deleted Post: " <> (toHtml (articleTitle article))
+    setMessageI $ MsgMsgDeletedArticle $ (articleTitle article)
     redirect AdminShowArticlesR
 
 -- Unpublish the blog post
@@ -164,7 +164,7 @@ postAdminUnpublishArticleR :: ArticleId -> Handler Html
 postAdminUnpublishArticleR articleId = do
     runDB $ update articleId [ArticleVisible =. False]
     article <- runDB $ get404 articleId
-    setMessage $ "Unpublished Post: " <> (toHtml (articleTitle article))
+    setMessageI $ MsgMsgUnpublishedArticle $ (articleTitle article)
     redirect AdminShowArticlesR
 
 -- Publish the blog post
@@ -172,6 +172,6 @@ postAdminPublishArticleR :: ArticleId -> Handler Html
 postAdminPublishArticleR articleId = do
     runDB $ update articleId [ArticleVisible =. True]
     article <- runDB $ get404 articleId
-    setMessage $ "Published Post: " <> (toHtml (articleTitle article))
+    setMessageI $ MsgMsgPublishedArticle $ (articleTitle article)
     redirect AdminShowArticlesR
 

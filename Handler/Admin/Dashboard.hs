@@ -20,5 +20,5 @@ getAdminDashboardR = do
     userEmail <- fmap usersEmail maybeAuth
     postCount <- postCountByAuthor
     adminLayout $ do
-        setTitle "Admin: Dashboard"
+        setTitleI MsgTitleAdminDashboard
         $(widgetFile "admin/dashboard")

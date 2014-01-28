@@ -1,26 +1,26 @@
 <div #dashboard-container>
-    <div #first-row>
-        <div #widget-analytics.widget>
+    <div .widget-row>
+        <div .widget.widget-left>
             <div .widget-title.red>
-                Analytics
+                _{MsgSystemInformation}
             <div .widget-content>
-                Some analytics jazz...
-        <div #widget-authors.widget>
+                A clock showing system time, some CPU and memory usage info...
+        <div .widget.widget-right>
             <div .widget-title.red>
-                Author Statistics
+                _{MsgAuthorStatistics}
             <div .widget-content>
                 $forall (Entity _ user, count) <- postCount
                     #{userIdent user} : #{show count}
 
-    <div #second-row>
-        <div #widget-comments.widget>
+    <div .widget-row>
+        <div .widget.widget-left>
             <div .widget-title.red>
-                Recent Comments
+                _{MsgCommentStatistics}
             <div .widget-content>
-                Showing some comments from posts?...
-        <div #widget-something.widget>
+                Showing some comments from Disqus...
+        <div .widget.widget-right>
             <div .widget-title.red>
-                Something
+                _{MsgAnalytics}
             <div .widget-content>
-                Dunno what's here yet :/ ...
+                Some CloudFlare analytics stuff...
                 

@@ -1,5 +1,0 @@
-<div #login-box>
-    <img #google-logo src="/static/img/google-logo.jpg" width="100px" height="100px"/>
-    <form method="get" action="@{AuthR forwardUrl}" .button .google>
-        <input type="hidden" name="openid_identifier" value="https://www.google.com/accounts/o8/id">
-        <input #login-button type="submit" value="Login via Google">

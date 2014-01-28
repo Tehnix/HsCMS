@@ -2,17 +2,19 @@
     <div .padding>
         <div .left.red>
             $if isTrashRoute
-                Trashed Posts
+                _{MsgTrashedArticles}
             $else
-                Posts
+                _{MsgArticles}
         <div .right>
-            <input #search-box type="text" placeholder="Search titles..." />
+            <input #search-box type="text" placeholder="_{MsgSearchTitles}" />
             <i .icon-search></i>
         <div .clear>
         <div .extra-padding>
         $forall (Entity articleId article, Entity _ user) <- articles
             <div :not (articleVisible article):.unpublished.list-item>
                 <div .picture>
+                    $# TODO add a thumbnail of the picture if there are any in the blog posts, like
+                    $# a header
                     ...
                 <div .information>
                     <div .time>
@@ -34,7 +36,7 @@
                     <div .content.hide>
                         #{articleHtmlContent article}
                     <footer>
-                        by
+                        _{MsgByLower}
                         <span .author>
                             #{userIdent user}
                 <div .right-arrow>
@@ -43,9 +45,9 @@
         $if null articles
             <div #no-content>
                 $if isTrashRoute
-                    No trash yet :)
+                    _{MsgNoTrash}
                 $else
-                    No articles yet! :(
+                    _{MsgNoArticles}
             <div .clear>
 
 <div #content-preview.not-used>
@@ -55,17 +57,17 @@
         <div .right>
             $if not isTrashRoute
                 <form method="post" #delete-list-item-form .remove-submit-style action="#">
-                    <input type="submit" value="" alt="Delete Post" #delete-list-item.remove-submit-style.icon-trash>
+                    <input type="submit" value="" title="_{MsgDeleteArticle}" alt="_{MsgDeleteArticle}" #delete-list-item.remove-submit-style.icon-trash>
             <i .delimiter></i>
             <form method="post" #unpublish-list-item-form .remove-submit-style action="#">
-                <input type="submit" value="" alt="Unpublish Post" #unpublish-list-item .remove-submit-style.icon-eye-close>
+                <input type="submit" value="" title="_{MsgUnpublishArticle}" alt="_{MsgUnpublishArticle}" #unpublish-list-item .remove-submit-style.icon-eye-close>
             <form method="post" #publish-list-item-form .hide.remove-submit-style action="#">
-                <input type="submit" value="" alt="Publish Post" #publish-list-item .remove-submit-style.icon-eye-open>
+                <input type="submit" value="" title="_{MsgPublishArticle}" alt="_{MsgPublishArticle}" #publish-list-item .remove-submit-style.icon-eye-open>
             <i .delimiter></i>
-            <a #view-list-item href="#" alt="View Post">
+            <a #view-list-item href="#" title="_{MsgViewArticle}" alt="_{MsgViewArticle}">
                 <i .icon-list-alt></i>
             <i .delimiter></i>
-            <a #edit-list-item href="#" alt="Edit Post">
+            <a #edit-list-item href="#" title="_{MsgEditArticle}" alt="_{MsgEditArticle}">
                 <i .icon-pencil></i>
         <div .clear>
         <hr>
