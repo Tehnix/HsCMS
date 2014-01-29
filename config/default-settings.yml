@@ -4,9 +4,9 @@ Default: &defaults
   approot: "http://localhost:3000"
   copyright: copyright tehnix 2014
   admins: []
-  theme: default
   #disqus: disqus_shortname_for_testing
   #githubToken: githuh_personal_accesss_token_with_gist_scope
+  #cloudflareKey: cloudflare_api_key
 
 Development:
   <<: *defaults
