@@ -22,9 +22,9 @@ The reason for this is quite simply that I'd prefer not to have any login creden
 
 
 ## Deployment
-The preferred method of deployment is using the tool called [keter](https://github.com/snoyberg/keter). There is included a standard `config/default-keter.yml` settings file in the root directory, same as with `config/settings.yml`, this needs to be copied and renamed to `config/keter.yml`. 
+The preferred method of deployment is using the tool called [keter](https://github.com/snoyberg/keter). There is included a standard `config/default-keter.yaml` settings file in the root directory, same as with `config/settings.yml`, this needs to be copied and renamed to `config/keter.yaml`. 
 
-Alter the settings to what you need, and then you can generate a `keter` bundle `yesod keter`. You can then move this to where your `keter` service expects it to be (you can also use the `copy-to` feature in the `keter.yml` file to do this last step automatically).
+Alter the settings to what you need, and then you can generate a `keter` bundle `yesod keter`. You can then move this to where your `keter` service expects it to be (you can also use the `copy-to` feature in the `keter.yaml` file to do this last step automatically).
 
 If you need to run `keter` alongside `nginx`, there is also a good  [guide for that here](https://github.com/yesodweb/yesod/wiki/Deploying-via-Keter-alongside-Nginx).
 

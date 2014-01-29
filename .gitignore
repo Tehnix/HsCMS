@@ -25,6 +25,6 @@ cabal.sandbox.config
 # Configuration files
 config/client_session_key.aes
 config/settings.yml
-config/keter.yml
+config/keter.yaml
 config/favicon.ico
 config/postgresql.yml
