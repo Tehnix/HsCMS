@@ -1,0 +1,29 @@
+Default: &defaults
+  user: HsCMS
+  password: HsCMS
+  host: localhost
+  port: 5432
+  database: HsCMS
+  poolsize: 10
+
+Development:
+  <<: *defaults
+
+Testing:
+  database: HsCMS_test
+  <<: *defaults
+
+Staging:
+  database: HsCMS_staging
+  poolsize: 100
+  <<: *defaults
+ 
+Heroku:
+  database: HsCMS_heroku
+  poolsize: 100
+  <<: *defaults
+
+Production:
+  database: HsCMS_production
+  poolsize: 100
+  <<: *defaults

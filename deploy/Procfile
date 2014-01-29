@@ -87,4 +87,4 @@
 
 
 # Heroku configuration that runs your app
-web: ./dist/build/HsCMS/HsCMS staging -p $PORT
+web: ./dist/build/HsCMS/HsCMS heroku -p $PORT

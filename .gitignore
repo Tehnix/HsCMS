@@ -4,7 +4,6 @@ dist*
 *.o
 static/tmp/
 static/combined/
-deploy/
 
 # Development files
 .hsenv*
@@ -16,13 +15,16 @@ cabal.sandbox.config
 .cabal-sandbox/
 *.sqlite3
 *.keter
-config/settings.yml
-config/keter.yml
-config/favicon.ico
 
 # Auto generated files
 *.swp
 ._*
 *._*
 *.DS_Store
+
+# Configuration files
 config/client_session_key.aes
+config/settings.yml
+config/keter.yml
+config/favicon.ico
+config/postgresql.yml
