@@ -28,6 +28,35 @@ Alter the settings to what you need, and then you can generate a `keter` bundle 
 
 If you need to run `keter` alongside `nginx`, there is also a good  [guide for that here](https://github.com/yesodweb/yesod/wiki/Deploying-via-Keter-alongside-Nginx).
 
+## Heroku
+
+__Not quite working yet...__
+
+Following the information in the Procfile, we first move the Procfile into the root directory,
+<pre>
+    mv deploy/Procfile .
+</pre>
+
+Then we create a json package file for heroku,
+<pre>
+    echo '{ "name": "HsCMS", "version": "0.0.1", "dependencies": {} }' >> package.json
+</pre>
+
+If this is the first time, you need to create the heroku app while specifying the stack and the buildpack,
+<pre>
+    heroku create yesod-codetalk --stack cedar --buildpack https://github.com/begriffs/heroku-buildpack-ghc.git
+</pre>
+
+the buildpack was picked from herokus list of [third-party buildpacks](https://devcenter.heroku.com/articles/third-party-buildpacks)
+
+There's some general information about to to use the buildpack on the [GitHub repository page](https://github.com/begriffs/heroku-buildpack-ghc), but you will probably hit the 15 minute build time limit. To get past that, we use an alternative build process,
+<pre>
+    heroku plugins:install https://github.com/ddollar/heroku-anvil
+    heroku build -r -b https://github.com/begriffs/heroku-buildpack-ghc.git
+</pre>
+
+After that you should be good to go.
+
 
 ## Settings
 There are several settings that allow you to customize the system a bit.

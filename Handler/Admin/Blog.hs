@@ -74,7 +74,7 @@ postAdminNewArticleR = do
                 Nothing -> return Nothing
                 Just gToken -> do
                     let mdCont = toStrict (renderHtml mdContent)
-                    res <- createGist (Just (GitHubToken gToken)) $ Gist title True $ fromList [(title, (GistContent mdCont Nothing))]
+                    res <- createGist (Just (GitHubToken gToken)) $ Gist title True $ fromList [(title <> ".md", (GistContent mdCont Nothing))]
                     case res of
                         Nothing -> do
                             setMessageI $ MsgMsgCreatedArticleGistError $ title
@@ -116,9 +116,9 @@ postAdminUpdateArticleR articleId = do
             res <- case (articleGistId originalArticle) of
                 Nothing -> do
                     -- If the article doesn't have a gist ID already
-                    return =<< createGist (Just (GitHubToken gToken)) $ Gist title True $ fromList [(title, (GistContent mdCont Nothing))]
+                    return =<< createGist (Just (GitHubToken gToken)) $ Gist title True $ fromList [(title <> ".md", (GistContent mdCont Nothing))]
                 Just gId -> do
-                    return =<< updateGist (GitHubToken gToken) gId $ Gist title True $ fromList [((articleTitle originalArticle), (GistContent mdCont (Just (articleTitle originalArticle))))]
+                    return =<< updateGist (GitHubToken gToken) gId $ Gist title True $ fromList [((articleTitle originalArticle) <> ".md", (GistContent mdCont (Just ((articleTitle originalArticle) <> ".md"))))]
             case res of
                 Nothing -> return Nothing
                 Just (GistResponse gId) -> return $ Just gId

@@ -70,7 +70,7 @@ instance FromJSON GistResponse where
 
 -- | Convert the GitHub Personal Access Token to a basic authorization header
 getTokenHeader :: GitHubToken -> RequestHeaders
-getTokenHeader (GitHubToken tk) = [("Authorization", "Basic " <> (encodeUtf8 tk))]
+getTokenHeader (GitHubToken tk) = [("Authorization", "token " <> (encodeUtf8 tk))]
 
 {-|
   'submitPostRequest' sends the POST request to the url parameter, and return the response as a 'ByteString' wrapped in 'MonadIO' or 'MonadBaseControl IO'.
