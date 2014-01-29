@@ -15,15 +15,15 @@ MsgCreatedArticle title@Text: Created Article: #{title}
 MsgCreatedArticleGistError title@Text: Created Article: #{title}. Something went wrong when creating the gist!
 
 
-# -- Admin Breadcrumbs
-CrumbDashboard: Dashboard
-CrumbArticles: Articles
-CrumbTrashedArticles: Trashed Articles
-CrumbNewArticle: New Article
-CrumbUpdated title@Text: Updated: #{title}
-CrumbTrashed title@Text: Trashed: #{title}
-CrumbUnpublished title@Text: Unpublished: #{title}
-CrumbPublished title@Text: Published: #{title}
+# -- Breadcrumbs
+CrumbAdminDashboard: Dashboard
+CrumbAdminArticles: Articles
+CrumbAdminTrashedArticles: Trashed Articles
+CrumbAdminNewArticle: New Article
+CrumbAdminUpdated title@Text: Updated: #{title}
+CrumbAdminTrashed title@Text: Trashed: #{title}
+CrumbAdminUnpublished title@Text: Unpublished: #{title}
+CrumbAdminPublished title@Text: Published: #{title}
 
 
 # -- admin-layout AND admin/articles 

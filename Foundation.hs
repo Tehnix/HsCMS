@@ -1,6 +1,7 @@
+{-# LANGUAGE OverloadedStrings     #-}
 module Foundation where
 
-import Prelude
+import Prelude hiding (takeWhile)
 import Yesod
 import Yesod.Static
 import Yesod.Auth
@@ -20,7 +21,7 @@ import Text.Hamlet (hamletFile)
 import Yesod.Core.Types (Logger)
 
 -- Custom imports
-import Data.Text (Text, pack, unpack)
+import Data.Text (Text, takeWhile)
 import Data.Monoid ((<>))
 
 
@@ -154,7 +155,7 @@ instance YesodBreadcrumbs App where
     breadcrumb AboutR = return ("About", Just ArticlesR)
     breadcrumb (AuthorR authorId) = do
         user <- runDB $ get404 authorId
-        crumb <- return $ pack $ "Author: " ++ (takeWhile (/='@') (unpack (userIdent user)))
+        crumb <- return $ "Author: " <> (takeWhile (/='@') (userIdent user))
         return (crumb, Just ArticlesR)
     breadcrumb ArchivesR = return ("Archives", Just ArticlesR)
     breadcrumb (ArticleR articleId) = do
@@ -162,25 +163,37 @@ instance YesodBreadcrumbs App where
         return (articleTitle article, Just ArticlesR)
 
     -- Admin panel breadcrumbs
-    breadcrumb AdminDashboardR = return ("Dashboard", Nothing) -- MsgCrumbDashboard
-    breadcrumb AdminShowArticlesR = return ("Articles", Just AdminDashboardR) -- MsgCrumbArticles
-    breadcrumb AdminShowTrashArticlesR = return ("Trashed Articles", Just AdminDashboardR) -- MsgCrumbTrashedArticles
-    breadcrumb AdminNewArticleR = return ("New Article", Just AdminDashboardR) -- MsgCrumbNewArticle
+    breadcrumb AdminDashboardR = do
+        render <- getMessageRender
+        return (render MsgCrumbAdminDashboard, Nothing)
+    breadcrumb AdminShowArticlesR = do
+        render <- getMessageRender
+        return (render MsgCrumbAdminArticles, Just AdminDashboardR)
+    breadcrumb AdminShowTrashArticlesR = do
+        render <- getMessageRender
+        return (render MsgCrumbAdminTrashedArticles, Just AdminDashboardR)
+    breadcrumb AdminNewArticleR = do
+        render <- getMessageRender
+        return (render MsgCrumbAdminNewArticle, Just AdminDashboardR)
     breadcrumb (AdminUpdateArticleR articleId) = do
+        render <- getMessageRender
         article <- runDB $ get404 articleId
-        crumb <- return $ "Updated: " <> (articleTitle article) -- MsgCrumbUpdated
+        crumb <- return $ render $ MsgCrumbAdminUpdated (articleTitle article)
         return (crumb, Just AdminShowArticlesR)
     breadcrumb (AdminTrashArticleR articleId) = do
+        render <- getMessageRender
         article <- runDB $ get404 articleId
-        crumb <- return $ "Trashed: " <> (articleTitle article) -- MsgCrumbTrashed
+        crumb <- return $ render $ MsgCrumbAdminTrashed (articleTitle article)
         return (crumb, Just AdminShowTrashArticlesR)
     breadcrumb (AdminUnpublishArticleR articleId) = do
+        render <- getMessageRender
         article <- runDB $ get404 articleId
-        crumb <- return $ "Unpublish - " <> (articleTitle article) -- MsgCrumbUnpublished
+        crumb <- return $ render $ MsgCrumbAdminUnpublished (articleTitle article)
         return (crumb, Just AdminShowArticlesR)
     breadcrumb (AdminPublishArticleR articleId) = do
+        render <- getMessageRender
         article <- runDB $ get404 articleId
-        crumb <- return $ "Publish: " <> (articleTitle article)  -- MsgCrumbPublished
+        crumb <- return $ render $ MsgCrumbAdminPublished (articleTitle article)
         return (crumb, Just AdminShowArticlesR)
 
     -- These pages never call breadcrumb
