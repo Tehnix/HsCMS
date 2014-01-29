@@ -10,6 +10,7 @@ deploy/
 .hsenv*
 yesod-devel/
 .ghci
+.anvil
 cabal-dev/
 cabal.sandbox.config
 .cabal-sandbox/
