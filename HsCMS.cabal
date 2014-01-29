@@ -86,6 +86,7 @@ library
                  , http-types
                  , transformers
                  , unordered-containers
+                 , heroku
 
 executable         HsCMS
     if flag(library-only)
