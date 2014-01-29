@@ -12,6 +12,8 @@ Simply copy the `config/default-settings.yml` file, rename it to `config/setting
 
 From there on out, it works as a simple [yesod web app](http://www.yesodweb.com) (it uses the [scaffold structure](http://www.yesodweb.com/book/scaffolding-and-the-site-template)).
 
+Oh, and you probably also want a favicon. You get that by placing your favicon at `config/favicon.ico` and it should pick it up.
+
 
 ## Authentication
 Only google authentication is used throughout the system, and therefore a google account is needed to use the admin facilities.

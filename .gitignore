@@ -17,6 +17,7 @@ cabal.sandbox.config
 *.keter
 config/settings.yml
 config/keter.yml
+config/favicon.ico
 
 # Auto generated files
 *.swp
