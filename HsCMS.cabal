@@ -84,6 +84,7 @@ library
                  , http-types
                  , transformers
                  , unordered-containers
+                 , ghc-prim
 
 executable         HsCMS
     if flag(library-only)
