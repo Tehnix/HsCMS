@@ -1,5 +1,12 @@
 name:              HsCMS
-version:           0.4.3
+version:           0.4.4
+license:           BSD3
+license-file:      LICENSE
+author:            Tehnix
+maintainer:        Tehnix
+synopsis:          A Content Management System
+description:       A CMS based on the Yesod framework
+category:          Web
 cabal-version:     >= 1.8
 build-type:        Simple
 
