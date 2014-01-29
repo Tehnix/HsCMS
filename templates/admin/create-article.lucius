@@ -136,3 +136,22 @@
         display:none;
     }
 }
+
+.modal {
+    width: 680px;
+    margin-left: -340px;
+}
+#cheatsheet-table {
+    width: 100%;
+    font-weight: normal;
+    color: #000;
+    td {
+        padding-bottom: 20px;
+    }
+    .left {
+        width: 47%;
+    }
+    .right {
+        width: 50%;
+    }
+}

@@ -31,6 +31,8 @@ a:active { color: #C58; }
 a:visited { color: #878787; }
 
 .red { color: red; font-weight: 200; }
+.bold { font-weight: bold; }
+.pointer {cursor: pointer; }
 .clear { clear: both }
 .required { margin: 1em 0; }
 .optional { margin: 1em 0; }

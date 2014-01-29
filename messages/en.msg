@@ -56,6 +56,8 @@ ArticleTitlePlaceholder: The article title
 ContentPlaceholder: Some nice content to go with that title!
 DashedArticleTitle: the-article-title
 Markdown: Markdown
+MarkdownCheatsheet: Markdown Cheatsheet
+Close: Close
 Preview: Preview
 LowerWord: word
 LowerWords: words
@@ -63,6 +65,24 @@ Update: Update
 Unpublish: Unpublish
 SaveDraft: Save Draft
 Publish: Publish
+
+MarkdownCheatsheetExplanation: You can always use plain HTML instead of markdown. This is often handy for sizing images with width and height attributes. This will give a brief overview, but for a more extensive guide, take a look at
+MarkdownSyntax: Markdown Syntax
+MarkdownLargeHeading: Large heading
+MarkdownBoldText: Bold text
+MarkdownAndSmallerHeading: And smaller
+MarkdownItalicizedText: Italicized text
+MarkdownLinks: Links
+MarkdownLinksWithTitle: And links with title
+MarkdownImages: Images
+MarkdownImagesWithTitle: Images with title
+MarkdownUnorderedLists: Unordered lists
+MarkdownUnorderedListsExtra: you can substitute * with + or -
+MarkdownOrderedLists: Ordered lists
+MarkdownOrderedListsExtra: note that the numbering doesn't matter, as long as there is a period after
+MarkdownCodeBlock: Code block
+MarkdownInlineCode: Inline-code
+
 
 
 # -- admin/dashboard

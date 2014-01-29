@@ -14,8 +14,8 @@
             <div .padding>
                 <div .left.red>
                     _{MsgMarkdown}
-                <div .right.red>
-                    <b>?
+                <div .right.red.bold.pointer>
+                    <span data-toggle="modal" data-target="#markdown-cheatsheet" data-keyboard="static">?
                 <div .clear>
                 <hr>
                 $maybe article <- marticle
@@ -52,3 +52,88 @@
                     $nothing
                         <input #form-save-btn .btn.btn-primary.extra-padding type="submit" value="_{MsgSaveDraft}">
                         <input #form-publish-btn .btn.btn-success type="submit" value="_{MsgPublish}">
+
+
+<!-- Modal -->
+<div class="modal fade" id="markdown-cheatsheet" tabindex="-1" role="dialog" aria-labelledby="MarkdownLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="MarkdownLabel">_{MsgMarkdownCheatsheet}</h4>
+            <div class="modal-body">
+                <table #cheatsheet-table>
+                    <tr>
+                        <td colspan="2">
+                            _{MsgMarkdownCheatsheetExplanation} 
+                            <a href="http://daringfireball.net/projects/markdown/syntax">
+                                _{MsgMarkdownSyntax}
+                            .
+                    <tr>
+                        <td .left>
+                            _{MsgMarkdownLargeHeading}: &nbsp;
+                            <code>
+                                # This is &lt;h1&gt; <br>
+                        <td .right>
+                            _{MsgMarkdownBoldText}: &nbsp;
+                            <code>
+                                <b>__this will be bold__
+                    <tr>
+                        <td .left>
+                            _{MsgMarkdownAndSmallerHeading}: &nbsp;
+                            <code>
+                                ## &lt;h2&gt; and so on...
+                        <td .right>
+                            _{MsgMarkdownItalicizedText}: &nbsp;
+                            <code>
+                                <i>_this'll be italics_
+                    <tr>
+                        <td .left>
+                            _{MsgMarkdownLinks}: &nbsp;
+                            <code>
+                                [Link Text](http://example.com)<br><br>
+                            _{MsgMarkdownLinksWithTitle}: &nbsp;
+                            <code>
+                                [My Link](http://example.com "Indeed a link")
+                        <td .right>
+                            _{MsgMarkdownImages}: &nbsp;
+                            <code>
+                                ![Alt Text](http://example.com/kittens.png)<br><br>
+                            _{MsgMarkdownImagesWithTitle}: &nbsp;
+                            <code>
+                                ![Alt Text](http://example.com/kittens.png "So cute!")
+                    <tr>
+                        <td .left>
+                            _{MsgMarkdownUnorderedLists}:
+                            <pre>
+                                * Red
+                                * Green
+                                * Blue
+                            _{MsgMarkdownUnorderedListsExtra}
+                        <td .right>
+                            _{MsgMarkdownOrderedLists}:
+                            <pre>
+                                1. First
+                                2. Second
+                                3. Third
+                            _{MsgMarkdownOrderedListsExtra}
+                    <tr>
+                        <td .left>
+                            _{MsgMarkdownCodeBlock}: &nbsp;
+                            <pre>
+                                &lt;pre&gt;
+                                &nbsp;&nbsp;This block is genereted using 
+                                &nbsp;&nbsp;wrapping the text in &lt;pre&gt; 
+                                &nbsp;&nbsp;or ```
+                                &lt;/pre&gt;
+                        <td .right>
+                            _{MsgMarkdownInlineCode}: &nbsp; <br>
+                            <code>
+                                this is made by wrapping the text in ` `
+                            <br>
+                            <code>
+                                but you can also use &lt;code&gt;  &lt;/code&gt;!
+                
+                            
+                            
+                            
