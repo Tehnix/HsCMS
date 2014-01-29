@@ -48,7 +48,7 @@
                         $if (articleVisible article)
                             <input #form-unpublish-btn .btn.btn-danger type="submit" value="_{MsgUnpublish}">
                         $else
-                            <input #form-publish-btn .btn.btn-success type="submit" value="Publish">
+                            <input #form-publish-btn .btn.btn-success type="submit" value="_{MsgPublish}">
                     $nothing
                         <input #form-save-btn .btn.btn-primary.extra-padding type="submit" value="_{MsgSaveDraft}">
                         <input #form-publish-btn .btn.btn-success type="submit" value="_{MsgPublish}">

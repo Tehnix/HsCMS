@@ -135,8 +135,10 @@ postAdminUpdateArticleR articleId = do
     -- Either save the post (ignoring if it's published or not), or change the publish status of the post
     case publish of
         Nothing -> do
-            runDB $ update articleId [ArticleGistId =. gistIdent, ArticleTitle =. title, ArticleMdContent =. mdContent, ArticleHtmlContent =. htmlContent, ArticleWordCount =. wordCount]
-            setMessageI $ MsgMsgSavedArticle $ title
+            runDB $ update articleId [ArticleGistId =. gistIdent, ArticleVisible =. publishStatus, ArticleTitle =. title, ArticleMdContent =. mdContent, ArticleHtmlContent =. htmlContent, ArticleWordCount =. wordCount]
+            if publishStatus then
+                setMessageI $ MsgMsgSavedArticle $ title 
+                else setMessageI $ MsgMsgUnpublishedArticle $ title
             redirect (AdminUpdateArticleR articleId)
         Just _ -> do
             runDB $ update articleId [ArticleGistId =. gistIdent, ArticleVisible =. publishStatus, ArticleTitle =. title, ArticleMdContent =. mdContent, ArticleHtmlContent =. htmlContent, ArticleWordCount =. wordCount]
