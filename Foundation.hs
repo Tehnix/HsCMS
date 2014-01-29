@@ -95,6 +95,8 @@ instance Yesod App where
     isAuthorized AdminShowTrashArticlesR _ = isAdmin
     isAuthorized (AdminUpdateArticleR _) _ = isAdmin
     isAuthorized (AdminTrashArticleR _) _ = isAdmin
+    isAuthorized (AdminPublishArticleR _) _ = isAdmin
+    isAuthorized (AdminUnpublishArticleR _) _ = isAdmin
     -- Anyone can access all other pages
     isAuthorized _ _ = return Authorized
 
@@ -129,7 +131,6 @@ instance YesodPersistRunner App where
 
 instance YesodAuth App where
     type AuthId App = UserId
-
     -- Where to send a user after successful login
     loginDest _ = AdminDashboardR
     -- Where to send a user after logout
@@ -161,26 +162,26 @@ instance YesodBreadcrumbs App where
         return (articleTitle article, Just ArticlesR)
 
     -- Admin panel breadcrumbs
-    breadcrumb AdminDashboardR = return ("Dashboard", Nothing)
-    breadcrumb AdminShowArticlesR = return ("Articles", Just AdminDashboardR)
-    breadcrumb AdminShowTrashArticlesR = return ("Trashed Articles", Just AdminDashboardR)
-    breadcrumb AdminNewArticleR = return ("New Article", Just AdminDashboardR)
+    breadcrumb AdminDashboardR = return ("Dashboard", Nothing) -- MsgCrumbDashboard
+    breadcrumb AdminShowArticlesR = return ("Articles", Just AdminDashboardR) -- MsgCrumbArticles
+    breadcrumb AdminShowTrashArticlesR = return ("Trashed Articles", Just AdminDashboardR) -- MsgCrumbTrashedArticles
+    breadcrumb AdminNewArticleR = return ("New Article", Just AdminDashboardR) -- MsgCrumbNewArticle
     breadcrumb (AdminUpdateArticleR articleId) = do
         article <- runDB $ get404 articleId
-        crumb <- return $ "Article: " <> (articleTitle article)
-        return (crumb, Just AdminDashboardR)
+        crumb <- return $ "Updated: " <> (articleTitle article) -- MsgCrumbUpdated
+        return (crumb, Just AdminShowArticlesR)
     breadcrumb (AdminTrashArticleR articleId) = do
         article <- runDB $ get404 articleId
-        crumb <- return $ "Trashed: " <> (articleTitle article)
-        return (crumb, Just AdminDashboardR)
+        crumb <- return $ "Trashed: " <> (articleTitle article) -- MsgCrumbTrashed
+        return (crumb, Just AdminShowTrashArticlesR)
     breadcrumb (AdminUnpublishArticleR articleId) = do
         article <- runDB $ get404 articleId
-        crumb <- return $ "Unpublish: " <> (articleTitle article)
-        return (crumb, Just AdminDashboardR)
+        crumb <- return $ "Unpublish - " <> (articleTitle article) -- MsgCrumbUnpublished
+        return (crumb, Just AdminShowArticlesR)
     breadcrumb (AdminPublishArticleR articleId) = do
         article <- runDB $ get404 articleId
-        crumb <- return $ "Publish: " <> (articleTitle article)
-        return (crumb, Just AdminDashboardR)
+        crumb <- return $ "Publish: " <> (articleTitle article)  -- MsgCrumbPublished
+        return (crumb, Just AdminShowArticlesR)
 
     -- These pages never call breadcrumb
     breadcrumb FaviconR = return ("", Nothing)
