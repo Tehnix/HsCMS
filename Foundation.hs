@@ -87,7 +87,8 @@ instance Yesod App where
     urlRenderOverride _ _ = Nothing
 
     -- The page to be redirected to when authentication is required.
-    authRoute _ = Just $ AuthR Yesod.Auth.GoogleEmail.forwardUrl
+    -- authRoute _ = Just $ AuthR Yesod.Auth.GoogleEmail.forwardUrl
+    authRoute _ = Just $ AuthR LoginR
 
     -- Require admin priviliges
     isAuthorized AdminDashboardR _ = isAdmin
