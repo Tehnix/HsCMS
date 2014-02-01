@@ -1,0 +1,105 @@
+$(function(){
+    // Fetch the data for the CloudFlare charts
+    $.get("@{AdminDisqusStatsR}").done(function(data) {
+        initializeDisqusCharts(data);
+    }).fail(function(data) {
+        
+    });
+    
+    // Fetch the data for the CloudFlare charts
+    $.get("@{AdminCloudFlareStatsR}").done(function(data) {
+        initializeCloudFlareCharts(data);
+    }).fail(function(data) {
+        $("#cloudflare-error").show();
+        $(".loading-stats").hide();
+        $("#cloudflare-interval").hide();
+    });
+    
+    
+    var initializeDisqusCharts = function(data) {
+        if (data.success && data.result.Right.code == 0) {
+            var articles = data.result.Right.response,
+                labelPoints = [],
+                commentsDataPoints = [],
+                likesDataPoints = [],
+                largestNumber = 5; // The minimum that the scale should go to
+            console.log(articles);
+            for (var i in articles) {
+                if (largestNumber < articles[i].posts) {
+                    largestNumber = articles[i].posts;
+                }
+                labelPoints.push(articles[i].title);
+                commentsDataPoints.push(articles[i].posts);
+                likesDataPoints.push(articles[i].likes);
+            }
+            var options = {
+                scaleShowGridLines: false,
+                //Boolean - If we want to override with a hard coded scale
+            	scaleOverride : true,
+            	//Number - The number of steps in a hard coded scale
+            	scaleSteps : 5,
+            	//Number - The value jump in the hard coded scale
+            	scaleStepWidth : largestNumber / 5,
+            	//Number - The scale starting value
+            	scaleStartValue : 0
+            }
+            var data = {
+                labels : labelPoints,
+            	datasets : [
+                    {
+            			fillColor : "rgba(151,187,205,0.5)",
+            			strokeColor : "rgba(151,187,205,1)",
+            			data : commentsDataPoints
+            		},
+            		{
+            			fillColor : "rgba(220,220,220,0.5)",
+            			strokeColor : "rgba(220,220,220,1)",
+            			data : likesDataPoints
+            		}
+            	]
+            }
+            var ctx = $("#disqus-chart").get(0).getContext("2d");
+            var disqusChart = new Chart(ctx).Bar(data, options);
+        }
+    }
+    
+    var initializeCloudFlareCharts = function(data) {
+        if (data.success) {
+            var colors = {
+                regular: "#8EC844",
+                crawler: "#E6E556",
+                threat: "#FE5D4D"
+            }
+            var options = {
+                animationEasing : "easeOutQuart",
+                segmentStrokeWidth : 0,
+                animation : true
+            }
+            pageviews = data.result.Right.pageviews;
+            uniques = data.result.Right.uniques;
+            var pageViewsData = [
+                {value: pageviews.regular, color:colors.regular},
+                {value: pageviews.crawler, color:colors.crawler},
+                {value: pageviews.threat, color:colors.threat}
+            ]
+            var uniquesData = [
+                {value: uniques.regular, color:colors.regular},
+                {value: uniques.crawler, color:colors.crawler},
+                {value: uniques.threat, color:colors.threat}
+            ]
+            $(".loading-stats").addClass("invisible");
+            $(".cloudflare-chart").removeClass("invisible");
+            var ctx = $("#cloudflare-pageviews-chart").get(0).getContext("2d");
+            var cloudflarePageViewsChart = new Chart(ctx).Doughnut(pageViewsData, options);
+            var ctx = $("#cloudflare-uniques-chart").get(0).getContext("2d");
+            var cloudflareUniquesChart = new Chart(ctx).Doughnut(uniquesData, options);
+            // Fill out the data containers
+            $("#cloudflare-uniques-threat").html(uniques.threat);
+            $("#cloudflare-uniques-crawler").html(uniques.crawler);
+            $("#cloudflare-uniques-regular").html(uniques.regular);
+            $("#cloudflare-pageviews-threat").html(pageviews.threat);
+            $("#cloudflare-pageviews-crawler").html(pageviews.crawler);
+            $("#cloudflare-pageviews-regular").html(pageviews.regular);
+        }
+    }
+});

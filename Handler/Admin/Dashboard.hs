@@ -6,8 +6,8 @@ import Yesod.Auth
 import qualified Database.Esqueleto as E
 
 
-postCountByAuthor :: Handler [(Entity User, E.Value Int)]
-postCountByAuthor = runDB $ E.select $ 
+articleCountByAuthor :: Handler [(Entity User, E.Value Int)]
+articleCountByAuthor = runDB $ E.select $ 
     E.from $ \(a, u) -> do
     E.where_ (a E.^. ArticleAuthor E.==. u E.^. UserId E.&&. a E.^. ArticleVisible E.==. E.val True E.&&. a E.^. ArticleTrash E.==. E.val False)
     E.groupBy (u E.^. UserId)
@@ -18,7 +18,9 @@ postCountByAuthor = runDB $ E.select $
 getAdminDashboardR :: Handler Html
 getAdminDashboardR = do
     userEmail <- fmap usersEmail maybeAuth
-    postCount <- postCountByAuthor
+    postCount <- articleCountByAuthor
     adminLayout $ do
         setTitleI MsgTitleAdminDashboard
+        toWidget [lucius| #navigation .navigation-dashboard { background: red; } |]
+        addScript $ StaticR js_chart_js
         $(widgetFile "admin/dashboard")

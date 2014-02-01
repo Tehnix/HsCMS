@@ -75,7 +75,6 @@ $(function(){
         }
         // Adjust height of content and preview area
         newHeight = height - bottomBarHeight - formTitleHeight - 20 - 10;
-        //padFormContent.height(newHeight);
         formPreviewContainer.height(newHeight - 40);
         mdTextArea.height(newHeight - 35);
     }

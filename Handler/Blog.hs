@@ -18,7 +18,7 @@ getArticleR articleId = do
         then notFound
         else defaultLayout $ do
             setTitle $ toHtml $ articleTitle article
-            $(widgetFile "theme/default/blog/single-article")
+            $(widgetFile "blog/single-article")
 
 -- Fetch all articles with their author info
 pullArticles :: Handler [(Entity Article, Entity User)]
@@ -35,7 +35,7 @@ getArticlesR = do
     articles <- pullArticles
     defaultLayout $ do
         setTitle "Blog"
-        $(widgetFile "theme/default/blog/articles")
+        $(widgetFile "blog/articles")
 
 getArchivesR :: Handler Html
 getArchivesR = do
@@ -44,7 +44,7 @@ getArchivesR = do
     articles <- pullArticles
     defaultLayout $ do
         setTitle "Archives"
-        $(widgetFile "theme/default/blog/archives")
+        $(widgetFile "blog/archives")
 
 getAuthorR :: UserId -> Handler Html
 getAuthorR author = do
@@ -53,5 +53,5 @@ getAuthorR author = do
     articles <- pullArticles
     defaultLayout $ do
         setTitle "Blog"
-        $(widgetFile "theme/default/blog/articles")
+        $(widgetFile "blog/articles")
 

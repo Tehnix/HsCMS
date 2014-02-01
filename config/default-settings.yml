@@ -5,8 +5,12 @@ Default: &defaults
   copyright: copyright tehnix 2014
   admins: []
   #disqus: disqus_shortname_for_testing
-  #githubToken: githuh_personal_accesss_token_with_gist_scope
+  #disqusSecretKey: your_disqus_secret_api_key
+  #disqusAccessToken: your_disqus_access_token
   #cloudflareKey: cloudflare_api_key
+  #cloudflareMail: "mail_associated_with_api_key@mail.com"
+  #cloudflareZone: "example.com"
+  #gistPublic: false
 
 Development:
   <<: *defaults
@@ -22,4 +26,6 @@ Production:
   approot: "http://yoursite.com"
   #analytics: your_analytics_UA
   #disqus: disqus_shortname_for_production
+  #githubToken: githuh_personal_accesss_token_with_gist_scope
+  #gistPublic: true
   <<: *defaults

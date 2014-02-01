@@ -20,7 +20,7 @@ import           Data.HashMap.Strict (fromList)
 import           Text.Blaze.Html.Renderer.Text (renderHtml)
 import qualified Database.Esqueleto as E
 import qualified Database.Esqueleto.Internal.Language as EI
-import           Gist
+import           API.Gist
 
 -- Fetch all articles with their author info
 pullArticles :: (EI.From query expr backend (expr (Entity Article)), EI.From query expr backend (expr (Entity User))) => Bool -> query (expr (Entity Article), expr (Entity User))
@@ -37,6 +37,7 @@ getAdminShowArticlesR = do
     -- articles <- runDB $ selectList [ArticleTrash ==. False] [Desc ArticleAdded]
     adminLayout $ do
         setTitleI MsgTitleAdminBlogArticles
+        toWidget [lucius| #navigation .navigation-articles { background: red; } |]
         $(widgetFile "admin/articles")
 
 -- The form page for posting a new blog post
@@ -45,7 +46,10 @@ getAdminNewArticleR = do
     formroute <- return $ AdminNewArticleR
     marticle <- return $ Nothing
     adminLayout $ do
+        addScript $ StaticR js_showdown_js
+        addScript $ StaticR js_extensions_github_js
         setTitleI MsgTitleAdminNewArticle
+        toWidget [lucius| #navigation .navigation-new-article { background: red; } |]
         $(widgetFile "admin/create-article")
 
 -- Handling the new posted blog post
@@ -74,7 +78,7 @@ postAdminNewArticleR = do
                 Nothing -> return Nothing
                 Just gToken -> do
                     let mdCont = toStrict (renderHtml mdContent)
-                    res <- createGist (Just (GitHubToken gToken)) $ Gist title True $ fromList [(title <> ".md", (GistContent mdCont Nothing))]
+                    res <- createGist (Just (GitHubToken gToken)) $ Gist title (maybe True (\r -> r) (extraGistPublic extra)) $ fromList [(title <> ".md", (GistContent mdCont Nothing))]
                     case res of
                         Nothing -> do
                             setMessageI $ MsgMsgCreatedArticleGistError $ title
@@ -91,6 +95,8 @@ getAdminUpdateArticleR articleId = do
     dbarticle <- runDB $ get404 articleId
     marticle <- return $ Just dbarticle
     adminLayout $ do
+        addScript $ StaticR js_showdown_js
+        addScript $ StaticR js_extensions_github_js
         case marticle of
             Just _ -> setTitleI MsgTitleAdminUpdateArticle
             Nothing -> setTitleI MsgTitleAdminNewArticle
@@ -116,7 +122,7 @@ postAdminUpdateArticleR articleId = do
             res <- case (articleGistId originalArticle) of
                 Nothing -> do
                     -- If the article doesn't have a gist ID already
-                    return =<< createGist (Just (GitHubToken gToken)) $ Gist title True $ fromList [(title <> ".md", (GistContent mdCont Nothing))]
+                    return =<< createGist (Just (GitHubToken gToken)) $ Gist title (maybe True (\r -> r) (extraGistPublic extra)) $ fromList [(title <> ".md", (GistContent mdCont Nothing))]
                 Just gId -> do
                     return =<< updateGist (GitHubToken gToken) gId $ Gist title True $ fromList [((articleTitle originalArticle) <> ".md", (GistContent mdCont (Just ((articleTitle originalArticle) <> ".md"))))]
             case res of
@@ -151,6 +157,7 @@ getAdminShowTrashArticlesR = do
     -- articles <- runDB $ selectList [ArticleTrash ==. True] [Desc ArticleAdded]
     adminLayout $ do
         setTitleI MsgTitleAdminTrashArticles
+        toWidget [lucius| #navigation .navigation-trash { background: red; } |]
         $(widgetFile "admin/articles")
 
 -- Deleting a blog post

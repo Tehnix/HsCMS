@@ -14,7 +14,7 @@
   createGist (Just (GitHubToken \"The token\")) $ Gist \"Description...\" True $ fromList [(\"File.md\", (GistContent \"Some Content!\" Nothing))]
   @
 -}
-module Gist (
+module API.Gist (
       createGist
     , updateGist
     , GitHubToken(..)
@@ -73,7 +73,7 @@ getTokenHeader :: GitHubToken -> RequestHeaders
 getTokenHeader (GitHubToken tk) = [("Authorization", "token " <> (encodeUtf8 tk))]
 
 {-|
-  'submitPostRequest' sends the POST request to the url parameter, and return the response as a 'ByteString' wrapped in 'MonadIO' or 'MonadBaseControl IO'.
+  'submitPostRequest' sends the POST request to the url parameter, and return the response as a 'ByteString' wrapped in 'MonadIO' or 'MonadBaseControl IO' monad.
 -}
 submitPostRequest :: (MonadIO m, MonadBaseControl IO m) => String -> Maybe GitHubToken -> ByteString -> m ByteString
 submitPostRequest urlString githubToken body = do

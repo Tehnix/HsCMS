@@ -31,14 +31,17 @@ a:active { color: #C58; }
 a:visited { color: #878787; }
 
 .red { color: red; font-weight: 200; }
+.black { color: #222; }
 .bold { font-weight: bold; }
 .pointer {cursor: pointer; }
 .clear { clear: both }
 .required { margin: 1em 0; }
 .optional { margin: 1em 0; }
 .hide { display:none; }
+.invisible { visibility: hidden; }
 .left { float:left }
 .right { float:right; }
+.center { text-align: center; }
 .delimiter { border-left: 1px solid #AEAEAE; height: 19px; display: inline-block; margin: 0 8px -5px 8px; }
 .btn {
     padding: 2px 10px;
@@ -106,19 +109,22 @@ a:visited { color: #878787; }
         /*display: inline;*/
         list-style: none;
         margin: 0 0 10px 0;
-        li {
-            margin-top: #{navTopMargin};
+        li a {
+            display: block;
+            /*margin-top: #{navTopMargin};*/
             padding-left: #{navLeftMargin};
+            padding-top: 10px;
             padding-bottom: 10px;
-            border-bottom:1px solid #646464;
             .nav-icon {
                 width: 25px;
                 display: inline-block;
             }
         }
+        li a:hover {
+            background: red;
+        }
         li:first-child {
             padding-top: 10px;
-            border-top: 1px solid #646464;
         }
         li, a {
             color: #FFFFFF;

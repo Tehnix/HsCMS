@@ -86,7 +86,15 @@ MarkdownInlineCode: Inline-code
 
 
 # -- admin/dashboard
-Analytics: Analytics
+CloudFlareAnalytics: CloudFlare Analytics
+CloudFlareAnalyticsInterval: Time Interval: 30 days
+CloudFlareAnalyticsLoading: Loading Data...
+CloudFlareAnalyticsPageViews: Page Views
+CloudFlareAnalyticsVisitors: Visitors
+CloudFlareAnalyticsUniqueVisitors: Unique Visitors
+CloudFlareAnalyticsRegular: Regular
+CloudFlareAnalyticsCrawler: Crawler
+CloudFlareAnalyticsThreat: Threat
 AuthorStatistics: Author Statistics
 CommentStatistics: Comment Statistics
 SystemInformation: System Information

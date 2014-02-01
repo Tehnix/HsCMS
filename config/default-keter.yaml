@@ -11,8 +11,8 @@ host: yoursite.com
 # The requests from nginx -> keter will not come to that 
 # hostname (the host setting), so we need to tell keter 
 # to listen on something else as well
-#extra-hosts:
-#    - "127.0.0.1:8000" 
+# extra-hosts:
+#     - "127.0.0.1:8000" 
 
 static-hosts:
     - host: yoursite.com/static

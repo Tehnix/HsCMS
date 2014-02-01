@@ -20,3 +20,6 @@
 /admin/blog/post/publish/#ArticleId     AdminPublishArticleR        POST
 /admin/blog/trash                       AdminShowTrashArticlesR GET
 /admin/blog/trash/put/#ArticleId        AdminTrashArticleR          POST
+
+/admin/api/cloudflare/stats             AdminCloudFlareStatsR   GET
+/admin/api/disqus/stats                 AdminDisqusStatsR       GET

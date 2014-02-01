@@ -3,7 +3,7 @@
     height: 100%;
     width: 100%;
     vertical-align: top;
-
+    
     .widget-row {
         display: table-row;
         vertical-align: top;
@@ -13,6 +13,8 @@
         border-right: 1px solid #eee;
         border-bottom: 1px solid #eee;
         display: table-cell;
+        height: 50%;
+        max-height: 50%;
         &.widget-left {
             width:45%;
         }
@@ -32,3 +34,49 @@
     }
 }
 
+.chart-color-box {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+}
+
+#disqus-chart {
+    max-width: 100% !important;
+    height: auto !important;
+}
+.disqus-comment-color {
+    background: rgba(151,187,205,1);
+}
+.disqus-likes-color {
+    background: rgba(220,220,220,1);
+}
+
+.loading-stats {
+    width: 100%;
+    text-align: center;
+}
+#cloudflare-table {
+    width: 100%;
+    .left {
+        width: 49%;
+    }
+    .right {
+        width: 49%;
+        text-align: center;
+    }
+    .cloudflare-regular-color {
+        background: #8EC844;
+    }
+    .cloudflare-crawler-color {
+        background: #E6E556;
+    }
+    .cloudflare-threat-color {
+        background: #FE5D4D;
+    }
+    .cloudflare-chart {
+        max-width: 50% !important;
+        height: auto !important;
+        margin-top: -18px;
+        margin-bottom: -9px;
+    }
+}

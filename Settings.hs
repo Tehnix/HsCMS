@@ -70,8 +70,13 @@ data Extra = Extra
     , extraAdmins :: [Text]
     , extraAnalytics :: Maybe Text -- ^ Google Analytics
     , extraDisqus :: Maybe Text
+    , extraDisqusSecretKey :: Maybe Text
+    , extraDisqusAccessToken :: Maybe Text
     , extraGithubToken :: Maybe Text
+    , extraGistPublic :: Maybe Bool
     , extraCloudflareKey :: Maybe Text
+    , extraCloudflareMail :: Maybe Text
+    , extraCloudflareZone :: Maybe Text
     } deriving Show
 
 parseExtra :: DefaultEnv -> Object -> Parser Extra
@@ -80,5 +85,10 @@ parseExtra _ o = Extra
     <*> o .: "admins"
     <*> o .:? "analytics"
     <*> o .:? "disqus"
+    <*> o .:? "disqusSecretKey"
+    <*> o .:? "disqusAccessToken"
     <*> o .:? "githubToken"
+    <*> o .:? "gistPublic"
     <*> o .:? "cloudflareKey"
+    <*> o .:? "cloudflareMail"
+    <*> o .:? "cloudflareZone"
