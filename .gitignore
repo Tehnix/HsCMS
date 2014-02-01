@@ -28,3 +28,4 @@ config/settings.yml
 config/keter.yaml
 config/favicon.ico
 config/postgresql.yml
+config/sqlite.yml
