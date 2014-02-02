@@ -37,7 +37,7 @@ getAdminShowArticlesR = do
     -- articles <- runDB $ selectList [ArticleTrash ==. False] [Desc ArticleAdded]
     adminLayout $ do
         setTitleI MsgTitleAdminBlogArticles
-        toWidget [lucius| #navigation .navigation-articles { background: red; } |]
+        toWidget [lucius| #navigation .navigation-articles { background: red; } .navigation-new-article { display: block !important; } |]
         $(widgetFile "admin/articles")
 
 -- The form page for posting a new blog post
@@ -49,7 +49,7 @@ getAdminNewArticleR = do
         addScript $ StaticR js_showdown_js
         addScript $ StaticR js_extensions_github_js
         setTitleI MsgTitleAdminNewArticle
-        toWidget [lucius| #navigation .navigation-new-article { background: red; } |]
+        toWidget [lucius| #navigation .navigation-new-article { background: red !important; } .navigation-new-article { display: block !important; } |]
         $(widgetFile "admin/create-article")
 
 -- Handling the new posted blog post
@@ -100,6 +100,7 @@ getAdminUpdateArticleR articleId = do
         case marticle of
             Just _ -> setTitleI MsgTitleAdminUpdateArticle
             Nothing -> setTitleI MsgTitleAdminNewArticle
+        toWidget [lucius| .navigation-new-article { display: block !important; } |]
         $(widgetFile "admin/create-article")
 
 -- Handling the updated blog post

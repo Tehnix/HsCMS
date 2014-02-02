@@ -6,20 +6,20 @@
 
 
 /                       ArticlesR   GET
-/blog/post/#ArticleId   ArticleR    GET
+/blog/#ArticleId        ArticleR    GET
 /author/#UserId         AuthorR     GET
 /archives               ArchivesR   GET
 /about                  AboutR      GET
 
 
 /admin                                  AdminDashboardR         GET
-/admin/blog/show                        AdminShowArticlesR      GET
-/admin/blog/post/create                 AdminNewArticleR        GET POST
-/admin/blog/post/update/#ArticleId      AdminUpdateArticleR     GET POST
-/admin/blog/post/unpublish/#ArticleId   AdminUnpublishArticleR      POST
-/admin/blog/post/publish/#ArticleId     AdminPublishArticleR        POST
+/admin/blog                             AdminShowArticlesR      GET
+/admin/blog/new                         AdminNewArticleR        GET POST
+/admin/blog/update/#ArticleId           AdminUpdateArticleR     GET POST
+/admin/blog/unpublish/#ArticleId        AdminUnpublishArticleR      POST
+/admin/blog/publish/#ArticleId          AdminPublishArticleR        POST
 /admin/blog/trash                       AdminShowTrashArticlesR GET
-/admin/blog/trash/put/#ArticleId        AdminTrashArticleR          POST
+/admin/blog/trash/#ArticleId            AdminTrashArticleR          POST
 
 /admin/api/cloudflare/stats             AdminCloudFlareStatsR   GET
 /admin/api/disqus/stats                 AdminDisqusStatsR       GET

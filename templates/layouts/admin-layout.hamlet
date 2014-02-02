@@ -1,13 +1,14 @@
 <div #nav role="nav">
     <div .user-image>
-        <img id="user-image" src="//www.gravatar.com/avatar/#{emailHash}?s=68">
+        <a href=@{ArticlesR}>
+            <img id="user-image" src="//www.gravatar.com/avatar/#{emailHash}?s=68">
     <ul #navigation>
         <li>
             <a .navigation-dashboard href=@{AdminDashboardR}>_{MsgDashboard}
         <li>
             <a .navigation-articles href=@{AdminShowArticlesR}>_{MsgArticles}
         <li>
-            <a .navigation-new-article href=@{AdminNewArticleR}>_{MsgNewArticle}
+            <a .navigation-new-article.nav-child href=@{AdminNewArticleR}>_{MsgNewArticle}
         <li>
             <a .navigation-settings href="#">_{MsgSettings}
         <li>
