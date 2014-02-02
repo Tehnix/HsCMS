@@ -8,7 +8,7 @@ $else
     $forall (Entity articleId article, Entity _ _) <- articles
         <section .article>
             <header .article-header>
-                <a href=@{ArticleR articleId}>
+                <a href=@{ArticleR articleId (spacesToDashes (articleTitle article))}>
                     <h1>#{articleTitle article}
                 <p .article-information>
                     Published 

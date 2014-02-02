@@ -10,8 +10,8 @@ import qualified Database.Esqueleto as E
 
 
 -- Fetch a specific article
-getArticleR :: ArticleId -> Handler Html
-getArticleR articleId = do
+getArticleR :: ArticleId -> Text -> Handler Html
+getArticleR articleId _ = do
     master <- getYesod
     article <- runDB $ get404 articleId
     if not (articleVisible article)

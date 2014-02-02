@@ -15,7 +15,6 @@
                 <div .picture>
                     $# TODO add a thumbnail of the picture if there are any in the blog posts, like
                     $# a header
-                    ...
                 <div .information>
                     <div .time>
                         #{formatTime defaultTimeLocale "%d/%m/%Y" (articleAdded article)}
@@ -24,7 +23,7 @@
                     <span .visible-status.hide>
                         #{articleVisible article}
                     <a .edit-link.hide href=@{AdminUpdateArticleR articleId}>
-                    <a .view-link.hide href=@{ArticleR articleId}>
+                    <a .view-link.hide href=@{ArticleR articleId (spacesToDashes (articleTitle article))}>
                     <a .unpublish-link.hide href=@{AdminUnpublishArticleR articleId}>
                     <a .publish-link.hide href=@{AdminPublishArticleR articleId}>
                     <a .delete-link.hide href=@{AdminTrashArticleR articleId}>

@@ -158,7 +158,7 @@ instance YesodBreadcrumbs App where
         crumb <- return $ "Author: " <> (takeWhile (/='@') (userIdent user))
         return (crumb, Just ArticlesR)
     breadcrumb ArchivesR = return ("Archives", Just ArticlesR)
-    breadcrumb (ArticleR articleId) = do
+    breadcrumb (ArticleR articleId _) = do
         article <- runDB $ get404 articleId
         return (articleTitle article, Just ArticlesR)
 

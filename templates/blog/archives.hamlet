@@ -16,7 +16,7 @@ $else
                 $forall (Entity articleId article, Entity _ _) <- articles
                     <tr>
                         <td .title>
-                            <a .link href=@{ArticleR articleId}>
+                            <a .link href=@{ArticleR articleId (spacesToDashes (articleTitle article))}>
                                 #{articleTitle article}
                         $#<td .author>
                         $#    #{splitByAt $ userIdent user}

@@ -6,7 +6,7 @@
 
 
 /                       ArticlesR   GET
-/blog/#ArticleId        ArticleR    GET
+/blog/#ArticleId/#Text  ArticleR    GET
 /author/#UserId         AuthorR     GET
 /archives               ArchivesR   GET
 /about                  AboutR      GET

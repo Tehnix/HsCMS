@@ -16,7 +16,7 @@
                 var disqus_shortname = '#{disqus}',
                     disqus_identifier = '#{extractKey articleId}',
                     disqus_title = '#{articleTitle article}',
-                    disqus_url = '@{ArticleR articleId}';
+                    disqus_url = '@{ArticleR articleId (spacesToDashes (articleTitle article))}';
 
                 (function() {
                     var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
