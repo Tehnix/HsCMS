@@ -4,15 +4,16 @@ html, body {
     width: 100%;
     margin:0;
     padding:0;
-    font-size: 1em;
+    font-size: 1.06em;
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-weight: 200;
 }
-h1 { font-size: 2.3em; font-weight: 100; line-height: 1em;}
-h2 { font-size: 1.6em; font-weight: 100; }
-h3 { font-weight: 100; }
-h4 { font-weight: 100; }
-h5 { font-weight: 100; }
+h1 { font-size: 3em; font-weight: 100; line-height: 1em;}
+h2 { font-size: 2.3em; font-weight: 100; }
+h3 { font-size: 2em; font-weight: 100; }
+h4 { font-size: 1.8em; font-weight: 100; }
+h5 { font-size: 1.4em; font-weight: 100; }
+h6 { font-size: 1.06em; font-weight: 100; }
 label { width: 8em; display: inline-block; }
 input, textarea { background: #FAFAFA}
 textarea { width: 27em; height: 9em; }
@@ -55,11 +56,8 @@ pre {
     position: relative;
     line-height: 1.5em;
     padding: 0px 30px 15px 30px;
-    max-width: 800px;
+    max-width: 650px;
     margin: 0 auto;
-}
-#content.medium-width {
-    max-width: 600px;
 }
 
 #breadcrumbs {
@@ -76,7 +74,7 @@ pre {
     margin: 0px 30px 5px 30px;
     padding: 5px 30px 5px 30px;
     border-top: 1px solid #D2D2D2;
-    max-width: 800px;
+    max-width: 650px;
     margin: 0 auto;
     .left-half {
         float:left;
@@ -84,9 +82,6 @@ pre {
     .right-half {
         float:right;
     }
-}
-#footer.medium-width {
-    max-width: 600px;
 }
 
 #copyright {

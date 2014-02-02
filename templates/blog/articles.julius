@@ -36,20 +36,6 @@ $(function(){
             }
         }
         
-        // Handle the layout based on the window size
-        var handleWindowSize = function() {
-            if ($(window).width() < 1225 && $(window).width() > 1015) {
-                $("#content, #pagination, #footer").addClass("medium-width");
-                $("#articles-sidebar").removeClass("hide");
-            } else if ($(window).width() <= 1015) {
-                $("#articles-sidebar").addClass("hide");
-                $("#content, #pagination, #footer").removeClass("medium-width");
-            } else {
-                $("#content, #pagination, #footer").removeClass("medium-width");
-                $("#articles-sidebar").removeClass("hide");
-            }
-        }
-        
         // Activate a pagination element
         var activatePage = function(elem) {
             var page = $(elem).html(),
@@ -101,10 +87,7 @@ $(function(){
         }
         handleHash();
         hashCheck();
-        $(window).resize(function() {
-            handleWindowSize();
-        })
-        handleWindowSize();
+        
         $(window).scroll(function() {
             setActivePost();
         });
