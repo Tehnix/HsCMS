@@ -16,7 +16,7 @@ import Data.Conduit (MonadBaseControl)
 import Data.Aeson
 import Network.HTTP.Conduit hiding (queryString)
 import Network.HTTP.QueryString (toString, queryString)
-import Control.Monad.IO.Class (MonadIO, liftIO)
+import Control.Monad.IO.Class (MonadIO)
 
 
 -- | 'DisqusAuth' consists of a secret API key and an access token.
@@ -69,5 +69,5 @@ getDisqusStats (DisqusRequest s a f) = do
     let getQuery = C.unpack $ toString $ queryString [("api_secret", encodeUtf8 s), ("access_token", encodeUtf8 a), ("forum", encodeUtf8 f), ("limit", "6")]
     res <- submitPostRequest $ "https://disqus.com/api/3.0/threads/listPopular.json?" ++ getQuery
     case (eitherDecode res) of
-        Left err -> return Nothing
+        Left _ -> return Nothing
         Right r -> return $ Just r

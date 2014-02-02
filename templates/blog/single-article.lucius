@@ -20,6 +20,9 @@
     }
     .article-body {
         margin-bottom: 10px;
+        h1 {
+            margin-top: 40px;
+        }
     }
     #disqus_thread {
         margin-top: 70px;
