@@ -19,5 +19,16 @@ Article
     visible Bool
     trash Bool
     deriving
-	
+StaticPage
+    title Text
+    mdContent Html
+    htmlContent Html
+    wordCount Int
+    added UTCTime
+    author UserId
+    gistId Text Maybe
+    visible Bool
+    trash Bool
+    deriving
+
  -- By default this file is used in Model.hs (which is imported by Foundation.hs)

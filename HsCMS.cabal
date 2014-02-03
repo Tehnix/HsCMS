@@ -32,9 +32,11 @@ library
                      API.Disqus
                      Handler.About
                      Handler.Blog
+                     Handler.StaticPages
                      Handler.Admin.API
                      Handler.Admin.Dashboard
                      Handler.Admin.Blog
+                     Handler.Admin.StaticPages
 
     if flag(dev) || flag(library-only)
         cpp-options:   -DDEVELOPMENT

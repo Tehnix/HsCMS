@@ -22,37 +22,68 @@ import qualified Database.Esqueleto as E
 import qualified Database.Esqueleto.Internal.Language as EI
 import           API.Gist
 
--- Fetch all articles with their author info
+
+-- | Markdown cheatsheet modal
+markdownCheatsheet :: Widget
+markdownCheatsheet = $(widgetFile "admin/markdown-cheatsheet")
+
+-- | Fetch all articles with their author information
 pullArticles :: (EI.From query expr backend (expr (Entity Article)), EI.From query expr backend (expr (Entity User))) => Bool -> query (expr (Entity Article), expr (Entity User))
 pullArticles trash = E.from $ \(a, u) -> do
     E.where_ (a E.^. ArticleAuthor E.==. u E.^. UserId E.&&. a E.^. ArticleTrash E.==. E.val trash)
     E.orderBy [E.desc (a E.^. ArticleAdded)]
     return (a, u)
 
--- The view showing the list of articles
+-- | View all articles
 getAdminShowArticlesR :: Handler Html
 getAdminShowArticlesR = do
+    msgRender <- getMessageRender
     let isTrashRoute = False
-    articles <- runDB $ E.select $ pullArticles False
-    -- articles <- runDB $ selectList [ArticleTrash ==. False] [Desc ArticleAdded]
+    contentList <- runDB $ E.select $ pullArticles False
     adminLayout $ do
         setTitleI MsgTitleAdminBlogArticles
-        toWidget [lucius| #navigation .navigation-articles { background: red; } .navigation-new-article { display: block !important; } |]
-        $(widgetFile "admin/articles")
+        toWidget [lucius| 
+            #navigation .navigation-articles { background: red; } 
+            #navigation .navigation-new-article { display: block !important; } 
+            #navigation .navigation-trash-articles { display: block !important; } 
+        |]
+        $(widgetFile "admin/list-content")
+    where
+        contentTitle = articleTitle
+        contentMarkdown = articleMdContent
+        contentHtmlContent = articleHtmlContent
+        contentVisible = articleVisible
+        contentAdded = articleAdded
+        contentWordCount = articleWordCount
+        updateRoute = AdminUpdateArticleR
+        viewRoute = ArticleR
+        unpublishRoute = AdminUnpublishArticleR
+        publishRoute = AdminPublishArticleR
+        trashRoute = AdminTrashArticleR
+        msgContentSingle = MsgArticle
+        msgContentPlural = MsgArticles
+        msgNoContent = MsgNoArticles
 
--- The form page for posting a new blog post
+-- | Form page for creating a new article
 getAdminNewArticleR :: Handler Html
 getAdminNewArticleR = do
     formroute <- return $ AdminNewArticleR
-    marticle <- return $ Nothing
+    mcontent <- return Nothing
     adminLayout $ do
         addScript $ StaticR js_showdown_js
         addScript $ StaticR js_extensions_github_js
         setTitleI MsgTitleAdminNewArticle
-        toWidget [lucius| #navigation .navigation-new-article { background: red !important; } .navigation-new-article { display: block !important; } |]
-        $(widgetFile "admin/create-article")
+        toWidget [lucius| 
+            #navigation .navigation-new-article { background: red !important; display: block !important; } 
+            #navigation .navigation-trash-articles { display: block !important; } 
+        |]
+        $(widgetFile "admin/create-content")
+    where
+        contentTitle = articleTitle
+        contentMarkdown = articleMdContent
+        contentVisible = articleVisible
 
--- Handling the new posted blog post
+-- | Handling the form for creating an article
 postAdminNewArticleR :: Handler Html
 postAdminNewArticleR = do
     title <- runInputPost $ ireq textField "form-title-field"
@@ -88,22 +119,27 @@ postAdminNewArticleR = do
             _ <- runDB $ insert $ Article title mdContent htmlContent wordCount added userId gistIdent True False
             redirect AdminShowArticlesR
 
--- The form page for updating an existing blog post
+-- | Form page for updating an article
 getAdminUpdateArticleR :: ArticleId -> Handler Html
 getAdminUpdateArticleR articleId = do
     formroute <- return $ AdminUpdateArticleR articleId
-    dbarticle <- runDB $ get404 articleId
-    marticle <- return $ Just dbarticle
+    dbcontent <- runDB $ get404 articleId
+    mcontent <- return $ Just dbcontent
     adminLayout $ do
         addScript $ StaticR js_showdown_js
         addScript $ StaticR js_extensions_github_js
-        case marticle of
-            Just _ -> setTitleI MsgTitleAdminUpdateArticle
-            Nothing -> setTitleI MsgTitleAdminNewArticle
-        toWidget [lucius| .navigation-new-article { display: block !important; } |]
-        $(widgetFile "admin/create-article")
+        setTitleI MsgTitleAdminUpdateArticle
+        toWidget [lucius| 
+            #navigation .navigation-new-article { display: block !important; } 
+            #navigation .navigation-trash-articles { display: block !important; } 
+        |]
+        $(widgetFile "admin/create-content")
+    where
+        contentTitle = articleTitle
+        contentMarkdown = articleMdContent
+        contentVisible = articleVisible
 
--- Handling the updated blog post
+-- | Handling the form for updating an article
 postAdminUpdateArticleR :: ArticleId -> Handler Html
 postAdminUpdateArticleR articleId = do
     title <- runInputPost $ ireq textField "form-title-field"
@@ -125,7 +161,7 @@ postAdminUpdateArticleR articleId = do
                     -- If the article doesn't have a gist ID already
                     return =<< createGist (Just (GitHubToken gToken)) $ Gist title (maybe True (\r -> r) (extraGistPublic extra)) $ fromList [(title <> ".md", (GistContent mdCont Nothing))]
                 Just gId -> do
-                    return =<< updateGist (GitHubToken gToken) gId $ Gist title True $ fromList [((articleTitle originalArticle) <> ".md", (GistContent mdCont (Just ((articleTitle originalArticle) <> ".md"))))]
+                    return =<< updateGist (GitHubToken gToken) gId $ Gist title True $ fromList [((articleTitle originalArticle) <> ".md", (GistContent mdCont (Just (title <> ".md"))))]
             case res of
                 Nothing -> return Nothing
                 Just (GistResponse gId) -> return $ Just gId
@@ -151,17 +187,36 @@ postAdminUpdateArticleR articleId = do
             runDB $ update articleId [ArticleGistId =. gistIdent, ArticleVisible =. publishStatus, ArticleTitle =. title, ArticleMdContent =. mdContent, ArticleHtmlContent =. htmlContent, ArticleWordCount =. wordCount]
             redirect AdminShowArticlesR
 
+-- | View all trashed articles
 getAdminShowTrashArticlesR :: Handler Html
 getAdminShowTrashArticlesR = do
+    msgRender <- getMessageRender
     let isTrashRoute = True
-    articles <- runDB $ E.select $ pullArticles True
-    -- articles <- runDB $ selectList [ArticleTrash ==. True] [Desc ArticleAdded]
+    contentList <- runDB $ E.select $ pullArticles True
     adminLayout $ do
         setTitleI MsgTitleAdminTrashArticles
-        toWidget [lucius| #navigation .navigation-trash { background: red; } |]
-        $(widgetFile "admin/articles")
+        toWidget [lucius| 
+            #navigation .navigation-new-article { display: block !important; } 
+            #navigation .navigation-trash-articles { background: red !important; display: block !important; } 
+        |]
+        $(widgetFile "admin/list-content")
+    where
+        contentTitle = articleTitle
+        contentMarkdown = articleMdContent
+        contentHtmlContent = articleHtmlContent
+        contentVisible = articleVisible
+        contentAdded = articleAdded
+        contentWordCount = articleWordCount
+        updateRoute = AdminUpdateArticleR
+        viewRoute = ArticleR
+        unpublishRoute = AdminUnpublishArticleR
+        publishRoute = AdminPublishArticleR
+        trashRoute = AdminTrashArticleR
+        msgContentSingle = MsgArticle
+        msgContentPlural = MsgArticles
+        msgNoContent = MsgNoArticles
 
--- Deleting a blog post
+-- | Mark an article as trashed
 postAdminTrashArticleR :: ArticleId -> Handler Html
 postAdminTrashArticleR articleId = do
     runDB $ update articleId [ArticleTrash =. True]
@@ -169,7 +224,7 @@ postAdminTrashArticleR articleId = do
     setMessageI $ MsgMsgDeletedArticle $ (articleTitle article)
     redirect AdminShowArticlesR
 
--- Unpublish the blog post
+-- | Change the status of an article to unpublished
 postAdminUnpublishArticleR :: ArticleId -> Handler Html
 postAdminUnpublishArticleR articleId = do
     runDB $ update articleId [ArticleVisible =. False]
@@ -177,7 +232,7 @@ postAdminUnpublishArticleR articleId = do
     setMessageI $ MsgMsgUnpublishedArticle $ (articleTitle article)
     redirect AdminShowArticlesR
 
--- Publish the blog post
+-- | Change the status of an article to published
 postAdminPublishArticleR :: ArticleId -> Handler Html
 postAdminPublishArticleR articleId = do
     runDB $ update articleId [ArticleVisible =. True]

@@ -6,17 +6,4 @@ $else
         <div #articles-sidebar-item-bottom>
             <div .arrow-down>
     $forall (Entity articleId article, Entity _ _) <- articles
-        <section .article>
-            <header .article-header>
-                <a href=@{ArticleR articleId (spacesToDashes (articleTitle article))}>
-                    <h1>#{articleTitle article}
-                <p .article-information>
-                    Published 
-                    on #{formatTime defaultTimeLocale "%h %d, %Y" (articleAdded article)} 
-                    $#  by 
-                    $# <a href=@{AuthorR userId}>
-                    $#     #{splitByAt $ userIdent user}
-            <article .article-body>
-                #{articleHtmlContent article}
-            <div .clear>
-
+        ^{blogArticle articleId article False}

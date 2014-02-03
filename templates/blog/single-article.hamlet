@@ -1,6 +1,10 @@
 <section .article>
     <header .article-header>
-        <h1>#{articleTitle article}
+        $if allowComments
+            <h1>#{articleTitle article}
+        $else
+            <a href=@{ArticleR articleId (spacesToDashes (articleTitle article))}>
+                <h1>#{articleTitle article}
         <p .article-information>
             Published
             on #{formatTime defaultTimeLocale "%h %d, %Y" (articleAdded article)}
@@ -10,20 +14,21 @@
     <article .article-body>
         #{articleHtmlContent article}
     <div .clear>
-    $maybe disqus <- extraDisqus $ appExtra $ settings master
-        <article #disqus_thread>
-            <script type="text/javascript">
-                var disqus_shortname = '#{disqus}',
-                    disqus_identifier = '#{extractKey articleId}',
-                    disqus_title = '#{articleTitle article}',
-                    disqus_url = '@{ArticleR articleId (spacesToDashes (articleTitle article))}';
+    $if allowComments
+        $maybe disqus <- extraDisqus $ appExtra $ settings master
+            <article #disqus_thread>
+                <script type="text/javascript">
+                    var disqus_shortname = '#{disqus}',
+                        disqus_identifier = '#{extractKey articleId}',
+                        disqus_title = '#{articleTitle article}',
+                        disqus_url = '@{ArticleR articleId (spacesToDashes (articleTitle article))}';
 
-                (function() {
-                    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-                    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-                    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-                })();
-            <noscript>
-                Please enable JavaScript to view the
-                    <a href="http://disqus.com/?ref_noscript">
-                        comments powered by Disqus.
+                    (function() {
+                        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                    })();
+                <noscript>
+                    Please enable JavaScript to view the
+                        <a href="http://disqus.com/?ref_noscript">
+                            comments powered by Disqus.

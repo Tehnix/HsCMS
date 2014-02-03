@@ -1,59 +1,3 @@
-<form #form-form method=post action=@{formroute}>
-    <input #form-wordcount-field name="form-wordcount-field" type="hidden" value="0">
-    <textarea #form-htmlcontent-field.hide name="form-htmlcontent-field">
-    <div #form-title>
-        $maybe article <- marticle
-            <input #form-title-field name="form-title-field" type="text" placeholder="_{MsgArticleTitlePlaceholder}" required="" value="#{articleTitle article}">
-        $nothing
-            <input #form-title-field name="form-title-field" type="text" placeholder="_{MsgArticleTitlePlaceholder}" required="" value="">
-    <div #permalink>
-        <b>Permalink</b> http://domain.com/article/<b><span id="permalink-text">_{MsgDashedArticleTitle}</span></b>/
-    
-    <div #content-preview-container>
-        <div #form-content>
-            <div .padding>
-                <div .left.red>
-                    _{MsgMarkdown}
-                <div .right.red.bold.pointer>
-                    <span data-toggle="modal" data-target="#markdown-cheatsheet" data-keyboard="static">?
-                <div .clear>
-                <hr>
-                $maybe article <- marticle
-                    <textarea #form-mdcontent-field name="form-mdcontent-field" placeholder="_{MsgContentPlaceholder}">
-                        #{articleMdContent article}
-                $nothing
-                    <textarea #form-mdcontent-field name="form-mdcontent-field" placeholder="_{MsgContentPlaceholder}">
-        <div #form-content-preview>
-            <div .padding>
-                <div .left.red>
-                    _{MsgPreview}
-                <div .right.red>
-                    <span #word-count>
-                        0
-                    <span #word-count-plural>
-                        _{MsgLowerWords}
-                    <span #word-count-single.hide>
-                        _{MsgLowerWord}
-                <div .clear>
-                <hr>
-                <div #preview-content-container>
-        <div .clear>
-        <div #bottom-bar>
-            <div .spacing>
-                <div .right>
-                    <input type="checkbox" value="true" name="form-publish" #form-publish-box .hide>
-                    <input type="checkbox" value="true" name="form-unpublish" #form-unpublish-box .hide>
-                    $maybe article <- marticle
-                        <input #form-save-btn .btn.btn-primary.extra-padding type="submit" value="_{MsgUpdate}">
-                        $if (articleVisible article)
-                            <input #form-unpublish-btn .btn.btn-danger type="submit" value="_{MsgUnpublish}">
-                        $else
-                            <input #form-publish-btn .btn.btn-success type="submit" value="_{MsgPublish}">
-                    $nothing
-                        <input #form-save-btn .btn.btn-primary.extra-padding type="submit" value="_{MsgSaveDraft}">
-                        <input #form-publish-btn .btn.btn-success type="submit" value="_{MsgPublish}">
-
-
 <!-- Modal -->
 <div class="modal fade" id="markdown-cheatsheet" tabindex="-1" role="dialog" aria-labelledby="MarkdownLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -133,7 +77,3 @@
                             <br>
                             <code>
                                 but you can also use &lt;code&gt;  &lt;/code&gt;!
-                
-                            
-                            
-                            

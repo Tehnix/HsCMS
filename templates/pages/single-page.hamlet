@@ -1,0 +1,23 @@
+<section .staticPage>
+    <header .staticPage-header>
+        <h1>#{staticPageTitle staticPage}
+    <staticPage .staticPage-body>
+        #{staticPageHtmlContent staticPage}
+    <div .clear>
+    $maybe disqus <- extraDisqus $ appExtra $ settings master
+        <staticPage #disqus_thread>
+            <script type="text/javascript">
+                var disqus_shortname = '#{disqus}',
+                    disqus_identifier = '#{extractKey staticPageId}',
+                    disqus_title = '#{staticPageTitle staticPage}',
+                    disqus_url = '@{StaticPageR staticPageId (spacesToDashes (staticPageTitle staticPage))}';
+
+                (function() {
+                    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+            <noscript>
+                Please enable JavaScript to view the
+                    <a href="http://disqus.com/?ref_noscript">
+                        comments powered by Disqus.

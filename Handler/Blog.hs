@@ -9,18 +9,7 @@ import System.Locale (defaultTimeLocale)
 import qualified Database.Esqueleto as E
 
 
--- Fetch a specific article
-getArticleR :: ArticleId -> Text -> Handler Html
-getArticleR articleId _ = do
-    master <- getYesod
-    article <- runDB $ get404 articleId
-    if not (articleVisible article)
-        then notFound
-        else defaultLayout $ do
-            setTitle $ toHtml $ articleTitle article
-            $(widgetFile "blog/single-article")
-
--- Fetch all articles with their author info
+-- | Fetch all articles with their author information
 pullArticles :: Handler [(Entity Article, Entity User)]
 pullArticles = runDB $ E.select $
     E.from $ \(a, u) -> do
@@ -28,15 +17,37 @@ pullArticles = runDB $ E.select $
     E.orderBy [E.desc (a E.^. ArticleAdded)]
     return (a, u)
 
+-- | Article widget
+blogArticle :: ArticleId -> Article -> Bool -> Widget
+blogArticle articleId article comments = do
+    master <- getYesod
+    allowComments <- return comments
+    $(widgetFile "blog/single-article")
+
+-- | Display a single article
+getArticleR :: ArticleId -> Text -> Handler Html
+getArticleR articleId _ = do
+    master <- getYesod
+    article <- runDB $ get404 articleId
+    allowComments <- return True
+    if not (articleVisible article)
+        then notFound
+        else defaultLayout $ do
+            setTitle $ toHtml $ articleTitle article
+            $(widgetFile "blog/single-article")
+
+-- | Display all articles
 getArticlesR :: Handler Html
 getArticlesR = do
     maid <- maybeAuthId
     muser <- maybeAuth
     articles <- pullArticles
+    allowComments <- return False
     defaultLayout $ do
         setTitle "Blog"
         $(widgetFile "blog/articles")
 
+-- | Display a archive of all articles
 getArchivesR :: Handler Html
 getArchivesR = do
     maid <- maybeAuthId
@@ -46,6 +57,7 @@ getArchivesR = do
         setTitle "Archives"
         $(widgetFile "blog/archives")
 
+-- | Display all articles from a specific author
 getAuthorR :: UserId -> Handler Html
 getAuthorR author = do
     maid <- maybeAuthId

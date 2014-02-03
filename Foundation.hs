@@ -161,11 +161,15 @@ instance YesodBreadcrumbs App where
     breadcrumb (ArticleR articleId _) = do
         article <- runDB $ get404 articleId
         return (articleTitle article, Just ArticlesR)
+    breadcrumb (StaticPageR staticPageId _) = do
+        staticPage <- runDB $ get404 staticPageId
+        return (staticPageTitle staticPage, Just ArticlesR)
 
     -- Admin panel breadcrumbs
     breadcrumb AdminDashboardR = do
         render <- getMessageRender
         return (render MsgCrumbAdminDashboard, Nothing)
+    -- Admin panel Articles breadcrumbs
     breadcrumb AdminShowArticlesR = do
         render <- getMessageRender
         return (render MsgCrumbAdminArticles, Just AdminDashboardR)
@@ -195,6 +199,36 @@ instance YesodBreadcrumbs App where
         article <- runDB $ get404 articleId
         crumb <- return $ render $ MsgCrumbAdminPublished (articleTitle article)
         return (crumb, Just AdminShowArticlesR)
+    -- Admin panel Static Pages breadcrumbs
+    breadcrumb AdminShowStaticPagesR = do
+        render <- getMessageRender
+        return (render MsgCrumbAdminStaticPages, Just AdminDashboardR)
+    breadcrumb AdminShowTrashStaticPagesR = do
+        render <- getMessageRender
+        return (render MsgCrumbAdminTrashedStaticPages, Just AdminDashboardR)
+    breadcrumb AdminNewStaticPageR = do
+        render <- getMessageRender
+        return (render MsgCrumbAdminNewStaticPage, Just AdminDashboardR)
+    breadcrumb (AdminUpdateStaticPageR staticPageId) = do
+        render <- getMessageRender
+        staticPage <- runDB $ get404 staticPageId
+        crumb <- return $ render $ MsgCrumbAdminUpdated (staticPageTitle staticPage)
+        return (crumb, Just AdminShowStaticPagesR)
+    breadcrumb (AdminTrashStaticPageR staticPageId) = do
+        render <- getMessageRender
+        staticPage <- runDB $ get404 staticPageId
+        crumb <- return $ render $ MsgCrumbAdminTrashed (staticPageTitle staticPage)
+        return (crumb, Just AdminShowTrashStaticPagesR)
+    breadcrumb (AdminUnpublishStaticPageR staticPageId) = do
+        render <- getMessageRender
+        staticPage <- runDB $ get404 staticPageId
+        crumb <- return $ render $ MsgCrumbAdminUnpublished (staticPageTitle staticPage)
+        return (crumb, Just AdminShowStaticPagesR)
+    breadcrumb (AdminPublishStaticPageR staticPageId) = do
+        render <- getMessageRender
+        staticPage <- runDB $ get404 staticPageId
+        crumb <- return $ render $ MsgCrumbAdminPublished (staticPageTitle staticPage)
+        return (crumb, Just AdminShowStaticPagesR)
 
     -- These pages never call breadcrumb
     breadcrumb FaviconR = return ("", Nothing)
