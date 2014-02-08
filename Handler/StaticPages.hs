@@ -10,7 +10,9 @@ import qualified Database.Esqueleto as E
 pullStaticPages :: Handler [(Entity StaticPage, Entity User)]
 pullStaticPages = runDB $ E.select $
     E.from $ \(a, u) -> do
-    E.where_ (a E.^. StaticPageAuthor E.==. u E.^. UserId E.&&. a E.^. StaticPageVisible E.==. E.val True E.&&. a E.^. StaticPageTrash E.==. E.val False)
+    E.where_ (a E.^. StaticPageAuthor E.==. u E.^. UserId 
+        E.&&. a E.^. StaticPageVisible E.==. E.val True 
+        E.&&. a E.^. StaticPageTrash E.==. E.val False)
     E.orderBy [E.desc (a E.^. StaticPageAdded)]
     return (a, u)
 

@@ -21,16 +21,53 @@ import           Text.Blaze.Html.Renderer.Text (renderHtml)
 import qualified Database.Esqueleto as E
 import qualified Database.Esqueleto.Internal.Language as EI
 import           API.Gist
+import           Data.Maybe (fromMaybe)
 
+
+{-|
+  This block generalises the templates so they can be used with other
+  content.
+-}
+contentTitle :: StaticPage -> Text
+contentTitle = staticPageTitle
+contentMarkdown :: StaticPage -> Html
+contentMarkdown = staticPageMdContent
+contentHtmlContent :: StaticPage -> Html
+contentHtmlContent = staticPageHtmlContent
+contentVisible :: StaticPage -> Bool
+contentVisible = staticPageVisible
+contentAdded :: StaticPage -> UTCTime
+contentAdded = staticPageAdded
+contentWordCount :: StaticPage -> Int
+contentWordCount = staticPageWordCount
+updateRoute :: StaticPageId -> Route App
+updateRoute = AdminUpdateStaticPageR
+viewRoute :: StaticPageId -> Text -> Route App
+viewRoute = StaticPageR
+unpublishRoute :: StaticPageId -> Route App
+unpublishRoute = AdminUnpublishStaticPageR
+publishRoute :: StaticPageId -> Route App
+publishRoute = AdminPublishStaticPageR
+trashRoute :: StaticPageId -> Route App
+trashRoute = AdminTrashStaticPageR
+msgContentSingle :: AppMessage
+msgContentSingle = MsgPage
+msgContentPlural :: AppMessage
+msgContentPlural = MsgPages
+msgNoContent :: AppMessage
+msgNoContent = MsgNoPages
 
 -- | Markdown cheatsheet modal
 markdownCheatsheet :: Widget
 markdownCheatsheet = $(widgetFile "admin/markdown-cheatsheet")
 
 -- | Fetch all articles with their author information
-pullStaticPages :: (EI.From query expr backend (expr (Entity StaticPage)), EI.From query expr backend (expr (Entity User))) => Bool -> query (expr (Entity StaticPage), expr (Entity User))
+pullStaticPages :: (EI.From query expr backend (expr (Entity StaticPage)), 
+                    EI.From query expr backend (expr (Entity User))) => 
+                    Bool -> query (expr (Entity StaticPage), expr (Entity User))
 pullStaticPages trash = E.from $ \(a, u) -> do
-    E.where_ (a E.^. StaticPageAuthor E.==. u E.^. UserId E.&&. a E.^. StaticPageTrash E.==. E.val trash)
+    E.where_ (a E.^. StaticPageAuthor E.==. u E.^. UserId 
+        E.&&. a E.^. StaticPageTrash E.==. E.val trash)
     E.orderBy [E.desc (a E.^. StaticPageAdded)]
     return (a, u)
 
@@ -48,26 +85,11 @@ getAdminShowStaticPagesR = do
             #navigation .navigation-trash-pages { display: block !important; } 
         |]
         $(widgetFile "admin/list-content")
-    where
-        contentTitle = staticPageTitle
-        contentMarkdown = staticPageMdContent
-        contentHtmlContent = staticPageHtmlContent
-        contentVisible = staticPageVisible
-        contentAdded = staticPageAdded
-        contentWordCount = staticPageWordCount
-        updateRoute = AdminUpdateStaticPageR
-        viewRoute = StaticPageR
-        unpublishRoute = AdminUnpublishStaticPageR
-        publishRoute = AdminPublishStaticPageR
-        trashRoute = AdminTrashStaticPageR
-        msgContentSingle = MsgPage
-        msgContentPlural = MsgPages
-        msgNoContent = MsgNoPages
 
 -- | Form page for creating a new article
 getAdminNewStaticPageR :: Handler Html
 getAdminNewStaticPageR = do
-    formroute <- return $ AdminNewStaticPageR
+    formroute <- return AdminNewStaticPageR
     mcontent <- return Nothing
     adminLayout $ do
         addScript $ StaticR js_showdown_js
@@ -78,10 +100,6 @@ getAdminNewStaticPageR = do
             #navigation .navigation-trash-pages { display: block !important; } 
         |]
         $(widgetFile "admin/create-content")
-    where
-        contentTitle c = articleTitle c
-        contentMarkdown c = articleMdContent c
-        contentVisible c = articleVisible c
 
 -- | Handling the form for creating an article
 postAdminNewStaticPageR :: Handler Html
@@ -98,21 +116,21 @@ postAdminNewStaticPageR = do
     case publish of
         Nothing -> do
             staticPageId <- runDB $ insert $ StaticPage title mdContent htmlContent wordCount added userId Nothing False False
-            setMessageI $ MsgMsgSavedStaticPage $ title
+            setMessageI $ MsgMsgSavedStaticPage title
             redirect (AdminUpdateStaticPageR staticPageId)
         Just _ -> do
-            setMessageI $ MsgMsgCreatedStaticPage $ title
+            setMessageI $ MsgMsgCreatedStaticPage title
             
             -- Create a gist of the post if the GitHub PA Token is set
             extra <- getExtra
-            gistIdent <- case (extraGithubToken extra) of
+            gistIdent <- case extraGithubToken extra of
                 Nothing -> return Nothing
                 Just gToken -> do
                     let mdCont = toStrict (renderHtml mdContent)
-                    res <- createGist (Just (GitHubToken gToken)) $ Gist title (maybe True (\r -> r) (extraGistPublic extra)) $ fromList [(title <> ".md", (GistContent mdCont Nothing))]
+                    res <- createGist (Just (GitHubToken gToken)) $ Gist title (fromMaybe True (extraGistPublic extra)) $ fromList [(title <> ".md", GistContent mdCont Nothing)]
                     case res of
                         Nothing -> do
-                            setMessageI $ MsgMsgCreatedStaticPageGistError $ title
+                            setMessageI $ MsgMsgCreatedStaticPageGistError title
                             return Nothing
                         Just (GistResponse gId) -> return $ Just gId
             
@@ -134,10 +152,6 @@ getAdminUpdateStaticPageR pageId = do
             #navigation .navigation-trash-pages { display: block !important; } 
         |]
         $(widgetFile "admin/create-content")
-    where
-        contentTitle = staticPageTitle
-        contentMarkdown = staticPageMdContent
-        contentVisible = staticPageVisible
 
 -- | Handling the form for updating an article
 postAdminUpdateStaticPageR :: StaticPageId -> Handler Html
@@ -152,16 +166,14 @@ postAdminUpdateStaticPageR pageId = do
     -- Update the gist of the post if the GitHub PA Token is set
     originalStaticPage <- runDB $ get404 pageId
     extra <- getExtra
-    gistIdent <- case (extraGithubToken extra) of
+    gistIdent <- case extraGithubToken extra of
         Nothing -> return Nothing
         Just gToken -> do
             let mdCont = toStrict (renderHtml mdContent)
-            res <- case (staticPageGistId originalStaticPage) of
-                Nothing -> do
-                    -- If the article doesn't have a gist ID already
-                    return =<< createGist (Just (GitHubToken gToken)) $ Gist title (maybe True (\r -> r) (extraGistPublic extra)) $ fromList [(title <> ".md", (GistContent mdCont Nothing))]
-                Just gId -> do
-                    return =<< updateGist (GitHubToken gToken) gId $ Gist title True $ fromList [((staticPageTitle originalStaticPage) <> ".md", (GistContent mdCont (Just (title <> ".md"))))]
+            res <- case staticPageGistId originalStaticPage of
+                -- If the article doesn't have a gist ID already
+                Nothing -> return =<< createGist (Just (GitHubToken gToken)) $ Gist title (fromMaybe True (extraGistPublic extra)) $ fromList [(title <> ".md", GistContent mdCont Nothing)]
+                Just gId -> return =<< updateGist (GitHubToken gToken) gId $ Gist title True $ fromList [(staticPageTitle originalStaticPage <> ".md", GistContent mdCont (Just (title <> ".md")))]
             case res of
                 Nothing -> return Nothing
                 Just (GistResponse gId) -> return $ Just gId
@@ -169,10 +181,10 @@ postAdminUpdateStaticPageR pageId = do
     -- Set the Bool and message depending on whether the post is published or unpublished
     publishStatus <- case unpublish of
         Nothing -> do
-            setMessageI $ MsgMsgPublishedStaticPage $ title
+            setMessageI $ MsgMsgPublishedStaticPage title
             return True
         Just _ -> do
-            setMessageI $ MsgMsgUnpublishedStaticPage $ title
+            setMessageI $ MsgMsgUnpublishedStaticPage title
             return False
     
     -- Either save the post (ignoring if it's published or not), or change the publish status of the post
@@ -180,8 +192,8 @@ postAdminUpdateStaticPageR pageId = do
         Nothing -> do
             runDB $ update pageId [StaticPageGistId =. gistIdent, StaticPageVisible =. publishStatus, StaticPageTitle =. title, StaticPageMdContent =. mdContent, StaticPageHtmlContent =. htmlContent, StaticPageWordCount =. wordCount]
             if publishStatus then
-                setMessageI $ MsgMsgSavedStaticPage $ title 
-                else setMessageI $ MsgMsgUnpublishedStaticPage $ title
+                setMessageI $ MsgMsgSavedStaticPage title 
+                else setMessageI $ MsgMsgUnpublishedStaticPage title
             redirect (AdminUpdateStaticPageR pageId)
         Just _ -> do
             runDB $ update pageId [StaticPageGistId =. gistIdent, StaticPageVisible =. publishStatus, StaticPageTitle =. title, StaticPageMdContent =. mdContent, StaticPageHtmlContent =. htmlContent, StaticPageWordCount =. wordCount]
@@ -200,28 +212,13 @@ getAdminShowTrashStaticPagesR = do
             #navigation .navigation-trash-pages { background: red !important; display: block !important; } 
         |]
         $(widgetFile "admin/list-content")
-    where
-        contentTitle = staticPageTitle
-        contentMarkdown = staticPageMdContent
-        contentHtmlContent = staticPageHtmlContent
-        contentVisible = staticPageVisible
-        contentAdded = staticPageAdded
-        contentWordCount = staticPageWordCount
-        updateRoute = AdminUpdateStaticPageR
-        viewRoute = StaticPageR
-        unpublishRoute = AdminUnpublishStaticPageR
-        publishRoute = AdminPublishStaticPageR
-        trashRoute = AdminTrashStaticPageR
-        msgContentSingle = MsgPage
-        msgContentPlural = MsgPages
-        msgNoContent = MsgNoPages
 
 -- | Mark an article as trashed
 postAdminTrashStaticPageR :: StaticPageId -> Handler Html
 postAdminTrashStaticPageR pageId = do
     runDB $ update pageId [StaticPageTrash =. True]
     page <- runDB $ get404 pageId
-    setMessageI $ MsgMsgDeletedStaticPage $ (staticPageTitle page)
+    setMessageI $ MsgMsgDeletedStaticPage $ staticPageTitle page
     redirect AdminShowStaticPagesR
 
 -- | Change the status of an article to unpublished
@@ -229,7 +226,7 @@ postAdminUnpublishStaticPageR :: StaticPageId -> Handler Html
 postAdminUnpublishStaticPageR pageId = do
     runDB $ update pageId [StaticPageVisible =. False]
     page <- runDB $ get404 pageId
-    setMessageI $ MsgMsgUnpublishedStaticPage $ (staticPageTitle page)
+    setMessageI $ MsgMsgUnpublishedStaticPage $ staticPageTitle page
     redirect AdminShowStaticPagesR
 
 -- | Change the status of an article to published
@@ -237,6 +234,6 @@ postAdminPublishStaticPageR :: StaticPageId -> Handler Html
 postAdminPublishStaticPageR pageId = do
     runDB $ update pageId [StaticPageVisible =. True]
     page <- runDB $ get404 pageId
-    setMessageI $ MsgMsgPublishedStaticPage $ (staticPageTitle page)
+    setMessageI $ MsgMsgPublishedStaticPage $ staticPageTitle page
     redirect AdminShowStaticPagesR
 
