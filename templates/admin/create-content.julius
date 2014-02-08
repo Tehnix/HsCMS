@@ -84,3 +84,4 @@ $(function(){
         rearrange($(window).width(), $(window).height());
     });
 });
+

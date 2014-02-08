@@ -4,3 +4,4 @@ if (msg) {
         msg.fadeOut();
     }, 2 * 1000);
 }
+

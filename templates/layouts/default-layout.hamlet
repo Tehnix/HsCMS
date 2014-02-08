@@ -5,7 +5,7 @@
                 #{msg}
         <div #breadcrumbs>
             $forall p <- parents
-                <a href="@{fst p}">#{snd p}</a> > 
+                <a href="@{fst p}">#{snd p}</a> >
             #{title'}
         ^{widget}
     <div .clear>
@@ -19,3 +19,4 @@
             <br />
             <a href="https://twitter.com/ZealDev">twitter</a> feed
     <div .clear>
+

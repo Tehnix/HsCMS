@@ -71,9 +71,9 @@ instance FromJSON CloudFlareResponse where
   'submitPostRequest' sends the POST request to the url parameter, and return the response as a 'L.ByteString' wrapped in 'MonadIO' or 'MonadBaseControl IO' monad.
 -}
 submitPostRequest :: (MonadIO m, MonadBaseControl IO m) => String -> [(ByteString, ByteString)] -> m L.ByteString
-submitPostRequest urlString postQuery = do
+submitPostRequest urlString postQuery = 
     case parseUrl urlString of
-        Nothing -> return $ "URL Syntax Error"
+        Nothing -> return "URL Syntax Error"
         Just initReq -> withManager $ \manager -> do
             let req = initReq { secure = True
                               , requestHeaders = [("User-Agent", "HsCMS")]
@@ -95,7 +95,8 @@ getCloudFlareStats (CloudFlareAuth t e) (CloudFlareAction zn i) = do
                     , ("interval", encodeUtf8 i) 
                     ]
     res <- submitPostRequest "https://www.cloudflare.com/api_json.html" postQuery
-    case (eitherDecode res) of
+    case eitherDecode res of
         Left _ -> return Nothing
         Right (CloudFlareResponse (traffic:_) _) -> return $ Just traffic
         Right (CloudFlareResponse [] _) -> return Nothing
+

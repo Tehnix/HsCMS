@@ -18,15 +18,15 @@
         <li>
             <a .navigation-trash-pages.nav-child href=@{AdminShowTrashStaticPagesR}>_{MsgTrash}
         <li>
-            <a .navigation-settings href="#">_{MsgSettings}                
+            <a .navigation-settings href="#">_{MsgSettings}
     <ul #bottom-navigation>
         <li>
             <a href=@{AuthR LogoutR}>_{MsgLogout}
-    
-    
+
 <div #main role="main">
     <div #content>
         $maybe msg <- mmsg
             <div #message>#{msg}
         ^{widget}
     <div .clear>
+

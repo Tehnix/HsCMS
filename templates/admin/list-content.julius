@@ -19,8 +19,6 @@ $(function(){
         rearrange($(window).width());
     });
     
-    
-    
     var items = $("#content-list .list-item"),
         $previewContainer = $("#content-preview-container"),
         $titlePreview = $("#title-container"),
@@ -64,7 +62,6 @@ $(function(){
         $(items[0]).addClass('selected');
         fillInContent($(items[0]));
     }
-    
     $("#content-list").on("click", ".list-item", function() {
         if (!$(this).hasClass("selected")) {
             items.removeClass("selected");
@@ -77,10 +74,7 @@ $(function(){
         }
     });
     
-    
-    
     var $searchBox = $("#search-box");
-    
     $searchBox.on("keyup", function() {
         if ($(this).val() === "") {
             items.removeClass("hide");
@@ -96,3 +90,4 @@ $(function(){
         }
     });
 });
+

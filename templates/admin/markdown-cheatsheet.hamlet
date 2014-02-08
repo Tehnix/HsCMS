@@ -9,7 +9,7 @@
                 <table #cheatsheet-table>
                     <tr>
                         <td colspan="2">
-                            _{MsgMarkdownCheatsheetExplanation} 
+                            _{MsgMarkdownCheatsheetExplanation}
                             <a href="http://daringfireball.net/projects/markdown/syntax">
                                 _{MsgMarkdownSyntax}
                             .
@@ -66,8 +66,8 @@
                             _{MsgMarkdownCodeBlock}: &nbsp;
                             <pre>
                                 &lt;pre&gt;
-                                &nbsp;&nbsp;This block is genereted using 
-                                &nbsp;&nbsp;wrapping the text in &lt;pre&gt; 
+                                &nbsp;&nbsp;This block is genereted using
+                                &nbsp;&nbsp;wrapping the text in &lt;pre&gt;
                                 &nbsp;&nbsp;or ```
                                 &lt;/pre&gt;
                         <td .right>
@@ -77,3 +77,4 @@
                             <br>
                             <code>
                                 but you can also use &lt;code&gt;  &lt;/code&gt;!
+

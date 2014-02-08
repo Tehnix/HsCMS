@@ -70,7 +70,7 @@ instance FromJSON GistResponse where
 
 -- | Convert the GitHub Personal Access Token to a basic authorization header
 getTokenHeader :: GitHubToken -> RequestHeaders
-getTokenHeader (GitHubToken tk) = [("Authorization", "token " <> (encodeUtf8 tk))]
+getTokenHeader (GitHubToken tk) = [("Authorization", "token " <> encodeUtf8 tk)]
 
 {-|
   'submitPostRequest' sends the POST request to the url parameter, and return the response as a 'ByteString' wrapped in 'MonadIO' or 'MonadBaseControl IO' monad.
@@ -79,7 +79,7 @@ submitPostRequest :: (MonadIO m, MonadBaseControl IO m) => String -> Maybe GitHu
 submitPostRequest urlString githubToken body = do
     let tokenHeader = maybe [] getTokenHeader githubToken
     case parseUrl urlString of
-        Nothing -> return $ "URL Syntax Error"
+        Nothing -> return "URL Syntax Error"
         Just initReq -> withManager $ \manager -> do
             let req = initReq { secure = True
                               , method = "POST"
@@ -98,7 +98,7 @@ createGist :: (MonadIO m, MonadBaseControl IO m) => Maybe GitHubToken -> Gist ->
 createGist githubToken gist = do
     let body = encode $ toJSON gist
     res <- submitPostRequest "https://api.github.com/gists" githubToken body
-    case (eitherDecode res) of
+    case eitherDecode res of
         Left _ -> return Nothing
         Right gistResponse -> return $ Just gistResponse
 
@@ -109,8 +109,8 @@ createGist githubToken gist = do
 updateGist :: (MonadIO m, MonadBaseControl IO m) => GitHubToken -> Text -> Gist -> m (Maybe GistResponse)
 updateGist githubToken gId gist = do
     let body = encode $ toJSON gist
-    let url = "https://api.github.com/gists/" ++ (unpack gId)
+    let url = "https://api.github.com/gists/" ++ unpack gId
     res <- submitPostRequest url (Just githubToken) body
-    case (eitherDecode res) of
+    case eitherDecode res of
         Left _ -> return Nothing
         Right gistResponse -> return $ Just gistResponse

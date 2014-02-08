@@ -33,17 +33,17 @@
                                 _{MsgCloudFlareAnalyticsPageViews}
                             <br>
                             <div .cloudflare-regular-color.chart-color-box></div>
-                            _{MsgCloudFlareAnalyticsRegular}: 
+                            _{MsgCloudFlareAnalyticsRegular}:
                             <span #cloudflare-pageviews-regular>
                                 ...
                             <br>
                             <div .cloudflare-crawler-color.chart-color-box></div>
-                            _{MsgCloudFlareAnalyticsCrawler}: 
+                            _{MsgCloudFlareAnalyticsCrawler}:
                             <span #cloudflare-pageviews-crawler>
                                 ...
                             <br>
                             <div .cloudflare-threat-color.chart-color-box></div>
-                            _{MsgCloudFlareAnalyticsThreat}: 
+                            _{MsgCloudFlareAnalyticsThreat}:
                             <span #cloudflare-pageviews-threat>
                                 ...
                         <td .right>
@@ -60,21 +60,21 @@
                                 _{MsgCloudFlareAnalyticsVisitors}
                             <br>
                             <div .cloudflare-regular-color.chart-color-box></div>
-                            _{MsgCloudFlareAnalyticsUniqueVisitors}: 
+                            _{MsgCloudFlareAnalyticsUniqueVisitors}:
                             <span #cloudflare-uniques-regular>
                                 ...
                             <br>
                             <div .cloudflare-crawler-color.chart-color-box></div>
-                            _{MsgCloudFlareAnalyticsCrawler}: 
+                            _{MsgCloudFlareAnalyticsCrawler}:
                             <span #cloudflare-uniques-crawler>
                                 ...
                             <br>
                             <div .cloudflare-threat-color.chart-color-box></div>
-                            _{MsgCloudFlareAnalyticsThreat}: 
+                            _{MsgCloudFlareAnalyticsThreat}:
                             <span #cloudflare-uniques-threat>
                                 ...
                         <td .right>
                             <div .loading-stats>
                                 _{MsgCloudFlareAnalyticsLoading}
                             <canvas #cloudflare-uniques-chart.cloudflare-chart.invisible width="150" height="150"></canvas>
-                
+

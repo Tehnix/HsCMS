@@ -50,9 +50,9 @@ instance FromJSON DisqusResponse
   'submitPostRequest' sends the POST request to the url parameter, and return the response as a 'L.ByteString' wrapped in 'MonadIO' or 'MonadBaseControl IO' monad.
 -}
 submitPostRequest :: (MonadIO m, MonadBaseControl IO m) => String -> m L.ByteString
-submitPostRequest urlString = do
+submitPostRequest urlString = 
     case parseUrl urlString of
-        Nothing -> return $ "URL Syntax Error"
+        Nothing -> return "URL Syntax Error"
         Just initReq -> withManager $ \manager -> do
             let req = initReq { secure = True
                               , requestHeaders = [("User-Agent", "HsCMS")]
@@ -68,6 +68,6 @@ getDisqusStats :: (MonadIO m, MonadBaseControl IO m) => DisqusRequest -> m (Mayb
 getDisqusStats (DisqusRequest s a f) = do
     let getQuery = C.unpack $ toString $ queryString [("api_secret", encodeUtf8 s), ("access_token", encodeUtf8 a), ("forum", encodeUtf8 f), ("limit", "6")]
     res <- submitPostRequest $ "https://disqus.com/api/3.0/threads/listPopular.json?" ++ getQuery
-    case (eitherDecode res) of
+    case eitherDecode res of
         Left _ -> return Nothing
         Right r -> return $ Just r
