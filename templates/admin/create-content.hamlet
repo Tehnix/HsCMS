@@ -2,10 +2,7 @@
     <input #form-wordcount-field name="form-wordcount-field" type="hidden" value="0">
     <textarea #form-htmlcontent-field.hide name="form-htmlcontent-field">
     <div #form-title>
-        $maybe content <- mcontent
-            <input #form-title-field name="form-title-field" type="text" placeholder="_{MsgTitlePlaceholder}" required="" value="#{contentTitle content}">
-        $nothing
-            <input #form-title-field name="form-title-field" type="text" placeholder="_{MsgTitlePlaceholder}" required="" value="">
+        <input #form-title-field name="form-title-field" type="text" placeholder="_{MsgTitlePlaceholder}" required="" value="#{maybe "" contentTitle mcontent}">
     <div #content-preview-container>
         <div #form-content>
             <div .padding>
@@ -15,11 +12,8 @@
                     <span data-toggle="modal" data-target="#markdown-cheatsheet" data-keyboard="static">?
                 <div .clear>
                 <hr>
-                $maybe content <- mcontent
-                    <textarea #form-mdcontent-field name="form-mdcontent-field" placeholder="_{MsgContentPlaceholder}">
-                        #{contentMarkdown content}
-                $nothing
-                    <textarea #form-mdcontent-field name="form-mdcontent-field" placeholder="_{MsgContentPlaceholder}">
+                <textarea #form-mdcontent-field name="form-mdcontent-field" placeholder="_{MsgContentPlaceholder}">
+                        #{maybe "" contentMarkdown mcontent}
         <div #form-content-preview>
             <div .padding>
                 <div .left.red>
@@ -38,16 +32,15 @@
         <div #bottom-bar>
             <div .spacing>
                 <div .right>
-                    <input type="checkbox" value="true" name="form-publish" #form-publish-box .hide>
-                    <input type="checkbox" value="true" name="form-unpublish" #form-unpublish-box .hide>
+                    <input type="checkbox" value="true" name="form-saved" #form-saved-box .hide>
+                    <input type="checkbox" value="true" name="form-unpublish"  :maybe False contentVisible mcontent:checked #form-unpublish-box .hide>
                     $maybe content <- mcontent
                         <input #form-save-btn .btn.btn-primary.extra-padding type="submit" value="_{MsgUpdate}">
-                        $if (contentVisible content)
-                            <input #form-unpublish-btn .btn.btn-danger type="submit" value="_{MsgUnpublish}">
-                        $else
-                            <input #form-publish-btn .btn.btn-success type="submit" value="_{MsgPublish}">
                     $nothing
                         <input #form-save-btn .btn.btn-primary.extra-padding type="submit" value="_{MsgSaveDraft}">
+                    $if (maybe False contentVisible mcontent)
+                        <input #form-unpublish-btn .btn.btn-danger type="submit" value="_{MsgUnpublish}">
+                    $else
                         <input #form-publish-btn .btn.btn-success type="submit" value="_{MsgPublish}">
 
 

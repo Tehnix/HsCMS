@@ -159,7 +159,7 @@ postAdminUpdateArticleR articleId = do
     mdContent <- runInputPost $ ireq htmlField "form-mdcontent-field"
     htmlContent <- runInputPost $ ireq htmlField "form-htmlcontent-field"
     wordCount <- runInputPost $ ireq intField "form-wordcount-field"
-    publish <- runInputPost $ iopt boolField "form-publish"
+    saved <- runInputPost $ iopt boolField "form-saved"
     unpublish <- runInputPost $ iopt boolField "form-unpublish"
     -- Update the gist of the post if the GitHub PA Token is set
     original <- runDB $ get404 articleId
@@ -181,34 +181,33 @@ postAdminUpdateArticleR articleId = do
                 Nothing -> return Nothing
                 Just (GistResponse gId) -> return $ Just gId
     -- Set the Bool and message depending on whether the post is published or unpublished
-    publishStatus <- case unpublish of
+    case unpublish of
         Nothing -> do
             setMessageI $ MsgMsgPublishedArticle title
-            return True
+            wasSaved True saved articleId AdminShowArticlesR title gistIdent mdContent htmlContent wordCount
+
         Just _ -> do
             setMessageI $ MsgMsgUnpublishedArticle title
-            return False
-    -- Either save the post (ignoring if it's published or not), or change the publish status of the post
-    case publish of
-        Nothing -> do
-            runDB $ update articleId [ ArticleGistId =. gistIdent
-                                     , ArticleVisible =. publishStatus
-                                     , ArticleTitle =. title
-                                     , ArticleMdContent =. mdContent
-                                     , ArticleHtmlContent =. htmlContent
-                                     , ArticleWordCount =. wordCount ]
-            if publishStatus then
-                setMessageI $ MsgMsgSavedArticle title 
-                else setMessageI $ MsgMsgUnpublishedArticle title
-            redirect (AdminUpdateArticleR articleId)
-        Just _ -> do
-            runDB $ update articleId [ ArticleGistId =. gistIdent
-                                     , ArticleVisible =. publishStatus
-                                     , ArticleTitle =. title
-                                     , ArticleMdContent =. mdContent
-                                     , ArticleHtmlContent =. htmlContent
-                                     , ArticleWordCount =. wordCount ]
-            redirect AdminShowArticlesR
+            wasSaved False saved articleId (AdminUpdateArticleR articleId) title gistIdent mdContent htmlContent wordCount
+    where
+        wasSaved publish saved aId directTo t g mC hC wC = 
+            case saved of
+                Nothing -> do
+                    runDB $ update articleId [ ArticleGistId =. g
+                                             , ArticleVisible =. publish
+                                             , ArticleTitle =. t
+                                             , ArticleMdContent =. mC
+                                             , ArticleHtmlContent =. hC
+                                             , ArticleWordCount =. wC ]
+                    redirect directTo
+                Just _ -> do
+                    runDB $ update articleId [ ArticleGistId =. g
+                                             , ArticleTitle =. t
+                                             , ArticleMdContent =. mC
+                                             , ArticleHtmlContent =. hC
+                                             , ArticleWordCount =. wC ]
+                    setMessageI $ MsgMsgSavedArticle t
+                    redirect (AdminUpdateArticleR aId)
 
 -- | View all trashed articles
 getAdminShowTrashArticlesR :: Handler Html
