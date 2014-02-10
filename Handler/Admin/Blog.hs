@@ -161,6 +161,7 @@ postAdminUpdateArticleR articleId = do
     wordCount <- runInputPost $ ireq intField "form-wordcount-field"
     saved <- runInputPost $ iopt boolField "form-saved"
     unpublish <- runInputPost $ iopt boolField "form-unpublish"
+    updated <- liftIO getCurrentTime
     -- Update the gist of the post if the GitHub PA Token is set
     original <- runDB $ get404 articleId
     extra <- getExtra
@@ -180,17 +181,16 @@ postAdminUpdateArticleR articleId = do
             case res of
                 Nothing -> return Nothing
                 Just (GistResponse gId) -> return $ Just gId
-    -- Set the Bool and message depending on whether the post is published or unpublished
+    -- Handle changing the visible status and redirecting to the appropriate page
     case unpublish of
         Nothing -> do
             setMessageI $ MsgMsgPublishedArticle title
-            wasSaved True saved articleId AdminShowArticlesR title gistIdent mdContent htmlContent wordCount
-
+            wasSaved True saved AdminShowArticlesR title gistIdent mdContent htmlContent wordCount updated
         Just _ -> do
             setMessageI $ MsgMsgUnpublishedArticle title
-            wasSaved False saved articleId (AdminUpdateArticleR articleId) title gistIdent mdContent htmlContent wordCount
+            wasSaved False saved (AdminUpdateArticleR articleId) title gistIdent mdContent htmlContent wordCount (articleAdded original)
     where
-        wasSaved publish saved aId directTo t g mC hC wC = 
+        wasSaved publish saved directTo t g mC hC wC updated = 
             case saved of
                 Nothing -> do
                     runDB $ update articleId [ ArticleGistId =. g
@@ -198,7 +198,8 @@ postAdminUpdateArticleR articleId = do
                                              , ArticleTitle =. t
                                              , ArticleMdContent =. mC
                                              , ArticleHtmlContent =. hC
-                                             , ArticleWordCount =. wC ]
+                                             , ArticleWordCount =. wC
+                                             , ArticleAdded =. updated ]
                     redirect directTo
                 Just _ -> do
                     runDB $ update articleId [ ArticleGistId =. g
@@ -207,7 +208,7 @@ postAdminUpdateArticleR articleId = do
                                              , ArticleHtmlContent =. hC
                                              , ArticleWordCount =. wC ]
                     setMessageI $ MsgMsgSavedArticle t
-                    redirect (AdminUpdateArticleR aId)
+                    redirect (AdminUpdateArticleR articleId)
 
 -- | View all trashed articles
 getAdminShowTrashArticlesR :: Handler Html
@@ -242,7 +243,8 @@ postAdminUnpublishArticleR articleId = do
 -- | Change the status of an article to published
 postAdminPublishArticleR :: ArticleId -> Handler Html
 postAdminPublishArticleR articleId = do
-    runDB $ update articleId [ArticleVisible =. True]
+    updated <- liftIO getCurrentTime
+    runDB $ update articleId [ArticleVisible =. True, ArticleAdded =. updated]
     article <- runDB $ get404 articleId
     setMessageI $ MsgMsgPublishedArticle $ articleTitle article
     redirect AdminShowArticlesR

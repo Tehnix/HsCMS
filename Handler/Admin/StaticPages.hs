@@ -159,8 +159,9 @@ postAdminUpdateStaticPageR pageId = do
     mdContent <- runInputPost $ ireq htmlField "form-mdcontent-field"
     htmlContent <- runInputPost $ ireq htmlField "form-htmlcontent-field"
     wordCount <- runInputPost $ ireq intField "form-wordcount-field"
-    publish <- runInputPost $ iopt boolField "form-publish"
+    saved <- runInputPost $ iopt boolField "form-saved"
     unpublish <- runInputPost $ iopt boolField "form-unpublish"
+    updated <- liftIO getCurrentTime
     -- Update the gist of the post if the GitHub PA Token is set
     original <- runDB $ get404 pageId
     extra <- getExtra
@@ -180,35 +181,34 @@ postAdminUpdateStaticPageR pageId = do
             case res of
                 Nothing -> return Nothing
                 Just (GistResponse gId) -> return $ Just gId
-    -- Set the Bool and message depending on whether the post is published or unpublished
-    publishStatus <- case unpublish of
+    -- Handle changing the visible status and redirecting to the appropriate page
+    case unpublish of
         Nothing -> do
             setMessageI $ MsgMsgPublishedStaticPage title
-            return True
+            wasSaved True saved AdminShowStaticPagesR title gistIdent mdContent htmlContent wordCount updated
         Just _ -> do
             setMessageI $ MsgMsgUnpublishedStaticPage title
-            return False
-    -- Either save the post (ignoring if it's published or not), or change the publish status of the post
-    case publish of
-        Nothing -> do
-            runDB $ update pageId [ StaticPageGistId =. gistIdent
-                                  , StaticPageVisible =. publishStatus
-                                  , StaticPageTitle =. title
-                                  , StaticPageMdContent =. mdContent
-                                  , StaticPageHtmlContent =. htmlContent
-                                  , StaticPageWordCount =. wordCount ]
-            if publishStatus then
-                setMessageI $ MsgMsgSavedStaticPage title 
-                else setMessageI $ MsgMsgUnpublishedStaticPage title
-            redirect (AdminUpdateStaticPageR pageId)
-        Just _ -> do
-            runDB $ update pageId [ StaticPageGistId =. gistIdent
-                                  , StaticPageVisible =. publishStatus
-                                  , StaticPageTitle =. title
-                                  , StaticPageMdContent =. mdContent
-                                  , StaticPageHtmlContent =. htmlContent
-                                  , StaticPageWordCount =. wordCount ]
-            redirect AdminShowStaticPagesR
+            wasSaved False saved (AdminUpdateStaticPageR pageId) title gistIdent mdContent htmlContent wordCount (staticPageAdded original)
+    where
+        wasSaved publish saved directTo t g mC hC wC updated = 
+            case saved of
+                Nothing -> do
+                    runDB $ update pageId [ StaticPageGistId =. g
+                                             , StaticPageVisible =. publish
+                                             , StaticPageTitle =. t
+                                             , StaticPageMdContent =. mC
+                                             , StaticPageHtmlContent =. hC
+                                             , StaticPageWordCount =. wC
+                                             , StaticPageAdded =. updated ]
+                    redirect directTo
+                Just _ -> do
+                    runDB $ update pageId [ StaticPageGistId =. g
+                                             , StaticPageTitle =. t
+                                             , StaticPageMdContent =. mC
+                                             , StaticPageHtmlContent =. hC
+                                             , StaticPageWordCount =. wC ]
+                    setMessageI $ MsgMsgSavedStaticPage t
+                    redirect (AdminUpdateStaticPageR pageId)
 
 -- | View all trashed articles
 getAdminShowTrashStaticPagesR :: Handler Html
@@ -243,7 +243,8 @@ postAdminUnpublishStaticPageR pageId = do
 -- | Change the status of an article to published
 postAdminPublishStaticPageR :: StaticPageId -> Handler Html
 postAdminPublishStaticPageR pageId = do
-    runDB $ update pageId [StaticPageVisible =. True]
+    updated <- liftIO getCurrentTime
+    runDB $ update pageId [StaticPageVisible =. True, StaticPageAdded =. updated]
     page <- runDB $ get404 pageId
     setMessageI $ MsgMsgPublishedStaticPage $ staticPageTitle page
     redirect AdminShowStaticPagesR

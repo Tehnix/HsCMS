@@ -34,7 +34,7 @@ import qualified Data.Text as T
 
 -- | Converts spaces to dashes (neat for prettier URLs).
 spacesToDashes :: Text -> Text
-spacesToDashes = T.concatMap (\y -> if y == ' ' then T.pack "-" else T.pack [y])
+spacesToDashes t = T.toLower $ T.concatMap (\y -> if y == ' ' then T.pack "-" else T.pack [y]) t
 
 -- | Extract a key from persistent.
 extractKey :: KeyBackend backend entity -> String
@@ -44,7 +44,7 @@ extractKey = extractKey' . unKey
 
 -- | Add thousand separators.
 addSeparator' :: String -> String -> Int -> String
-addSeparator' s t 0 = addSeparator' (P.tail s) ((P.head s) : t) (1)
+addSeparator' s t 0 = addSeparator' (P.tail s) ((P.head s) : t) 1
 addSeparator' s t n = if (P.length s) == 0
     then t
     else if (rem n 3) == 0
