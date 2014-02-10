@@ -77,6 +77,7 @@ instance Yesod App where
             $(combineScripts 'StaticR
                 [ js_jquery_js
                 ])
+            addScriptRemote "https://google-code-prettify.googlecode.com/svn/loader/run_prettify.js"
             $(widgetFile "layouts/default-layout")
         giveUrlRenderer $(hamletFile "templates/layouts/default-layout-wrapper.hamlet")
 
