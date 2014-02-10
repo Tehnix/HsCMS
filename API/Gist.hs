@@ -17,9 +17,9 @@
 module API.Gist (
       createGist
     , updateGist
-    , GitHubToken(..)
-    , GistContent(..)
-    , Gist(..)
+    , githubAuth
+    , gistContent
+    , gistUpdateContent
     , GistResponse(..)
   ) where
 
@@ -67,6 +67,18 @@ data GistResponse = GistResponse
 instance FromJSON GistResponse where
     parseJSON (Object v) = GistResponse <$> v .: "id"
     parseJSON _ = mzero
+
+-- | Helper for creating a GitHubToken
+githubAuth :: Text -> GitHubToken
+githubAuth tkn = GitHubToken tkn
+
+-- | Helper for creating a Gist
+gistContent :: Text -> Bool -> Text -> Text -> Gist
+gistContent d p t c = gistUpdateContent d p t Nothing c
+
+-- | Helper for updating a Gist
+gistUpdateContent :: Text -> Bool -> Text -> Maybe Text -> Text -> Gist
+gistUpdateContent d p originalTitle newTitle c = Gist d p $ fromList [(originalTitle <> ".md", GistContent c newTitle)]
 
 -- | Convert the GitHub Personal Access Token to a basic authorization header
 getTokenHeader :: GitHubToken -> RequestHeaders

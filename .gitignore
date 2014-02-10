@@ -29,3 +29,9 @@ config/keter.yaml
 config/favicon.ico
 config/postgresql.yml
 config/sqlite.yml
+
+
+# Vagrant files
+Vagrantfile
+bootstrap.sh
+.vagrant/

@@ -16,7 +16,6 @@ import           Yesod.Auth
 import           System.Locale (defaultTimeLocale)
 import           Data.Time
 import           Data.Text.Lazy (toStrict)
-import           Data.HashMap.Strict (fromList)
 import           Text.Blaze.Html.Renderer.Text (renderHtml)
 import qualified Database.Esqueleto as E
 import qualified Database.Esqueleto.Internal.Language as EI
@@ -111,7 +110,6 @@ postAdminNewArticleR = do
     publish <- runInputPost $ iopt boolField "form-publish"
     added <- liftIO getCurrentTime
     userId <- requireAuthId
-    
     -- Either save a draft of the post, or publish it
     case publish of
         Nothing -> do
@@ -120,14 +118,15 @@ postAdminNewArticleR = do
             redirect (AdminUpdateArticleR articleId)
         Just _ -> do
             setMessageI $ MsgMsgCreatedArticle title
-            
             -- Create a gist of the post if the GitHub PA Token is set
             extra <- getExtra
             gistIdent <- case extraGithubToken extra of
                 Nothing -> return Nothing
                 Just gToken -> do
                     let mdCont = toStrict (renderHtml mdContent)
-                    res <- createGist (Just (GitHubToken gToken)) $ Gist title (fromMaybe True (extraGistPublic extra)) $ fromList [(title <> ".md", GistContent mdCont Nothing)]
+                    let auth = githubAuth gToken
+                    let gist = gistContent title (fromMaybe True (extraGistPublic extra)) title mdCont
+                    res <- createGist (Just auth) gist
                     case res of
                         Nothing -> do
                             setMessageI $ MsgMsgCreatedArticleGistError title
@@ -162,22 +161,25 @@ postAdminUpdateArticleR articleId = do
     wordCount <- runInputPost $ ireq intField "form-wordcount-field"
     publish <- runInputPost $ iopt boolField "form-publish"
     unpublish <- runInputPost $ iopt boolField "form-unpublish"
-    
     -- Update the gist of the post if the GitHub PA Token is set
-    originalArticle <- runDB $ get404 articleId
+    original <- runDB $ get404 articleId
     extra <- getExtra
     gistIdent <- case extraGithubToken extra of
         Nothing -> return Nothing
         Just gToken -> do
             let mdCont = toStrict (renderHtml mdContent)
-            res <- case articleGistId originalArticle of
+            let auth = githubAuth gToken
+            res <- case articleGistId original of
                 -- If the article doesn't have a gist ID already
-                Nothing -> return =<< createGist (Just (GitHubToken gToken)) $ Gist title (fromMaybe True (extraGistPublic extra)) $ fromList [(title <> ".md", GistContent mdCont Nothing)]
-                Just gId -> return =<< updateGist (GitHubToken gToken) gId $ Gist title True $ fromList [(articleTitle originalArticle <> ".md", GistContent mdCont (Just (title <> ".md")))]
+                Nothing -> do
+                    let gist = gistContent title (fromMaybe True (extraGistPublic extra)) title mdCont
+                    return =<< createGist (Just auth) gist
+                Just gId -> do
+                    let gist = gistUpdateContent title (fromMaybe True (extraGistPublic extra)) (articleTitle original <> ".md") (Just title) mdCont
+                    return =<< updateGist auth gId gist
             case res of
                 Nothing -> return Nothing
                 Just (GistResponse gId) -> return $ Just gId
-    
     -- Set the Bool and message depending on whether the post is published or unpublished
     publishStatus <- case unpublish of
         Nothing -> do
@@ -186,17 +188,26 @@ postAdminUpdateArticleR articleId = do
         Just _ -> do
             setMessageI $ MsgMsgUnpublishedArticle title
             return False
-    
     -- Either save the post (ignoring if it's published or not), or change the publish status of the post
     case publish of
         Nothing -> do
-            runDB $ update articleId [ArticleGistId =. gistIdent, ArticleVisible =. publishStatus, ArticleTitle =. title, ArticleMdContent =. mdContent, ArticleHtmlContent =. htmlContent, ArticleWordCount =. wordCount]
+            runDB $ update articleId [ ArticleGistId =. gistIdent
+                                     , ArticleVisible =. publishStatus
+                                     , ArticleTitle =. title
+                                     , ArticleMdContent =. mdContent
+                                     , ArticleHtmlContent =. htmlContent
+                                     , ArticleWordCount =. wordCount ]
             if publishStatus then
                 setMessageI $ MsgMsgSavedArticle title 
                 else setMessageI $ MsgMsgUnpublishedArticle title
             redirect (AdminUpdateArticleR articleId)
         Just _ -> do
-            runDB $ update articleId [ArticleGistId =. gistIdent, ArticleVisible =. publishStatus, ArticleTitle =. title, ArticleMdContent =. mdContent, ArticleHtmlContent =. htmlContent, ArticleWordCount =. wordCount]
+            runDB $ update articleId [ ArticleGistId =. gistIdent
+                                     , ArticleVisible =. publishStatus
+                                     , ArticleTitle =. title
+                                     , ArticleMdContent =. mdContent
+                                     , ArticleHtmlContent =. htmlContent
+                                     , ArticleWordCount =. wordCount ]
             redirect AdminShowArticlesR
 
 -- | View all trashed articles
