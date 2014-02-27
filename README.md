@@ -30,7 +30,7 @@ Alter the settings to what you need, and then you can generate a `keter` bundle 
 
 If you need to run `keter` alongside `nginx`, there is also a good  [guide for that here](https://github.com/yesodweb/yesod/wiki/Deploying-via-Keter-alongside-Nginx).
 
-## Keep the same SQLite3 database through deployments
+#### Keep the same SQLite3 database through deployments
 To keep the same SQLite3 database file throughout deployments, you need to set its path to a shared destination. My own approach, when using keter, is to make a directory at `/opt/keter/database`, and then set the setting for the production sqlite3 file to,
 
 
