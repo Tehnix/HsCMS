@@ -67,7 +67,7 @@ instance Yesod App where
         master <- getYesod
         mmsg <- getMessage
         (title', parents) <- breadcrumbs
-
+        
         pc <- widgetToPageContent $ do
             $(combineStylesheets 'StaticR
                 [ css_normalize_css

@@ -6,9 +6,11 @@
 
 
 ## Setup
-I assume you are somewhat familiar with the [yesod](http://www.yesodweb.com) framework, and have it installed. Else, you can do `cabal install yesod-platform` and `cabal install yesod-bin` to get going (or use the cabal sandbox feature).
+I assume you are somewhat familiar with the [yesod](http://www.yesodweb.com) framework.
 
-First copy the `config/default-settings.yml` file, rename it to `config/settings.yml` and then set it up following the information under [settings](#settings). After this, do the same with `config/default-sqlite.yml` to `config/sqlite.yml`.
+The steps to get going are:
+* copy the `config/default-settings.yml` file, rename it to `config/settings.yml` and then set it up following the information under [settings](#settings). 
+* do the same with `config/default-sqlite.yml` to `config/sqlite.yml`.
 
 From there on out, it works as a simple [yesod web app](http://www.yesodweb.com) (it uses the [scaffold structure](http://www.yesodweb.com/book/scaffolding-and-the-site-template)).
 
@@ -39,37 +41,6 @@ Production:
   <<: *defaults
 ```
 
-
-## Heroku
-
-__Not quite working yet...__
-
-Following the information in the Procfile, we first move the Procfile into the root directory,
-```
-    mv deploy/Procfile .
-```
-
-Then we create a json package file for heroku,
-```
-    echo '{ "name": "HsCMS", "version": "0.0.1", "dependencies": {} }' >> package.json
-```
-
-If this is the first time, you need to create the heroku app while specifying the stack and the buildpack,
-```
-    heroku create yesod-codetalk --stack cedar --buildpack https://github.com/begriffs/heroku-buildpack-ghc.git
-```
-
-the buildpack was picked from herokus list of [third-party buildpacks](https://devcenter.heroku.com/articles/third-party-buildpacks)
-
-There's some general information about to to use the buildpack on the [GitHub repository page](https://github.com/begriffs/heroku-buildpack-ghc), but you will probably hit the 15 minute build time limit. To get past that, we use an alternative build process,
-```
-    heroku plugins:install https://github.com/ddollar/heroku-anvil
-    heroku build -r -b https://github.com/begriffs/heroku-buildpack-ghc.git
-```
-
-After that you should be good to go.
-
-
 ## Settings
 There are several settings that allow you to customize the system a bit.
 
@@ -82,19 +53,31 @@ The `admins` settings is a list of all the emails that are allowed in the admin 
 #### Optional 
 ```
     disqus: your_disqus_shortname
+    disqusSecretKey: your_disqus_secret_api_key
+    disqusAccessToken: your_disqus_access_token
 ```
-The `disqus` setting allows you to set it to your disqus name, and, via that, integrate comments on the article pages.
+The `disqus` setting allows you to set it to your disqus name, and, via that, integrate comments on the article pages. I recommend having different disqus sites for development and for production.
+
+If the `disqusSecretKey` `disqusAccessToken` are set, you can view comment statistics in the admin dashboard. They are completely optional, and only the `disqus` setting is needed for comments on your site.
 
 
 ```
     githubToken: your_github_personal_access_key
+    gistPublic: false
 ```
-The `githubToken` setting is really a novelty feature. It allows for automatic gist creation of your blog posts, and also updates them when you update your posts, effectively giving you a history of revisions. 
+The `githubToken` setting is really a novelty feature. It allows for automatic gist creation of your blog posts, and also updates them when you update your posts, effectively giving you a history of revisions and online backup of blog posts.
 
-The gist is created the first time you publish your post, and is updated everytime you update the post. It isn't deleted or hidden if you later on unpublish your post.
+The gist is created the first time you publish your post, and is updated every time you update the post. It isn't deleted or hidden if you later on unpublish your post.
+
+If `gistPublic` is false, it will post as a secret gist, if not, it will be public and the creation along with updates will be shown in the feeds of the users that follow you on GitHub.
+
+NOTE: you might not want to set `githubToken` in the development section, but only in production, so you don't end up with a lot of useless test gists.
 
 
 ```
     cloudflareKey: cloudflare_api_key
+    cloudflareMail: "mail_associated_with_api_key@mail.com"
+    cloudflareZone: "example.com"
 ```
-__Under development:__ Will allow HsCMS to pull visitor statistics and show them in the dashboard. 
+Allows HsCMS to pull visitor statistics and show them in the dashboard.
+

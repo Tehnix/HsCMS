@@ -5,8 +5,8 @@ import Import
 
 
 getAboutR :: Handler Html
-getAboutR = defaultLayout $ 
-    do
+getAboutR = do
+    defaultLayout $ do
         setTitle "About"
         $(widgetFile "pages/about")
 
