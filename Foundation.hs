@@ -21,9 +21,11 @@ import Text.Hamlet (hamletFile)
 import Yesod.Core.Types (Logger)
 
 -- Custom imports
-import Data.Text (Text, takeWhile)
+import Data.Text (Text, takeWhile, unpack)
 import Data.Monoid ((<>))
-
+import Layout
+import Language.Haskell.TH
+import Data.Maybe
 
 -- | The site argument for your application. This can be a good place to
 -- keep settings and values requiring initialization before your application
@@ -67,6 +69,8 @@ instance Yesod App where
         master <- getYesod
         mmsg <- getMessage
         (title', parents) <- breadcrumbs
+
+        let layout = unpack $ fromMaybe "default-layout" $ extraLayout $ appExtra $ settings master
         
         pc <- widgetToPageContent $ do
             $(combineStylesheets 'StaticR
@@ -78,8 +82,8 @@ instance Yesod App where
                 [ js_jquery_js
                 ])
             addScriptRemote "https://google-code-prettify.googlecode.com/svn/loader/run_prettify.js"
-            $(widgetFile "layouts/default-layout")
-        giveUrlRenderer $(hamletFile "templates/layouts/default-layout-wrapper.hamlet")
+            getItem layout $(getWidgets)
+        giveUrlRenderer $ getItem layout $(getWrappers)
 
     -- This is done to provide an optimization for serving static files from
     -- a separate domain. Please see the staticRoot setting in Settings.hs
