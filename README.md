@@ -51,6 +51,8 @@ There are several settings that allow you to customize the system a bit.
 The `admins` settings is a list of all the emails that are allowed in the admin section of the system. Since google auth is used, it's impossible to gain access without owning or having control over the defined email.
 
 #### Optional 
+__Disqus__
+
 ```
     disqus: your_disqus_shortname
     disqusSecretKey: your_disqus_secret_api_key
@@ -60,6 +62,8 @@ The `disqus` setting allows you to set it to your disqus name, and, via that, in
 
 If the `disqusSecretKey` `disqusAccessToken` are set, you can view comment statistics in the admin dashboard. They are completely optional, and only the `disqus` setting is needed for comments on your site.
 
+
+__GitHub Gists__
 
 ```
     githubToken: your_github_personal_access_key
@@ -73,6 +77,8 @@ If `gistPublic` is false, it will post as a secret gist, if not, it will be publ
 
 NOTE: you might not want to set `githubToken` in the development section, but only in production, so you don't end up with a lot of useless test gists.
 
+
+__CloudFlare__
 
 ```
     cloudflareKey: cloudflare_api_key
