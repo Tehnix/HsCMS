@@ -34,7 +34,7 @@
                 <div .right>
                     <input type="checkbox" value="true" name="form-saved" #form-saved-box .hide>
                     <input type="checkbox" value="true" name="form-unpublish"  :maybe False contentVisible mcontent:checked #form-unpublish-box .hide>
-                    $maybe content <- mcontent
+                    $maybe _ <- mcontent
                         <input #form-save-btn .btn.btn-primary.extra-padding type="submit" value="_{MsgUpdate}">
                     $nothing
                         <input #form-save-btn .btn.btn-primary.extra-padding type="submit" value="_{MsgSaveDraft}">

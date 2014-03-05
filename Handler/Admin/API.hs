@@ -2,8 +2,8 @@
 module Handler.Admin.API where
  
 import Import
-import API.CloudFlare
-import API.Disqus
+import Handler.API.CloudFlare
+import Handler.API.Disqus
  
  
 data CloudFlareResponseJson = CloudFlareResponseJson 

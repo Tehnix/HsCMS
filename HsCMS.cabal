@@ -28,9 +28,9 @@ library
                      Settings.StaticFiles
                      Settings.Development
                      GeneralFunctions
-                     API.Gist
-                     API.CloudFlare
-                     API.Disqus
+                     Handler.API.Gist
+                     Handler.API.CloudFlare
+                     Handler.API.Disqus
                      Handler.About
                      Handler.Blog
                      Handler.StaticPages

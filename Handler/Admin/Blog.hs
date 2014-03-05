@@ -19,7 +19,7 @@ import           Data.Text.Lazy (toStrict)
 import           Text.Blaze.Html.Renderer.Text (renderHtml)
 import qualified Database.Esqueleto as E
 import qualified Database.Esqueleto.Internal.Language as EI
-import           API.Gist
+import           Handler.API.Gist
 import           Data.Maybe (fromMaybe)
 
 

@@ -14,7 +14,7 @@
   createGist (Just (GitHubToken \"The token\")) $ Gist \"Description...\" True $ fromList [(\"File.md\", (GistContent \"Some Content!\" Nothing))]
   @
 -}
-module API.Gist (
+module Handler.API.Gist (
       createGist
     , updateGist
     , githubAuth

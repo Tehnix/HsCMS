@@ -1,5 +1,5 @@
 {-# LANGUAGE OverloadedStrings, DeriveGeneric, FlexibleContexts #-}
-module API.Disqus (
+module Handler.API.Disqus (
     getDisqusStats
   , DisqusRequest(..)
   , DisqusResponseData(..)

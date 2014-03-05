@@ -1,5 +1,5 @@
 {-# LANGUAGE OverloadedStrings, DeriveGeneric, FlexibleContexts #-}
-module API.CloudFlare (
+module Handler.API.CloudFlare (
     getCloudFlareStats
   , CloudFlareAction(..)
   , CloudFlareAuth(..)
