@@ -82,6 +82,7 @@ data Extra = Extra
     , extraCloudflareKey :: Maybe Text
     , extraCloudflareMail :: Maybe Text
     , extraCloudflareZone :: Maybe Text
+    , extraLayout :: Maybe Text
     } deriving Show
 
 parseExtra :: DefaultEnv -> Object -> Parser Extra
@@ -97,3 +98,4 @@ parseExtra _ o = Extra
     <*> o .:? "cloudflareKey"
     <*> o .:? "cloudflareMail"
     <*> o .:? "cloudflareZone"
+    <*> o .:? "layout"
