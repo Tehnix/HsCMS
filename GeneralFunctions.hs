@@ -86,6 +86,6 @@ adminLayout widget = do
             [ js_jquery_js
             , js_bootstrap_min_js
             ])
-        $(widgetFile "layouts/admin-layout")
-    giveUrlRenderer $(hamletFile "templates/layouts/admin-layout-wrapper.hamlet")
+        $(widgetFile "admin/layout")
+    giveUrlRenderer $(hamletFile "templates/admin/layout-wrapper.hamlet")
 

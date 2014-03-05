@@ -11,6 +11,7 @@ Default: &defaults
   #cloudflareMail: "mail_associated_with_api_key@mail.com"
   #cloudflareZone: "example.com"
   #gistPublic: false
+  #layout: "default-layout"
 
 Development:
   <<: *defaults

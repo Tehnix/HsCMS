@@ -14,17 +14,15 @@ import Settings.Development (development)
 import qualified Database.Persist
 import Database.Persist.Sql (SqlPersistT)
 import Settings.StaticFiles
-import Settings (widgetFile, Extra (..))
+import Settings (Extra (..))
 import Model
 import Text.Jasmine (minifym)
-import Text.Hamlet (hamletFile)
 import Yesod.Core.Types (Logger)
 
 -- Custom imports
 import Data.Text (Text, takeWhile, unpack)
 import Data.Monoid ((<>))
 import Layout
-import Language.Haskell.TH
 import Data.Maybe
 
 -- | The site argument for your application. This can be a good place to
@@ -67,10 +65,11 @@ instance Yesod App where
 
     defaultLayout widget = do
         master <- getYesod
+        extra <- getExtra
         mmsg <- getMessage
         (title', parents) <- breadcrumbs
-
-        let layout = unpack $ fromMaybe "default-layout" $ extraLayout $ appExtra $ settings master
+        
+        let layout = unpack $ fromMaybe "default-layout" $ extraLayout extra
         
         pc <- widgetToPageContent $ do
             $(combineStylesheets 'StaticR
@@ -268,5 +267,3 @@ isAdmin = do
       Just (Entity _ user)
           | userIdent user `elem` extraAdmins extra -> return Authorized
           | otherwise                               -> return AuthenticationRequired
-
-

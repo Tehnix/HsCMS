@@ -22,6 +22,11 @@ cabal.sandbox.config
 *._*
 *.DS_Store
 
+# Vagrant files
+Vagrantfile
+bootstrap.sh
+.vagrant/
+
 # Configuration files
 config/client_session_key.aes
 config/settings.yml
@@ -30,8 +35,6 @@ config/favicon.ico
 config/postgresql.yml
 config/sqlite.yml
 
-
-# Vagrant files
-Vagrantfile
-bootstrap.sh
-.vagrant/
+# Custom files
+templates/layouts/*
+!templates/layouts/default-layout

@@ -16,6 +16,7 @@ Contributions are more than welcome! :)...
 * [Setup](#setup)
 * [Authentication](#authentication)
 * [Deployment](#deployment)
+* [Custom Layouts](#custom-layouts)
 * [Settings](#settings)
 
 
@@ -55,8 +56,21 @@ Production:
   <<: *defaults
 ```
 
+
+## Custom Layouts
+HsCMS provides a default layout you can use to get quickly started. If you want to use another layout, it is recommended that you don't alter the default layout, but create your own separate one. 
+
+To do this:
+
+* Create a folder in `templates/layouts` with the name of your layout
+* Make sure it has, as minimum, a `layout.hamlet` and a `wrapper.hamlet` file
+* Add `layout: "my-new-layout"` to `config/settings.yml`, where `my-new-layout` is the name of the folder you created earlier
+
+Because of how this currently functions, layouts are not autorecompiled when using `yesod devel` meaning you have to stop the devel command and execute it again.
+
+
 ## Settings
-There are several settings that allow you to customize the system a bit.
+There are several settings that allow you to customise the system a bit.
 
 #### Required 
 ```
@@ -64,7 +78,7 @@ There are several settings that allow you to customize the system a bit.
 ```
 The `admins` settings is a list of all the emails that are allowed in the admin section of the system. Since google auth is used, it's impossible to gain access without owning or having control over the defined email.
 
-#### Optional 
+#### Optional
 __Disqus__
 
 ```
@@ -101,3 +115,11 @@ __CloudFlare__
 ```
 Allows HsCMS to pull visitor statistics and show them in the dashboard.
 
+
+__Layouts__
+
+```
+    layout: "my-new-layout"
+```
+
+As mentioned in the [section about layouts](#custom-layouts), this is used to set another layout than the default-layout. If it is not present, HsCMS will use the layout found in `templates/default-layout`.
