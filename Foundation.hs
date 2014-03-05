@@ -14,16 +14,18 @@ import Settings.Development (development)
 import qualified Database.Persist
 import Database.Persist.Sql (SqlPersistT)
 import Settings.StaticFiles
-import Settings (Extra (..))
+import Settings (widgetFile, Extra (..))
 import Model
 import Text.Jasmine (minifym)
+import Text.Hamlet (hamletFile)
 import Yesod.Core.Types (Logger)
 
 -- Custom imports
 import Data.Text (Text, takeWhile, unpack)
 import Data.Monoid ((<>))
-import Layout
 import Data.Maybe
+import GeneralFunctions
+import Layout
 
 -- | The site argument for your application. This can be a good place to
 -- keep settings and values requiring initialization before your application
@@ -68,7 +70,6 @@ instance Yesod App where
         extra <- getExtra
         mmsg <- getMessage
         (title', parents) <- breadcrumbs
-        
         let layout = unpack $ fromMaybe "default-layout" $ extraLayout extra
         
         pc <- widgetToPageContent $ do
@@ -257,7 +258,7 @@ getExtra = fmap (appExtra . settings) getYesod
 --
 -- https://github.com/yesodweb/yesod/wiki/Sending-email
 
--- Check if a users email is present in the admins list in settings
+-- | Check if a users email is present in the admins list in settings.
 isAdmin :: Handler AuthResult
 isAdmin = do
   extra <- getExtra
@@ -267,3 +268,24 @@ isAdmin = do
       Just (Entity _ user)
           | userIdent user `elem` extraAdmins extra -> return Authorized
           | otherwise                               -> return AuthenticationRequired
+
+-- | The layout for the admin panel.
+adminLayout :: Widget -> Handler Html
+adminLayout widget = do
+    master <- getYesod
+    mmsg <- getMessage
+    (title', parents) <- breadcrumbs
+    userEmail <- fmap usersEmail maybeAuth
+    emailHash <- fmap lowerEmailHash maybeAuth
+    pc <- widgetToPageContent $ do
+        $(combineStylesheets 'StaticR
+            [ css_normalize_css
+            , css_bootstrap_css
+            , css_fonts_css
+            ])
+        $(combineScripts 'StaticR
+            [ js_jquery_js
+            , js_bootstrap_min_js
+            ])
+        $(widgetFile "admin/layout")
+    giveUrlRenderer $(hamletFile "templates/admin/layout-wrapper.hamlet")

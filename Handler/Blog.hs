@@ -23,7 +23,7 @@ blogArticle :: ArticleId -> Article -> Bool -> Widget
 blogArticle articleId article comments = do
     master <- getYesod
     allowComments <- return comments
-    $(widgetFile "blog/single-article")
+    $(widgetFile "front/single-article")
 
 -- | Display a single article
 getArticleR :: ArticleId -> Text -> Handler Html
@@ -35,7 +35,7 @@ getArticleR articleId _ = do
         then notFound
         else defaultLayout $ do
             setTitle $ toHtml $ articleTitle article
-            $(widgetFile "blog/single-article")
+            $(widgetFile "front/single-article")
 
 -- | Display all articles
 getArticlesR :: Handler Html
@@ -44,7 +44,7 @@ getArticlesR = do
     allowComments <- return False
     defaultLayout $ do
         setTitle "Blog"
-        $(widgetFile "blog/articles")
+        $(widgetFile "front/articles")
 
 -- | Display a archive of all articles
 getArchivesR :: Handler Html
@@ -52,13 +52,13 @@ getArchivesR = do
     articles <- pullArticles
     defaultLayout $ do
         setTitle "Archives"
-        $(widgetFile "blog/archives")
+        $(widgetFile "front/archives")
 
 -- | Display all articles from a specific author
 getAuthorR :: UserId -> Handler Html
 getAuthorR author = do
     articles <- pullArticles
     defaultLayout $ do
-        setTitle "Blog"
-        $(widgetFile "blog/articles")
+        setTitle "Articles"
+        $(widgetFile "front/articles")
 

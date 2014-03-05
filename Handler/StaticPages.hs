@@ -25,5 +25,5 @@ getStaticPageR staticPageId _ = do
         then notFound
         else defaultLayout $ do
             setTitle $ toHtml $ staticPageTitle staticPage
-            $(widgetFile "pages/single-page")
+            $(widgetFile "front/single-page")
 
