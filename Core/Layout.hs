@@ -1,5 +1,5 @@
 {-# LANGUAGE OverloadedStrings #-}
-module Layout (
+module Core.Layout (
       getItem
     , getWidgets
     , getWrappers
@@ -12,7 +12,7 @@ import Control.Monad
 import Data.List
 import Text.Hamlet
 
-import Settings
+import Core.Settings
 
 
 data LayoutQ = LayoutQ { layoutWidget :: Q Exp

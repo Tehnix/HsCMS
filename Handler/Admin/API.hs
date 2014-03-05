@@ -1,7 +1,7 @@
 {-# LANGUAGE TupleSections, OverloadedStrings #-}
 module Handler.Admin.API where
  
-import Import
+import Core.Import
 import Handler.API.CloudFlare
 import Handler.API.Disqus
  

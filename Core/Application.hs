@@ -1,12 +1,12 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
-module Application
+module Core.Application
     ( makeApplication
     , getApplicationDev
     , makeFoundation
     ) where
 
-import Import
-import Settings
+import Core.Import
+import Core.Settings
 import Yesod.Auth
 import Yesod.Default.Config
 import Yesod.Default.Main
@@ -69,7 +69,7 @@ makeFoundation conf = do
     dbconf <- withYamlEnvironment "config/sqlite.yml" (appEnv conf)
               Database.Persist.loadConfig >>=
               Database.Persist.applyEnv
-    p <- Database.Persist.createPoolConfig (dbconf :: Settings.PersistConf)
+    p <- Database.Persist.createPoolConfig (dbconf :: Core.Settings.PersistConf)
 
     loggerSet' <- newStdoutLoggerSet defaultBufSize
     (getter, _) <- clockDateCacher

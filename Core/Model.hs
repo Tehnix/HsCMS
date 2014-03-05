@@ -1,4 +1,4 @@
-module Model where
+module Core.Model where
 
 import Prelude
 import Yesod

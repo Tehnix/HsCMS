@@ -1,7 +1,7 @@
 {-# LANGUAGE TupleSections, OverloadedStrings #-}
 module Handler.About where
 
-import Import
+import Core.Import
 
 
 getAboutR :: Handler Html

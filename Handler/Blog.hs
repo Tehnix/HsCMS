@@ -1,7 +1,7 @@
 {-# LANGUAGE TupleSections, OverloadedStrings #-}
 module Handler.Blog where
 
-import Import
+import Core.Import
 import Yesod.Default.Config (appExtra)
 import Data.Time
 import System.Locale (defaultTimeLocale)

@@ -1,7 +1,7 @@
 {-# LANGUAGE TupleSections, OverloadedStrings #-}
 module Handler.StaticPages where
 
-import Import
+import Core.Import
 import Yesod.Default.Config (appExtra)
 import qualified Database.Esqueleto as E
 

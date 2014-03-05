@@ -9,7 +9,7 @@ import           Prelude              as Import hiding (head, init, last, readFi
 import           Yesod                as Import hiding (Route (..))
 -- import           Control.Applicative  as Import (pure, (<$>), (<*>))
 import           Data.Text            as Import (Text, pack, unpack, toLower)
-import           Model                as Import
+import           Core.Model           as Import
 -- #if __GLASGOW_HASKELL__ >= 704
 -- import           Data.Monoid          as Import (Monoid (mappend, mempty, mconcat), (<>))
 -- #else

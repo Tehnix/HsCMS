@@ -11,7 +11,7 @@ module Handler.Admin.Blog (
     , postAdminPublishArticleR
   ) where
 
-import           Import
+import           Core.Import
 import           Yesod.Auth
 import           System.Locale (defaultTimeLocale)
 import           Data.Time

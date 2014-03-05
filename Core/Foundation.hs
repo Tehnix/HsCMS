@@ -1,5 +1,5 @@
 {-# LANGUAGE OverloadedStrings     #-}
-module Foundation where
+module Core.Foundation where
 
 import Prelude hiding (takeWhile)
 import Yesod
@@ -9,13 +9,13 @@ import Yesod.Auth.GoogleEmail
 import Yesod.Default.Config
 import Yesod.Default.Util (addStaticContentExternal)
 import Network.HTTP.Conduit (Manager)
-import qualified Settings
+import qualified Core.Settings
 import Settings.Development (development)
 import qualified Database.Persist
 import Database.Persist.Sql (SqlPersistT)
 import Settings.StaticFiles
-import Settings (widgetFile, Extra (..))
-import Model
+import Core.Settings (widgetFile, Extra (..))
+import Core.Model
 import Text.Jasmine (minifym)
 import Text.Hamlet (hamletFile)
 import Yesod.Core.Types (Logger)
@@ -25,7 +25,7 @@ import Data.Text (Text, takeWhile, unpack)
 import Data.Monoid ((<>))
 import Data.Maybe
 import GeneralFunctions
-import Layout
+import Core.Layout
 
 -- | The site argument for your application. This can be a good place to
 -- keep settings and values requiring initialization before your application
@@ -34,9 +34,9 @@ import Layout
 data App = App
     { settings :: AppConfig DefaultEnv Extra
     , getStatic :: Static -- ^ Settings for static file serving.
-    , connPool :: Database.Persist.PersistConfigPool Settings.PersistConf -- ^ Database connection pool.
+    , connPool :: Database.Persist.PersistConfigPool Core.Settings.PersistConf -- ^ Database connection pool.
     , httpManager :: Manager
-    , persistConfig :: Settings.PersistConf
+    , persistConfig :: Core.Settings.PersistConf
     , appLogger :: Logger
     }
 
@@ -88,7 +88,7 @@ instance Yesod App where
     -- This is done to provide an optimization for serving static files from
     -- a separate domain. Please see the staticRoot setting in Settings.hs
     urlRenderOverride y (StaticR s) =
-        Just $ uncurry (joinPath y (Settings.staticRoot $ settings y)) $ renderRoute s
+        Just $ uncurry (joinPath y (Core.Settings.staticRoot $ settings y)) $ renderRoute s
     urlRenderOverride _ _ = Nothing
 
     -- The page to be redirected to when authentication is required.
@@ -111,7 +111,7 @@ instance Yesod App where
     -- expiration dates to be set far in the future without worry of
     -- users receiving stale content.
     addStaticContent =
-        addStaticContentExternal minifym genFileName Settings.staticDir (StaticR . flip StaticRoute [])
+        addStaticContentExternal minifym genFileName Core.Settings.staticDir (StaticR . flip StaticRoute [])
       where
         -- Generate a unique filename based on the content itself
         genFileName lbs

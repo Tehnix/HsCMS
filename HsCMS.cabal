@@ -19,12 +19,12 @@ Flag library-only
     Default:       False
 
 library
-    exposed-modules: Application
-                     Foundation
-                     Import
-                     Layout
-                     Model
-                     Settings
+    exposed-modules: Core.Application
+                     Core.Foundation
+                     Core.Import
+                     Core.Layout
+                     Core.Model
+                     Core.Settings
                      Settings.StaticFiles
                      Settings.Development
                      GeneralFunctions

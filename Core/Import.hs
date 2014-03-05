@@ -1,4 +1,4 @@
-module Import
+module Core.Import
     ( module Import
     ) where
 
@@ -9,9 +9,9 @@ import           Yesod                as Import hiding (Route (..))
 import           Control.Applicative  as Import (pure, (<$>), (<*>))
 import           Data.Text            as Import (Text)
 
-import           Foundation           as Import
-import           Model                as Import
-import           Settings             as Import
+import           Core.Foundation      as Import
+import           Core.Model           as Import
+import           Core.Settings        as Import
 import           Settings.Development as Import
 import           Settings.StaticFiles as Import
 

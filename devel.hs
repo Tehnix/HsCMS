@@ -1,5 +1,5 @@
 {-# LANGUAGE PackageImports #-}
-import "HsCMS" Application (getApplicationDev)
+import "HsCMS" Core.Application (getApplicationDev)
 import Network.Wai.Handler.Warp
     (runSettings, defaultSettings, settingsPort)
 import Control.Concurrent (forkIO)

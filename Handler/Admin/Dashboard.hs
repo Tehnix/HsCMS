@@ -1,7 +1,7 @@
 {-# LANGUAGE TupleSections, OverloadedStrings #-}
 module Handler.Admin.Dashboard where
 
-import Import
+import Core.Import
 import Yesod.Auth
 import qualified Database.Esqueleto as E
 
