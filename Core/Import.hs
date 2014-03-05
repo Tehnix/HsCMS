@@ -29,4 +29,4 @@ infixr 5 <>
 #endif
 
 -- Custom imports
-import           GeneralFunctions     as Import
+import           Core.HelperFunctions as Import

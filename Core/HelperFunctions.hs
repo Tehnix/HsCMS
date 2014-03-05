@@ -3,7 +3,7 @@
 {-# LANGUAGE QuasiQuotes           #-}
 {-# LANGUAGE TemplateHaskell       #-}
 {-# LANGUAGE TypeFamilies          #-}
-module GeneralFunctions where
+module Core.HelperFunctions where
 
 import           Prelude              as Import hiding (head, init, last, readFile, tail, writeFile)
 import           Yesod                as Import hiding (Route (..))

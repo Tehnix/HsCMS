@@ -21,11 +21,11 @@ import Text.Hamlet (hamletFile)
 import Yesod.Core.Types (Logger)
 
 -- Custom imports
+import Core.HelperFunctions
+import Core.Layout
 import Data.Text (Text, takeWhile, unpack)
 import Data.Monoid ((<>))
 import Data.Maybe
-import GeneralFunctions
-import Core.Layout
 
 -- | The site argument for your application. This can be a good place to
 -- keep settings and values requiring initialization before your application
@@ -147,7 +147,10 @@ instance YesodAuth App where
         case x of
             Just (Entity uid _) -> return $ Just uid
             Nothing -> do
-                fmap Just $ insert $ User (credsIdent creds) Nothing
+                fmap Just $ insert User
+                    { userIdent = credsIdent creds
+                    , userPassword = Nothing
+                    }
 
     -- You can add other plugins like BrowserID, email or OAuth here
     authPlugins _ = [authGoogleEmail]
@@ -251,6 +254,7 @@ instance RenderMessage App FormMessage where
 -- | Get the 'Extra' value, used to hold data from the settings.yml file.
 getExtra :: Handler Extra
 getExtra = fmap (appExtra . settings) getYesod
+
 -- Note: previous versions of the scaffolding included a deliver function to
 -- send emails. Unfortunately, there are too many different options for us to
 -- give a reasonable default. Instead, the information is available on the
