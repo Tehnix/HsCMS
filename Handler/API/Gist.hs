@@ -9,7 +9,7 @@
   @
 
   And a gist tied to a user,
-   
+
   @
   createGist (Just (GitHubToken \"The token\")) $ Gist \"Description...\" True $ fromList [(\"File.md\", (GistContent \"Some Content!\" Nothing))]
   @
@@ -60,7 +60,7 @@ data Gist = Gist
 instance ToJSON Gist
 
 -- | The response returned from the GitHub API.
-data GistResponse = GistResponse 
+data GistResponse = GistResponse
     { gistId :: Text -- ^ The id of the created/updated gist.
     } deriving (Show, Generic)
 
@@ -78,7 +78,7 @@ gistContent d p t c = gistUpdateContent d p t Nothing c
 
 -- | Helper for updating a Gist
 gistUpdateContent :: Text -> Bool -> Text -> Maybe Text -> Text -> Gist
-gistUpdateContent d p originalTitle newTitle c = Gist d p $ fromList [(originalTitle <> ".md", GistContent c newTitle)]
+gistUpdateContent d p originalTitle newTitle c = Gist d p $ fromList [(originalTitle, GistContent c newTitle)]
 
 -- | Convert the GitHub Personal Access Token to a basic authorization header
 getTokenHeader :: GitHubToken -> RequestHeaders

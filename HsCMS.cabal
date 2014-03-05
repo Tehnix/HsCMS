@@ -36,6 +36,7 @@ library
                      Handler.StaticPages
                      Handler.Admin.API
                      Handler.Admin.Dashboard
+                     Handler.Admin.CreateContent
                      Handler.Admin.Blog
                      Handler.Admin.StaticPages
 

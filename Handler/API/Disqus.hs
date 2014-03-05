@@ -1,7 +1,7 @@
 {-# LANGUAGE OverloadedStrings, DeriveGeneric, FlexibleContexts #-}
 module Handler.API.Disqus (
     getDisqusStats
-  , DisqusRequest(..)
+  , disqusRequest
   , DisqusResponseData(..)
   , DisqusResponse(..)
   ) where
@@ -19,7 +19,7 @@ import Network.HTTP.QueryString (toString, queryString)
 import Control.Monad.IO.Class (MonadIO)
 
 
--- | 'DisqusAuth' consists of a secret API key and an access token.
+-- | DisqusRequest consists of a secret API key, an access token and the forum name.
 data DisqusRequest = DisqusRequest 
     { secretKey   :: Text
     , accessToken :: Text
@@ -45,6 +45,14 @@ data DisqusResponse = DisqusResponse
 
 instance ToJSON DisqusResponse
 instance FromJSON DisqusResponse
+
+-- | Helper for creating a DisqusRequest
+disqusRequest :: Text -> Text -> Text -> DisqusRequest
+disqusRequest sKey aTkn f = DisqusRequest {
+      secretKey = sKey
+    , accessToken = aTkn
+    , forum = f 
+    }
 
 {-|
   'submitPostRequest' sends the POST request to the url parameter, and return the response as a 'L.ByteString' wrapped in 'MonadIO' or 'MonadBaseControl IO' monad.

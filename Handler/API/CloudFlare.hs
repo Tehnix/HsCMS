@@ -1,8 +1,8 @@
 {-# LANGUAGE OverloadedStrings, DeriveGeneric, FlexibleContexts #-}
 module Handler.API.CloudFlare (
     getCloudFlareStats
-  , CloudFlareAction(..)
-  , CloudFlareAuth(..)
+  , cloudFlareAction
+  , cloudFlareAuth
   , CloudFlareTrafficBreakdown(..)
   ) where
 
@@ -66,6 +66,20 @@ instance FromJSON CloudFlareResponse where
         <$> (((v .: "response") >>= (.: "result")) >>= (.: "objs"))
         <*> v .: "result"
     parseJSON _ = mzero
+
+-- | Helper for creating a CloudFlareAuth
+cloudFlareAuth :: Text -> Text -> CloudFlareAuth
+cloudFlareAuth cfTkn cfEmail = CloudFlareAuth {
+      tkn = cfTkn
+    , email = cfEmail
+    }
+
+-- | Helper for creating a CloudFlareAction
+cloudFlareAction :: Text -> Text -> CloudFlareAction
+cloudFlareAction zone int = CloudFlareAction {
+      z = zone
+    , interval = int
+    }
 
 {-|
   'submitPostRequest' sends the POST request to the url parameter, and return the response as a 'L.ByteString' wrapped in 'MonadIO' or 'MonadBaseControl IO' monad.

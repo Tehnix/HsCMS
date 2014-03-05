@@ -33,7 +33,7 @@ getAdminCloudFlareStatsR = do
             Just cfMail -> 
                 case extraCloudflareZone extra of
                     Nothing -> return Nothing
-                    Just cfZone -> return =<< getCloudFlareStats (CloudFlareAuth cfKey cfMail) $ CloudFlareAction cfZone "20"
+                    Just cfZone -> return =<< getCloudFlareStats (cloudFlareAuth cfKey cfMail) $ cloudFlareAction cfZone "20"
     return $ maybe errJson succJson stats
     where
         errJson = toJSON $ CloudFlareResponseJson False (Left "Error parsing CloudFlare JSON")
@@ -50,7 +50,7 @@ getAdminDisqusStatsR = do
             Just disToken -> 
                 case extraDisqus extra of 
                     Nothing -> return Nothing
-                    Just dis -> return =<< getDisqusStats $ DisqusRequest disSecret disToken dis
+                    Just dis -> return =<< getDisqusStats $ disqusRequest disSecret disToken dis
     return $ maybe errJson succJson stats
     where
         errJson = toJSON $ DisqusResponseJson False (Left "Error parsing Disqus JSON")

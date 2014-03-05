@@ -7,7 +7,6 @@ module Core.HelperFunctions where
 
 import           Prelude              as Import hiding (head, init, last, readFile, tail, writeFile)
 import           Yesod                as Import hiding (Route (..))
--- import           Control.Applicative  as Import (pure, (<$>), (<*>))
 import           Data.Text            as Import (Text, pack, unpack, toLower)
 import           Core.Model           as Import
 -- #if __GLASGOW_HASKELL__ >= 704

@@ -15,12 +15,9 @@ import           Core.Import
 import           Yesod.Auth
 import           System.Locale (defaultTimeLocale)
 import           Data.Time
-import           Data.Text.Lazy (toStrict)
-import           Text.Blaze.Html.Renderer.Text (renderHtml)
 import qualified Database.Esqueleto as E
 import qualified Database.Esqueleto.Internal.Language as EI
-import           Handler.API.Gist
-import           Data.Maybe (fromMaybe)
+import           Handler.Admin.CreateContent
 
 
 {-|
@@ -56,16 +53,12 @@ msgContentPlural = MsgArticles
 msgNoContent :: AppMessage
 msgNoContent = MsgNoArticles
 
--- | Markdown cheatsheet modal
-markdownCheatsheet :: Widget
-markdownCheatsheet = $(widgetFile "admin/markdown-cheatsheet")
-
 -- | Fetch all articles with their author information
-pullArticles :: (EI.From query expr backend (expr (Entity Article)), 
-                 EI.From query expr backend (expr (Entity User))) => 
+pullArticles :: (EI.From query expr backend (expr (Entity Article)),
+                 EI.From query expr backend (expr (Entity User))) =>
                  Bool -> query (expr (Entity Article), expr (Entity User))
 pullArticles trash = E.from $ \(a, u) -> do
-    E.where_ (a E.^. ArticleAuthor E.==. u E.^. UserId 
+    E.where_ (a E.^. ArticleAuthor E.==. u E.^. UserId
         E.&&. a E.^. ArticleTrash E.==. E.val trash)
     E.orderBy [E.desc (a E.^. ArticleAdded)]
     return (a, u)
@@ -78,10 +71,10 @@ getAdminShowArticlesR = do
     contentList <- runDB $ E.select $ pullArticles False
     adminLayout $ do
         setTitleI MsgTitleAdminBlogArticles
-        toWidget [lucius| 
-            #navigation .navigation-articles { background: red; } 
-            #navigation .navigation-new-article { display: block !important; } 
-            #navigation .navigation-trash-articles { display: block !important; } 
+        toWidget [lucius|
+            #navigation .navigation-articles { background: red; }
+            #navigation .navigation-new-article { display: block !important; }
+            #navigation .navigation-trash-articles { display: block !important; }
         |]
         $(widgetFile "admin/list-content")
 
@@ -94,9 +87,9 @@ getAdminNewArticleR = do
         addScript $ StaticR js_showdown_js
         addScript $ StaticR js_extensions_github_js
         setTitleI MsgTitleAdminNewArticle
-        toWidget [lucius| 
-            #navigation .navigation-new-article { background: red !important; display: block !important; } 
-            #navigation .navigation-trash-articles { display: block !important; } 
+        toWidget [lucius|
+            #navigation .navigation-new-article { background: red !important; display: block !important; }
+            #navigation .navigation-trash-articles { display: block !important; }
         |]
         $(widgetFile "admin/create-content")
 
@@ -107,34 +100,20 @@ postAdminNewArticleR = do
     mdContent <- runInputPost $ ireq htmlField "form-mdcontent-field"
     htmlContent <- runInputPost $ ireq htmlField "form-htmlcontent-field"
     wordCount <- runInputPost $ ireq intField "form-wordcount-field"
-    publish <- runInputPost $ iopt boolField "form-publish"
+    saved <- runInputPost $ iopt boolField "form-saved"
     added <- liftIO getCurrentTime
     userId <- requireAuthId
     -- Either save a draft of the post, or publish it
-    case publish of
+    case saved of
         Nothing -> do
+            gistIdent <- maybeCreateOrUpdateGist Nothing "" title mdContent MsgMsgCreatedArticleGistError
+            _ <- runDB $ insert $ Article title mdContent htmlContent wordCount added userId gistIdent True False
+            setMessageI $ MsgMsgCreatedArticle title
+            redirect AdminShowArticlesR
+        Just _ -> do
             articleId <- runDB $ insert $ Article title mdContent htmlContent wordCount added userId Nothing False False
             setMessageI $ MsgMsgSavedArticle title
             redirect (AdminUpdateArticleR articleId)
-        Just _ -> do
-            setMessageI $ MsgMsgCreatedArticle title
-            -- Create a gist of the post if the GitHub PA Token is set
-            extra <- getExtra
-            gistIdent <- case extraGithubToken extra of
-                Nothing -> return Nothing
-                Just gToken -> do
-                    let mdCont = toStrict (renderHtml mdContent)
-                    let auth = githubAuth gToken
-                    let gist = gistContent title (fromMaybe True (extraGistPublic extra)) title mdCont
-                    res <- createGist (Just auth) gist
-                    case res of
-                        Nothing -> do
-                            setMessageI $ MsgMsgCreatedArticleGistError title
-                            return Nothing
-                        Just (GistResponse gId) -> return $ Just gId
-            
-            _ <- runDB $ insert $ Article title mdContent htmlContent wordCount added userId gistIdent True False
-            redirect AdminShowArticlesR
 
 -- | Form page for updating an article
 getAdminUpdateArticleR :: ArticleId -> Handler Html
@@ -146,9 +125,9 @@ getAdminUpdateArticleR articleId = do
         addScript $ StaticR js_showdown_js
         addScript $ StaticR js_extensions_github_js
         setTitleI MsgTitleAdminUpdateArticle
-        toWidget [lucius| 
-            #navigation .navigation-new-article { display: block !important; } 
-            #navigation .navigation-trash-articles { display: block !important; } 
+        toWidget [lucius|
+            #navigation .navigation-new-article { display: block !important; }
+            #navigation .navigation-trash-articles { display: block !important; }
         |]
         $(widgetFile "admin/create-content")
 
@@ -162,25 +141,9 @@ postAdminUpdateArticleR articleId = do
     saved <- runInputPost $ iopt boolField "form-saved"
     unpublish <- runInputPost $ iopt boolField "form-unpublish"
     updated <- liftIO getCurrentTime
-    -- Update the gist of the post if the GitHub PA Token is set
+
     original <- runDB $ get404 articleId
-    extra <- getExtra
-    gistIdent <- case extraGithubToken extra of
-        Nothing -> return Nothing
-        Just gToken -> do
-            let mdCont = toStrict (renderHtml mdContent)
-            let auth = githubAuth gToken
-            res <- case articleGistId original of
-                -- If the article doesn't have a gist ID already
-                Nothing -> do
-                    let gist = gistContent title (fromMaybe True (extraGistPublic extra)) title mdCont
-                    return =<< createGist (Just auth) gist
-                Just gId -> do
-                    let gist = gistUpdateContent title (fromMaybe True (extraGistPublic extra)) (articleTitle original <> ".md") (Just title) mdCont
-                    return =<< updateGist auth gId gist
-            case res of
-                Nothing -> return Nothing
-                Just (GistResponse gId) -> return $ Just gId
+    gistIdent <- maybeCreateOrUpdateGist (articleGistId original) (articleTitle original) title mdContent MsgMsgCreatedArticleGistError
     -- Handle changing the visible status and redirecting to the appropriate page
     case unpublish of
         Nothing -> do
@@ -190,7 +153,7 @@ postAdminUpdateArticleR articleId = do
             setMessageI $ MsgMsgUnpublishedArticle title
             wasSaved False saved (AdminUpdateArticleR articleId) title gistIdent mdContent htmlContent wordCount (articleAdded original)
     where
-        wasSaved publish saved directTo t g mC hC wC updated = 
+        wasSaved publish saved redirectRoute t g mC hC wC updated =
             case saved of
                 Nothing -> do
                     runDB $ update articleId [ ArticleGistId =. g
@@ -200,7 +163,7 @@ postAdminUpdateArticleR articleId = do
                                              , ArticleHtmlContent =. hC
                                              , ArticleWordCount =. wC
                                              , ArticleAdded =. updated ]
-                    redirect directTo
+                    redirect redirectRoute
                 Just _ -> do
                     runDB $ update articleId [ ArticleGistId =. g
                                              , ArticleTitle =. t
@@ -218,9 +181,9 @@ getAdminShowTrashArticlesR = do
     contentList <- runDB $ E.select $ pullArticles True
     adminLayout $ do
         setTitleI MsgTitleAdminTrashArticles
-        toWidget [lucius| 
-            #navigation .navigation-new-article { display: block !important; } 
-            #navigation .navigation-trash-articles { background: red !important; display: block !important; } 
+        toWidget [lucius|
+            #navigation .navigation-new-article { display: block !important; }
+            #navigation .navigation-trash-articles { background: red !important; display: block !important; }
         |]
         $(widgetFile "admin/list-content")
 
@@ -248,4 +211,3 @@ postAdminPublishArticleR articleId = do
     article <- runDB $ get404 articleId
     setMessageI $ MsgMsgPublishedArticle $ articleTitle article
     redirect AdminShowArticlesR
-
