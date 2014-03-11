@@ -3,7 +3,7 @@
     height: 100%;
     width: 100%;
     vertical-align: top;
-    
+
     .widget-row {
         display: table-row;
         vertical-align: top;
@@ -80,4 +80,3 @@
         margin-bottom: -9px;
     }
 }
-

@@ -3,16 +3,16 @@ args:
     - production
 ssl: false
 
-# This will become APPROOT, if you have any absolute URLs, it 
+# This will become APPROOT, if you have any absolute URLs, it
 # must be accurate
 host: yoursite.com
 
 # https://github.com/yesodweb/yesod/wiki/Deploying-via-Keter-alongside-Nginx#wiki-double-proxy
-# The requests from nginx -> keter will not come to that 
-# hostname (the host setting), so we need to tell keter 
+# The requests from nginx -> keter will not come to that
+# hostname (the host setting), so we need to tell keter
 # to listen on something else as well
 # extra-hosts:
-#     - "127.0.0.1:8000" 
+#     - "127.0.0.1:8000"
 
 static-hosts:
     - host: yoursite.com/static

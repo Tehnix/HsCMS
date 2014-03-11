@@ -20,7 +20,7 @@ import Control.Monad.IO.Class (MonadIO)
 
 
 -- | DisqusRequest consists of a secret API key, an access token and the forum name.
-data DisqusRequest = DisqusRequest 
+data DisqusRequest = DisqusRequest
     { secretKey   :: Text
     , accessToken :: Text
     , forum       :: Text
@@ -38,7 +38,7 @@ instance ToJSON DisqusResponseData
 instance FromJSON DisqusResponseData
 
 -- | The response from Disqus.
-data DisqusResponse = DisqusResponse 
+data DisqusResponse = DisqusResponse
     { code     :: Int
     , response :: [DisqusResponseData]
     } deriving (Show, Generic)
@@ -51,14 +51,14 @@ disqusRequest :: Text -> Text -> Text -> DisqusRequest
 disqusRequest sKey aTkn f = DisqusRequest {
       secretKey = sKey
     , accessToken = aTkn
-    , forum = f 
+    , forum = f
     }
 
 {-|
   'submitPostRequest' sends the POST request to the url parameter, and return the response as a 'L.ByteString' wrapped in 'MonadIO' or 'MonadBaseControl IO' monad.
 -}
 submitPostRequest :: (MonadIO m, MonadBaseControl IO m) => String -> m L.ByteString
-submitPostRequest urlString = 
+submitPostRequest urlString =
     case parseUrl urlString of
         Nothing -> return "URL Syntax Error"
         Just initReq -> withManager $ \manager -> do

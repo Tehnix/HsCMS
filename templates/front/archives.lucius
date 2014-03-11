@@ -9,7 +9,7 @@
     font-weight: 200;
     line-height: 1.5em;
     color: #444;
-    
+
     table {
         tbody {
             tr {
@@ -38,4 +38,3 @@
         }
     }
 }
-

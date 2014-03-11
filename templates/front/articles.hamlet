@@ -7,4 +7,3 @@ $else
             <div .arrow-down>
     $forall (Entity articleId article, Entity _ _) <- articles
         ^{blogArticle articleId article False}
-

@@ -22,4 +22,3 @@ $else
                         $#    #{splitByAt $ userIdent user}
                         <td .published>
                             #{formatTime defaultTimeLocale "%h %d, %Y" (articleAdded article)}
-

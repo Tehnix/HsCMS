@@ -13,7 +13,7 @@ $(function(){
         for (var i = 1; i <= pages; i++) {
             $pagination.append("<span class='pagination-page'>" + i + "</span>");
         }
-        
+
         // Set the active page in the sidebar
         var setActivePost = function() {
             if($(window).scrollTop() + $(window).height() > $(document).height() - 20) {
@@ -35,7 +35,7 @@ $(function(){
                 }
             }
         }
-        
+
         // Activate a pagination element
         var activatePage = function(elem) {
             var page = $(elem).html(),
@@ -62,7 +62,7 @@ $(function(){
         $("#pagination").on("click", ".pagination-page", function() {
             activatePage(this);
         });
-        
+
         // Handle the hash, activating pagination elements etc
         var handleHash = function(hash) {
             var hash = window.location.hash;
@@ -77,7 +77,7 @@ $(function(){
                 activatePage($("#pagination .pagination-page")[0]);
             }
         }
-        
+
         // Check for hash changes
         var hashCheck = function() {
             setTimeout(function() {
@@ -87,7 +87,7 @@ $(function(){
         }
         handleHash();
         hashCheck();
-        
+
         $(window).scroll(function() {
             setActivePost();
         });
@@ -104,12 +104,11 @@ $(function(){
             $("html, body").animate({ scrollTop: $($(".article.show")[index]).position().top }, 200);
         });
     }
-    
+
     var Articles = $("#content .article");
     var ArticlesPerPage = 3;
     if (Articles.length > 0) {
         pagination(Articles, ArticlesPerPage);
     }
-    
-});
 
+});

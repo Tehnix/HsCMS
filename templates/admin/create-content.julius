@@ -9,11 +9,11 @@ $(function(){
         wordCountDisplay = $("#word-count")
         wordCountDisplaySingle = $("#word-count-single")
         wordCountDisplayPlural = $("#word-count-plural");
-    
+
     var mdTextAreaChanged = function() {
         previewContainer.html(converter.makeHtml(mdTextArea.val()));
         htmlTextArea.val(converter.makeHtml(mdTextArea.val()));
-        
+
         var previewContainerText = $.trim(previewContainer.text());
         var count = previewContainerText.split(/[\s\.\(\),]+/).length;
         if (previewContainerText == "") {
@@ -36,17 +36,17 @@ $(function(){
 
     $("#form-save-btn").click(function() {
         $("#form-saved-box").attr('checked', true);
-    }); 
+    });
     $("#form-publish-btn").click(function() {
         $("#form-unpublish-box").attr('checked', false);
     });
     $("#form-unpublish-btn").click(function() {
         $("#form-unpublish-box").attr('checked', true);
     });
-    
+
     // Make sure the textarea expands and shrinks dynamically
     //mdTextArea.TextAreaExpander(mdTextArea.height());
-    
+
     // Handle layout based on window size
     var formContentPreview = $("#form-content-preview"),
         formContent = $("#form-content"),
@@ -70,10 +70,9 @@ $(function(){
         formPreviewContainer.height(newHeight - 40);
         mdTextArea.height(newHeight - 35);
     }
-    
+
     rearrange($(window).width(), $(window).height());
     $(window).resize(function() {
         rearrange($(window).width(), $(window).height());
     });
 });
-

@@ -12,8 +12,8 @@ import qualified Database.Esqueleto as E
 pullArticles :: Handler [(Entity Article, Entity User)]
 pullArticles = runDB $ E.select $
     E.from $ \(a, u) -> do
-    E.where_ (a E.^. ArticleAuthor E.==. u E.^. UserId 
-        E.&&. a E.^. ArticleVisible E.==. E.val True 
+    E.where_ (a E.^. ArticleAuthor E.==. u E.^. UserId
+        E.&&. a E.^. ArticleVisible E.==. E.val True
         E.&&. a E.^. ArticleTrash E.==. E.val False)
     E.orderBy [E.desc (a E.^. ArticleAdded)]
     return (a, u)
@@ -61,4 +61,3 @@ getAuthorR author = do
     defaultLayout $ do
         setTitle "Articles"
         $(widgetFile "front/articles")
-

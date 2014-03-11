@@ -77,4 +77,3 @@
                             <div .loading-stats>
                                 _{MsgCloudFlareAnalyticsLoading}
                             <canvas #cloudflare-uniques-chart.cloudflare-chart.invisible width="150" height="150"></canvas>
-

@@ -30,7 +30,7 @@
     background: #292929;
     height: #{topMargin};
     line-height: #{topMargin};
-    
+
     .spacing {
         margin-right:90px;
     }
@@ -153,4 +153,3 @@
         width: 50%;
     }
 }
-

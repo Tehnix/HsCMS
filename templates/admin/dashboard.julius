@@ -3,9 +3,9 @@ $(function(){
     $.get("@{AdminDisqusStatsR}").done(function(data) {
         initializeDisqusCharts(data);
     }).fail(function(data) {
-        
+
     });
-    
+
     // Fetch the data for the CloudFlare charts
     $.get("@{AdminCloudFlareStatsR}").done(function(data) {
         initializeCloudFlareCharts(data);
@@ -14,8 +14,8 @@ $(function(){
         $(".loading-stats").hide();
         $("#cloudflare-interval").hide();
     });
-    
-    
+
+
     var initializeDisqusCharts = function(data) {
         if (data.success && data.result.Right.code == 0) {
             var articles = data.result.Right.response,
@@ -62,7 +62,7 @@ $(function(){
             var disqusChart = new Chart(ctx).Bar(data, options);
         }
     }
-    
+
     var initializeCloudFlareCharts = function(data) {
         if (data.success) {
             var colors = {
@@ -103,4 +103,3 @@ $(function(){
         }
     }
 });
-

@@ -29,4 +29,3 @@
             <div #message>#{msg}
         ^{widget}
     <div .clear>
-

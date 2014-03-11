@@ -18,7 +18,7 @@ $(function(){
     $(window).resize(function() {
         rearrange($(window).width());
     });
-    
+
     var items = $("#content-list .list-item"),
         $previewContainer = $("#content-preview-container"),
         $titlePreview = $("#title-container"),
@@ -27,7 +27,7 @@ $(function(){
         $deleteBtn = $("#delete-list-item-form"),
         $unpublishBtn = $("#unpublish-list-item-form"),
         $publishBtn = $("#publish-list-item-form");
-        
+
     var fillInContent = function(elem) {
         formContentPreview.removeClass("not-used");
         var title = $($('article header .title', elem)[0]).html(),
@@ -56,7 +56,7 @@ $(function(){
             $publishBtn.removeClass("hide");
         }
     }
-    
+
     // Initial select of the first element
     if (items.length > 0) {
         $(items[0]).addClass('selected');
@@ -68,12 +68,12 @@ $(function(){
             $(this).addClass("selected");
             fillInContent(this);
         }
-        // Make the whole list item 
+        // Make the whole list item
         if (arrangement == 2) {
             document.location = $($('.information .edit-link', this)[0]).attr("href");
         }
     });
-    
+
     var $searchBox = $("#search-box");
     $searchBox.on("keyup", function() {
         if ($(this).val() === "") {
@@ -90,4 +90,3 @@ $(function(){
         }
     });
 });
-

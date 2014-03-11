@@ -21,7 +21,7 @@ import Control.Monad (mzero)
 
 
 -- | 'CloudFlareAuth' consists of a CloudFlare API key and the email tied to that key.
-data CloudFlareAuth = CloudFlareAuth 
+data CloudFlareAuth = CloudFlareAuth
     { tkn   :: Text -- ^ This is the API key made available on your CloudFlare Account page.
     , email :: Text -- ^ The e-mail address associated with the API key.
     } deriving (Show)
@@ -33,12 +33,12 @@ data CloudFlareAction = CloudFlareAction
     } deriving (Show, Generic)
 
 -- | The traffic data from CloudFlare
-data CloudFlareStats = CloudFlareStats 
+data CloudFlareStats = CloudFlareStats
     { regular :: Int
     , threat :: Int
     , crawler :: Int
     } deriving (Show, Generic)
-    
+
 instance ToJSON CloudFlareStats
 instance FromJSON CloudFlareStats
 
@@ -56,7 +56,7 @@ instance FromJSON CloudFlareTrafficBreakdown where
     parseJSON _ = mzero
 
 -- | The response returned from the CloudFlare API.
-data CloudFlareResponse = CloudFlareResponse 
+data CloudFlareResponse = CloudFlareResponse
     { objs :: [CloudFlareTrafficBreakdown]
     , result :: Text
     } deriving (Show, Generic)
@@ -85,7 +85,7 @@ cloudFlareAction zone int = CloudFlareAction {
   'submitPostRequest' sends the POST request to the url parameter, and return the response as a 'L.ByteString' wrapped in 'MonadIO' or 'MonadBaseControl IO' monad.
 -}
 submitPostRequest :: (MonadIO m, MonadBaseControl IO m) => String -> [(ByteString, ByteString)] -> m L.ByteString
-submitPostRequest urlString postQuery = 
+submitPostRequest urlString postQuery =
     case parseUrl urlString of
         Nothing -> return "URL Syntax Error"
         Just initReq -> withManager $ \manager -> do
@@ -106,11 +106,10 @@ getCloudFlareStats (CloudFlareAuth t e) (CloudFlareAction zn i) = do
                     , ("email", encodeUtf8 e)
                     , ("a", "stats")
                     , ("z", encodeUtf8 zn)
-                    , ("interval", encodeUtf8 i) 
+                    , ("interval", encodeUtf8 i)
                     ]
     res <- submitPostRequest "https://www.cloudflare.com/api_json.html" postQuery
     case eitherDecode res of
         Left _ -> return Nothing
         Right (CloudFlareResponse (traffic:_) _) -> return $ Just traffic
         Right (CloudFlareResponse [] _) -> return Nothing
-

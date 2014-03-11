@@ -71,7 +71,7 @@ instance Yesod App where
         mmsg <- getMessage
         (title', parents) <- breadcrumbs
         let layout = unpack $ fromMaybe "default-layout" $ extraLayout extra
-        
+
         pc <- widgetToPageContent $ do
             $(combineStylesheets 'StaticR
                 [ css_normalize_css
