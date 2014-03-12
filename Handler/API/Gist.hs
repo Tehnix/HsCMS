@@ -70,7 +70,7 @@ instance FromJSON GistResponse where
 
 -- | Helper for creating a GitHubToken
 githubAuth :: Text -> GitHubToken
-githubAuth tkn = GitHubToken tkn
+githubAuth = GitHubToken
 
 -- | Helper for creating a Gist
 gistContent :: Text -> Bool -> Text -> Text -> Gist

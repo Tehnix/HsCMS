@@ -93,7 +93,7 @@ submitPostRequest urlString postQuery =
                               , requestHeaders = [("User-Agent", "HsCMS")]
                               , checkStatus = \_ _ _ -> Nothing
                               }
-            let req2 = (flip urlEncodedBody) req $ postQuery
+            let req2 = (flip urlEncodedBody) req postQuery
             res <- httpLbs req2 manager
             return $ responseBody res
 

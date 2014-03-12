@@ -43,7 +43,7 @@ availableLayouts =
     runIO $ do
         contents <- getDirectoryContents "templates/layouts/"
         dirsEx <- filterM (doesDirectoryExist . ("templates/layouts/" ++)) contents
-        let dirs = delete "." $ delete ".." $ dirsEx
+        let dirs = delete "." $ delete ".." dirsEx
         return dirs
 
 -- | Get a list of containers for all the avaiable layouts.

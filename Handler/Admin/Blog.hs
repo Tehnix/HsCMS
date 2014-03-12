@@ -81,8 +81,8 @@ getAdminShowArticlesR = do
 -- | Form page for creating a new article
 getAdminNewArticleR :: Handler Html
 getAdminNewArticleR = do
-    formroute <- return AdminNewArticleR
-    mcontent <- return Nothing
+    let formroute = AdminNewArticleR
+    let mcontent = Nothing
     adminLayout $ do
         addScript $ StaticR js_showdown_js
         addScript $ StaticR js_extensions_github_js
@@ -118,9 +118,9 @@ postAdminNewArticleR = do
 -- | Form page for updating an article
 getAdminUpdateArticleR :: ArticleId -> Handler Html
 getAdminUpdateArticleR articleId = do
-    formroute <- return $ AdminUpdateArticleR articleId
+    let formroute = AdminUpdateArticleR articleId
     dbcontent <- runDB $ get404 articleId
-    mcontent <- return $ Just dbcontent
+    let mcontent = Just dbcontent
     adminLayout $ do
         addScript $ StaticR js_showdown_js
         addScript $ StaticR js_extensions_github_js

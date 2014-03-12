@@ -1,7 +1,5 @@
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE OverloadedStrings     #-}
-{-# LANGUAGE QuasiQuotes           #-}
-{-# LANGUAGE TemplateHaskell       #-}
 {-# LANGUAGE TypeFamilies          #-}
 module Core.HelperFunctions where
 
@@ -36,12 +34,11 @@ extractKey = extractKey' . unKey
 
 -- | Add thousand separators.
 addSeparator' :: String -> String -> Int -> String
-addSeparator' s t 0 = addSeparator' (P.tail s) ((P.head s) : t) 1
-addSeparator' s t n = if (P.length s) == 0
-    then t
-    else if (rem n 3) == 0
-        then addSeparator' (P.tail s) ((P.head s) : ',' : t) (n+1)
-        else addSeparator' (P.tail s) ((P.head s) : t) (n+1)
+addSeparator' s t 0 = addSeparator' (P.tail s) (P.head s : t) 1
+addSeparator' s t n
+    | null s = t
+    | rem n 3 == 0 = addSeparator' (P.tail s) (P.head s : ',' : t) (n+1)
+    | otherwise = addSeparator' (P.tail s) (P.head s : t) (n+1)
 -- | Wrapper for the addSeparator function, which adds thousand separators.
 addSeparator :: String -> Text
 addSeparator s = pack (addSeparator' (P.reverse s) "" 0)

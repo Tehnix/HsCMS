@@ -22,7 +22,7 @@ pullArticles = runDB $ E.select $
 blogArticle :: ArticleId -> Article -> Bool -> Widget
 blogArticle articleId article comments = do
     master <- getYesod
-    allowComments <- return comments
+    let allowComments = comments
     $(widgetFile "front/single-article")
 
 -- | Display a single article
@@ -30,7 +30,7 @@ getArticleR :: ArticleId -> Text -> Handler Html
 getArticleR articleId _ = do
     master <- getYesod
     article <- runDB $ get404 articleId
-    allowComments <- return True
+    let allowComments = True
     if not (articleVisible article)
         then notFound
         else defaultLayout $ do
@@ -41,7 +41,7 @@ getArticleR articleId _ = do
 getArticlesR :: Handler Html
 getArticlesR = do
     articles <- pullArticles
-    allowComments <- return False
+    let allowComments = False
     defaultLayout $ do
         setTitle "Blog"
         $(widgetFile "front/articles")
