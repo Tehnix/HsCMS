@@ -1,5 +1,5 @@
 {-# LANGUAGE TupleSections, OverloadedStrings #-}
-module Handler.Admin.CreateContent where
+module Handler.Admin.Gist where
 
 import Core.Import
 import Handler.API.Gist
@@ -7,9 +7,6 @@ import Data.Text.Lazy (toStrict)
 import Text.Blaze.Html.Renderer.Text (renderHtml)
 import Data.Maybe (fromMaybe)
 
--- | Markdown cheatsheet modal
-markdownCheatsheet :: Widget
-markdownCheatsheet = $(widgetFile "admin/markdown-cheatsheet")
 
 -- | Create a gist.
 maybeCreateGist :: (RenderMessage App msg) => Text -> Bool -> Text -> Html -> (Text -> msg) -> Handler (Maybe Text)

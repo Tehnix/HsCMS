@@ -16,10 +16,11 @@ import           Core.Model           as Import
 -- (<>) = mappend
 -- #endif
 
-import Data.Digest.Pure.MD5
-import Data.ByteString.Lazy.UTF8 as L
+import           Data.Digest.Pure.MD5
+import           Data.ByteString.Lazy.UTF8 as L
 import qualified Prelude as P
 import qualified Data.Text as T
+import qualified Data.Char as C
 
 
 -- | Converts spaces to dashes (neat for prettier URLs).
@@ -56,3 +57,6 @@ lowerEmailHash Nothing = ""
 usersEmail :: Maybe (Entity User) -> Text
 usersEmail (Just (Entity _ user)) = userIdent user
 usersEmail Nothing = "Unknown"
+
+showToLower :: (Show a) => a -> String
+showToLower s = map C.toLower $ show s

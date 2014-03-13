@@ -13,7 +13,7 @@
                 <div .clear>
                 <hr>
                 <textarea #form-mdcontent-field name="form-mdcontent-field" placeholder="_{MsgContentPlaceholder}">
-                        #{maybe "" contentMarkdown mcontent}
+                        #{maybe "" contentMdContent mcontent}
         <div #form-content-preview>
             <div .padding>
                 <div .left.red>

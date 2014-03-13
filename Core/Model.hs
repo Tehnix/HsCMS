@@ -1,13 +1,14 @@
 module Core.Model where
 
 import Prelude
-import Yesod
+import Yesod hiding (Content)
 import Data.Text (Text)
 import Database.Persist.Quasi
 import Data.Typeable (Typeable)
 
 -- Custom imports
 import Data.Time (UTCTime)
+import Core.Types
 
 -- You can define all of your database entities in the entities file.
 -- You can find more information on persistent and how to declare entities

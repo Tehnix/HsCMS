@@ -1,4 +1,4 @@
-$if null articles
+$if null allContent
     <div .font-box>
         <p #no-articles> There are no articles yet :(...
 $else
@@ -13,12 +13,12 @@ $else
                     <th .published>
                         Published
             <tbody>
-                $forall (Entity articleId article, Entity _ _) <- articles
+                $forall (Entity contentId content, Entity _ _) <- allContent
                     <tr>
                         <td .title>
-                            <a .link href=@{ArticleR articleId (spacesToDashes (articleTitle article))}>
-                                #{articleTitle article}
+                            <a .link href=@{ArticleR contentId (spacesToDashes (contentTitle content))}>
+                                #{contentTitle content}
                         $#<td .author>
                         $#    #{splitByAt $ userIdent user}
                         <td .published>
-                            #{formatTime defaultTimeLocale "%h %d, %Y" (articleAdded article)}
+                            #{formatTime defaultTimeLocale "%h %d, %Y" (contentAdded content)}

@@ -6,10 +6,10 @@
 
 
 /                           ArticlesR   GET
-/blog/#ArticleId/#Text      ArticleR    GET
+/blog/#ContentId/#Text      ArticleR    GET
 /author/#UserId             AuthorR     GET
 /archives                   ArchivesR   GET
-/page/#StaticPageId/#Text   StaticPageR GET
+/page/#ContentId/#Text      StaticPageR GET
 /about                      AboutR      GET
 
 
@@ -17,19 +17,19 @@
 
 /admin/blog                             AdminShowArticlesR      GET
 /admin/blog/new                         AdminNewArticleR        GET POST
-/admin/blog/update/#ArticleId           AdminUpdateArticleR     GET POST
-/admin/blog/unpublish/#ArticleId        AdminUnpublishArticleR      POST
-/admin/blog/publish/#ArticleId          AdminPublishArticleR        POST
+/admin/blog/update/#ContentId           AdminUpdateArticleR     GET POST
+/admin/blog/unpublish/#ContentId        AdminUnpublishArticleR      POST
+/admin/blog/publish/#ContentId          AdminPublishArticleR        POST
 /admin/blog/trash                       AdminShowTrashArticlesR GET
-/admin/blog/trash/#ArticleId            AdminTrashArticleR          POST
+/admin/blog/trash/#ContentId            AdminTrashArticleR          POST
 
-/admin/pages                             AdminShowStaticPagesR      GET
-/admin/pages/new                         AdminNewStaticPageR        GET POST
-/admin/pages/update/#StaticPageId        AdminUpdateStaticPageR     GET POST
-/admin/pages/unpublish/#StaticPageId     AdminUnpublishStaticPageR      POST
-/admin/pages/publish/#StaticPageId       AdminPublishStaticPageR        POST
-/admin/pages/trash                       AdminShowTrashStaticPagesR GET
-/admin/pages/trash/#StaticPageId         AdminTrashStaticPageR          POST
+/admin/pages                            AdminShowStaticPagesR      GET
+/admin/pages/new                        AdminNewStaticPageR        GET POST
+/admin/pages/update/#ContentId          AdminUpdateStaticPageR     GET POST
+/admin/pages/unpublish/#ContentId       AdminUnpublishStaticPageR      POST
+/admin/pages/publish/#ContentId         AdminPublishStaticPageR        POST
+/admin/pages/trash                      AdminShowTrashStaticPagesR GET
+/admin/pages/trash/#ContentId           AdminTrashStaticPageR          POST
 
 /admin/api/cloudflare/stats             AdminCloudFlareStatsR   GET
 /admin/api/disqus/stats                 AdminDisqusStatsR       GET

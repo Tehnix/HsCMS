@@ -1,5 +1,5 @@
 name:              HsCMS
-version:           0.4.7
+version:           0.4.8
 license:           BSD3
 license-file:      LICENSE
 author:            Tehnix
@@ -25,6 +25,7 @@ library
                      Core.Model
                      Core.Settings
                      Core.Layout
+                     Core.Types
                      Core.HelperFunctions
                      Settings.StaticFiles
                      Settings.Development
@@ -32,13 +33,14 @@ library
                      Handler.API.CloudFlare
                      Handler.API.Disqus
                      Handler.About
-                     Handler.Blog
-                     Handler.StaticPages
+                     Handler.Articles
+                     Handler.Pages
                      Handler.Admin.API
                      Handler.Admin.Dashboard
-                     Handler.Admin.CreateContent
-                     Handler.Admin.Blog
-                     Handler.Admin.StaticPages
+                     Handler.Admin.Gist
+                     Handler.Admin.Content
+                     Handler.Admin.Articles
+                     Handler.Admin.Pages
 
     if flag(dev) || flag(library-only)
         cpp-options:   -DDEVELOPMENT

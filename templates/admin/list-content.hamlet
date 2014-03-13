@@ -22,11 +22,11 @@
                         #{addSeparator $ show $ contentWordCount content}
                     <span .visible-status.hide>
                         #{contentVisible content}
-                    <a .edit-link.hide href=@{updateRoute contentId}>
-                    <a .view-link.hide href=@{viewRoute contentId (spacesToDashes (contentTitle content))}>
-                    <a .unpublish-link.hide href=@{unpublishRoute contentId}>
-                    <a .publish-link.hide href=@{publishRoute contentId}>
-                    <a .delete-link.hide href=@{trashRoute contentId}>
+                    <a .edit-link.hide href=@{updateRoute kind contentId}>
+                    <a .view-link.hide href=@{viewRoute kind contentId (spacesToDashes (contentTitle content))}>
+                    <a .unpublish-link.hide href=@{unpublishRoute kind contentId}>
+                    <a .publish-link.hide href=@{publishRoute kind contentId}>
+                    <a .delete-link.hide href=@{trashRoute kind contentId}>
                 <article>
                     <header>
                         <hgroup>

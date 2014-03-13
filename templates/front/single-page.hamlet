@@ -1,16 +1,16 @@
 <section .staticPage>
     <header .staticPage-header>
-        <h1>#{staticPageTitle staticPage}
+        <h1>#{contentTitle content}
     <staticPage .staticPage-body>
-        #{staticPageHtmlContent staticPage}
+        #{contentHtmlContent content}
     <div .clear>
     $maybe disqus <- extraDisqus $ appExtra $ settings master
         <staticPage #disqus_thread>
             <script type="text/javascript">
                 var disqus_shortname = '#{disqus}',
-                    disqus_identifier = '#{extractKey staticPageId}',
-                    disqus_title = '#{staticPageTitle staticPage}',
-                    disqus_url = '@{StaticPageR staticPageId (spacesToDashes (staticPageTitle staticPage))}';
+                    disqus_identifier = '#{extractKey contentId}',
+                    disqus_title = '#{contentTitle content}',
+                    disqus_url = '@{StaticPageR contentId (spacesToDashes (contentTitle content))}';
 
                 (function() {
                     var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;

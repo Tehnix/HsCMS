@@ -165,12 +165,12 @@ instance YesodBreadcrumbs App where
         let crumb = "Author: " <> takeWhile (/='@') (userIdent user)
         return (crumb, Just ArticlesR)
     breadcrumb ArchivesR = return ("Archives", Just ArticlesR)
-    breadcrumb (ArticleR articleId _) = do
-        article <- runDB $ get404 articleId
-        return (articleTitle article, Just ArticlesR)
-    breadcrumb (StaticPageR staticPageId _) = do
-        staticPage <- runDB $ get404 staticPageId
-        return (staticPageTitle staticPage, Just ArticlesR)
+    breadcrumb (ArticleR contentId _) = do
+        content <- runDB $ get404 contentId
+        return (contentTitle content, Just ArticlesR)
+    breadcrumb (StaticPageR contentId _) = do
+        content <- runDB $ get404 contentId
+        return (contentTitle content, Just ArticlesR)
 
     -- Admin panel breadcrumbs
     breadcrumb AdminDashboardR = do
@@ -186,25 +186,25 @@ instance YesodBreadcrumbs App where
     breadcrumb AdminNewArticleR = do
         render <- getMessageRender
         return (render MsgCrumbAdminNewArticle, Just AdminDashboardR)
-    breadcrumb (AdminUpdateArticleR articleId) = do
+    breadcrumb (AdminUpdateArticleR contentId) = do
         render <- getMessageRender
-        article <- runDB $ get404 articleId
-        let crumb = render $ MsgCrumbAdminUpdated (articleTitle article)
+        content <- runDB $ get404 contentId
+        let crumb = render $ MsgCrumbAdminUpdated (contentTitle content)
         return (crumb, Just AdminShowArticlesR)
-    breadcrumb (AdminTrashArticleR articleId) = do
+    breadcrumb (AdminTrashArticleR contentId) = do
         render <- getMessageRender
-        article <- runDB $ get404 articleId
-        let crumb = render $ MsgCrumbAdminTrashed (articleTitle article)
+        content <- runDB $ get404 contentId
+        let crumb = render $ MsgCrumbAdminTrashed (contentTitle content)
         return (crumb, Just AdminShowTrashArticlesR)
-    breadcrumb (AdminUnpublishArticleR articleId) = do
+    breadcrumb (AdminUnpublishArticleR contentId) = do
         render <- getMessageRender
-        article <- runDB $ get404 articleId
-        let crumb = render $ MsgCrumbAdminUnpublished (articleTitle article)
+        content <- runDB $ get404 contentId
+        let crumb = render $ MsgCrumbAdminUnpublished (contentTitle content)
         return (crumb, Just AdminShowArticlesR)
-    breadcrumb (AdminPublishArticleR articleId) = do
+    breadcrumb (AdminPublishArticleR contentId) = do
         render <- getMessageRender
-        article <- runDB $ get404 articleId
-        let crumb = render $ MsgCrumbAdminPublished (articleTitle article)
+        content <- runDB $ get404 contentId
+        let crumb = render $ MsgCrumbAdminPublished (contentTitle content)
         return (crumb, Just AdminShowArticlesR)
     -- Admin panel Static Pages breadcrumbs
     breadcrumb AdminShowStaticPagesR = do
@@ -216,25 +216,25 @@ instance YesodBreadcrumbs App where
     breadcrumb AdminNewStaticPageR = do
         render <- getMessageRender
         return (render MsgCrumbAdminNewStaticPage, Just AdminDashboardR)
-    breadcrumb (AdminUpdateStaticPageR staticPageId) = do
+    breadcrumb (AdminUpdateStaticPageR contentId) = do
         render <- getMessageRender
-        staticPage <- runDB $ get404 staticPageId
-        let crumb = render $ MsgCrumbAdminUpdated (staticPageTitle staticPage)
+        content <- runDB $ get404 contentId
+        let crumb = render $ MsgCrumbAdminUpdated (contentTitle content)
         return (crumb, Just AdminShowStaticPagesR)
-    breadcrumb (AdminTrashStaticPageR staticPageId) = do
+    breadcrumb (AdminTrashStaticPageR contentId) = do
         render <- getMessageRender
-        staticPage <- runDB $ get404 staticPageId
-        let crumb = render $ MsgCrumbAdminTrashed (staticPageTitle staticPage)
+        content <- runDB $ get404 contentId
+        let crumb = render $ MsgCrumbAdminTrashed (contentTitle content)
         return (crumb, Just AdminShowTrashStaticPagesR)
-    breadcrumb (AdminUnpublishStaticPageR staticPageId) = do
+    breadcrumb (AdminUnpublishStaticPageR contentId) = do
         render <- getMessageRender
-        staticPage <- runDB $ get404 staticPageId
-        let crumb = render $ MsgCrumbAdminUnpublished (staticPageTitle staticPage)
+        content <- runDB $ get404 contentId
+        let crumb = render $ MsgCrumbAdminUnpublished (contentTitle content)
         return (crumb, Just AdminShowStaticPagesR)
-    breadcrumb (AdminPublishStaticPageR staticPageId) = do
+    breadcrumb (AdminPublishStaticPageR contentId) = do
         render <- getMessageRender
-        staticPage <- runDB $ get404 staticPageId
-        let crumb = render $ MsgCrumbAdminPublished (staticPageTitle staticPage)
+        content <- runDB $ get404 contentId
+        let crumb = render $ MsgCrumbAdminPublished (contentTitle content)
         return (crumb, Just AdminShowStaticPagesR)
 
     -- These pages never call breadcrumb

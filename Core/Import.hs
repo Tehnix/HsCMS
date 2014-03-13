@@ -4,7 +4,7 @@ module Core.Import
 
 import           Prelude              as Import hiding (head, init, last,
                                                  readFile, tail, writeFile)
-import           Yesod                as Import hiding (Route (..))
+import           Yesod                as Import hiding (Route (..), Content)
 
 import           Control.Applicative  as Import (pure, (<$>), (<*>))
 import           Data.Text            as Import (Text)
@@ -17,6 +17,7 @@ import           Settings.StaticFiles as Import
 
 -- Custom imports
 import           Core.HelperFunctions as Import
+import           Core.Types           as Import
 
 
 #if __GLASGOW_HASKELL__ >= 704

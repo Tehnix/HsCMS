@@ -8,10 +8,11 @@ import qualified Database.Esqueleto as E
 
 articleCountByAuthor :: Handler [(Entity User, E.Value Int)]
 articleCountByAuthor = runDB $ E.select $
-    E.from $ \(a, u) -> do
-    E.where_ (a E.^. ArticleAuthor E.==. u E.^. UserId
-        E.&&. a E.^. ArticleVisible E.==. E.val True
-        E.&&. a E.^. ArticleTrash E.==. E.val False)
+    E.from $ \(c, u) -> do
+    E.where_ (c E.^. ContentAuthor E.==. u E.^. UserId
+        E.&&. c E.^. ContentType E.==. E.val Article
+        E.&&. c E.^. ContentVisible E.==. E.val True
+        E.&&. c E.^. ContentTrash E.==. E.val False)
     E.groupBy (u E.^. UserId)
     let cnt = E.countRows :: E.SqlExpr (E.Value Int)
     E.orderBy [E.asc (u E.^. UserIdent)]

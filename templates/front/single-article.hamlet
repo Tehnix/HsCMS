@@ -1,27 +1,27 @@
 <section .article>
     <header .article-header>
         $if allowComments
-            <h1>#{articleTitle article}
+            <h1>#{contentTitle content}
         $else
-            <a href=@{ArticleR articleId (spacesToDashes (articleTitle article))}>
-                <h1>#{articleTitle article}
+            <a href=@{ArticleR contentId (spacesToDashes (contentTitle content))}>
+                <h1>#{contentTitle content}
         <p .article-information>
             Published
-            on #{formatTime defaultTimeLocale "%h %d, %Y" (articleAdded article)}
+            on #{formatTime defaultTimeLocale "%h %d, %Y" (contentAdded content)}
             $# by
-            $# <a href=@{AuthorR (articleAuthor article)}>
-            $#     #{splitByAt $ T.unpack $ articleAuthor article}
+            $# <a href=@{AuthorR (contentAuthor content)}>
+            $#     #{splitByAt $ T.unpack $ contentAuthor content}
     <article .article-body>
-        #{articleHtmlContent article}
+        #{contentHtmlContent content}
     <div .clear>
     $if allowComments
         $maybe disqus <- extraDisqus $ appExtra $ settings master
             <article #disqus_thread>
                 <script type="text/javascript">
                     var disqus_shortname = '#{disqus}',
-                        disqus_identifier = '#{extractKey articleId}',
-                        disqus_title = '#{articleTitle article}',
-                        disqus_url = '@{ArticleR articleId (spacesToDashes (articleTitle article))}';
+                        disqus_identifier = '#{extractKey contentId}',
+                        disqus_title = '#{contentTitle content}',
+                        disqus_url = '@{ArticleR contentId (spacesToDashes (contentTitle content))}';
 
                     (function() {
                         var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
