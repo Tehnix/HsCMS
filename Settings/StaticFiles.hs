@@ -8,6 +8,7 @@ import Settings.Development
 import Language.Haskell.TH (Q, Exp, Name)
 import Data.Default (def)
 
+
 -- | use this to create your static file serving site
 staticSite :: IO Static.Static
 staticSite = if development then Static.staticDevel staticDir

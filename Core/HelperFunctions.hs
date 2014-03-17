@@ -58,5 +58,6 @@ usersEmail :: Maybe (Entity User) -> Text
 usersEmail (Just (Entity _ user)) = userIdent user
 usersEmail Nothing = "Unknown"
 
+-- | Convert something to a string and lowercase it.
 showToLower :: (Show a) => a -> String
 showToLower s = map C.toLower $ show s

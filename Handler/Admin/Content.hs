@@ -114,8 +114,10 @@ getNewContent :: ContentKind -> AppMessage -> Route App -> Handler Html
 getNewContent kind titleMsg formroute = do
     let mcontent = Nothing
     adminLayout $ do
-        addScript $ StaticR js_showdown_js
-        addScript $ StaticR js_extensions_github_js
+        $(combineScripts 'StaticR
+            [ js_showdown_js
+            , js_extensions_github_js
+            ])
         setTitleI titleMsg
         toWidget [lucius|
             #navigation .navigation-new-#{showToLower kind} { background: red !important; display: block !important; }
@@ -188,22 +190,21 @@ postUpdateContent gistErrorMsg savedMsg pubMsg unpubMsg updatedRoute showRoute c
             setMessageI $ unpubMsg title
             wasSaved False saved (updatedRoute contentId) title gistIdent mdContent htmlContent wordCount (contentAdded original)
     where
-        wasSaved publish saved redirectRoute t g mC hC wC updated =
-            case saved of
-                Nothing -> do
-                    runDB $ update contentId [ ContentGistId =. g
-                                             , ContentVisible =. publish
-                                             , ContentTitle =. t
-                                             , ContentMdContent =. mC
-                                             , ContentHtmlContent =. hC
-                                             , ContentWordCount =. wC
-                                             , ContentAdded =. updated ]
-                    redirect redirectRoute
-                Just _ -> do
-                    runDB $ update contentId [ ContentGistId =. g
-                                             , ContentTitle =. t
-                                             , ContentMdContent =. mC
-                                             , ContentHtmlContent =. hC
-                                             , ContentWordCount =. wC ]
-                    setMessageI $ savedMsg t
-                    redirect (updatedRoute contentId)
+        wasSaved publish saved redirectRoute t g mC hC wC updated = case saved of
+            Nothing -> do
+                runDB $ update contentId [ ContentGistId =. g
+                                         , ContentVisible =. publish
+                                         , ContentTitle =. t
+                                         , ContentMdContent =. mC
+                                         , ContentHtmlContent =. hC
+                                         , ContentWordCount =. wC
+                                         , ContentAdded =. updated ]
+                redirect redirectRoute
+            Just _ -> do
+                runDB $ update contentId [ ContentGistId =. g
+                                         , ContentTitle =. t
+                                         , ContentMdContent =. mC
+                                         , ContentHtmlContent =. hC
+                                         , ContentWordCount =. wC ]
+                setMessageI $ savedMsg t
+                redirect (updatedRoute contentId)
