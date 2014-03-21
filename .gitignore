@@ -29,6 +29,7 @@ bootstrap.sh
 
 # Configuration files
 config/client_session_key.aes
+client_session_key.aes
 config/settings.yml
 config/keter.yaml
 config/favicon.ico
