@@ -7,34 +7,9 @@ import           System.Locale (defaultTimeLocale)
 import           Data.Time
 import qualified Database.Esqueleto as E
 import qualified Database.Esqueleto.Internal.Language as EI
-import           Handler.Admin.Gist
+import           Handler.Admin.CreateContent
+import           Handler.Admin.ListContent
 
-
--- | This block generalises the templates so they can be used with other content.
-updateRoute :: ContentKind -> ContentId -> Route App
-updateRoute Article = AdminUpdateArticleR
-updateRoute Page = AdminUpdateStaticPageR
-viewRoute :: ContentKind -> ContentId -> Text -> Route App
-viewRoute Article = ArticleR
-viewRoute Page = StaticPageR
-unpublishRoute :: ContentKind -> ContentId -> Route App
-unpublishRoute Article = AdminUnpublishArticleR
-unpublishRoute Page = AdminUnpublishStaticPageR
-publishRoute :: ContentKind -> ContentId -> Route App
-publishRoute Article = AdminPublishArticleR
-publishRoute Page = AdminPublishStaticPageR
-trashRoute :: ContentKind -> ContentId -> Route App
-trashRoute Article = AdminTrashArticleR
-trashRoute Page = AdminTrashStaticPageR
-msgContentSingle :: ContentKind -> AppMessage
-msgContentSingle Article = MsgArticle
-msgContentSingle Page = MsgPage
-msgContentPlural :: ContentKind -> AppMessage
-msgContentPlural Article = MsgArticles
-msgContentPlural Page = MsgPages
-msgNoContent :: ContentKind -> AppMessage
-msgNoContent Article = MsgNoArticles
-msgNoContent Page = MsgNoPages
 
 -- | Markdown cheatsheet modal
 markdownCheatsheet :: Widget

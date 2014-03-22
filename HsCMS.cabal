@@ -37,7 +37,8 @@ library
                      Handler.Pages
                      Handler.Admin.API
                      Handler.Admin.Dashboard
-                     Handler.Admin.Gist
+                     Handler.Admin.CreateContent
+                     Handler.Admin.ListContent
                      Handler.Admin.Content
                      Handler.Admin.Articles
                      Handler.Admin.Pages

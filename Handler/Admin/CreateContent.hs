@@ -1,5 +1,5 @@
 {-# LANGUAGE TupleSections, OverloadedStrings #-}
-module Handler.Admin.Gist where
+module Handler.Admin.CreateContent where
 
 import Core.Import
 import Handler.API.Gist
