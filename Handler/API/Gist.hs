@@ -29,7 +29,7 @@ import Data.Text (Text, unpack)
 import Data.Text.Encoding (encodeUtf8)
 import Data.ByteString.Lazy (ByteString, toStrict)
 import Data.HashMap.Strict
-import Data.Conduit (MonadBaseControl)
+import Control.Monad.Trans.Control (MonadBaseControl)
 import Data.Monoid ((<>))
 import Data.Aeson
 import Network.HTTP.Conduit

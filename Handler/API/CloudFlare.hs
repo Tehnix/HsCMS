@@ -12,7 +12,7 @@ import Data.Text (Text)
 import Data.Text.Encoding (encodeUtf8)
 import qualified Data.ByteString.Lazy as L (ByteString)
 import Data.ByteString
-import Data.Conduit (MonadBaseControl)
+import Control.Monad.Trans.Control (MonadBaseControl)
 import Data.Aeson
 import Network.HTTP.Conduit
 import Control.Monad.IO.Class (MonadIO)

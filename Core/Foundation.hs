@@ -8,7 +8,7 @@ import Yesod.Auth
 import Yesod.Auth.GoogleEmail
 import Yesod.Default.Config
 import Yesod.Default.Util (addStaticContentExternal)
-import Network.HTTP.Conduit (Manager)
+import Network.HTTP.Client.Conduit (Manager, HasHttpManager (getHttpManager))
 import qualified Core.Settings
 import Settings.Development (development)
 import qualified Database.Persist
@@ -40,6 +40,9 @@ data App = App
     , persistConfig :: Core.Settings.PersistConf
     , appLogger :: Logger
     }
+
+instance HasHttpManager App where
+    getHttpManager = httpManager
 
 -- Set up i18n messages. See the message folder.
 mkMessage "App" "messages" "en"
