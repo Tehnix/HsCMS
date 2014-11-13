@@ -16,7 +16,7 @@ before_install:
 
 install:
  - cabal update
- - cabal install --only-dependencies --enable-tests --enable-benchmarks
+ - cabal install -j --enable-tests --max-backjumps=-1 --reorder-goals
 
 # Here starts the actual work to be performed for the package under test; any command which exits with a non-zero exit code causes the build to fail.
 script:
