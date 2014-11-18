@@ -8,17 +8,5 @@ Email
     user UserId Maybe
     verkey Text Maybe
     UniqueEmail email
-Content
-    type ContentKind
-    title Text
-    mdContent Html
-    htmlContent Html
-    added UTCTime
-    author UserId
-    wordCount Int
-    gistId Text Maybe
-    visible Bool
-    trash Bool
-    deriving
 
--- By default this file is used in Model.hs (which is imported by Foundation.hs)
+ -- By default this file is used in Model.hs (which is imported by Foundation.hs)

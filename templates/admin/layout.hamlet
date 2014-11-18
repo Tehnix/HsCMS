@@ -1,31 +1,18 @@
-<div #nav role="nav">
-    <div .user-image>
-        <a href=@{ArticlesR}>
-            <img id="user-image" src="//www.gravatar.com/avatar/#{emailHash}?s=68">
-    <ul #navigation>
-        <li>
-            <a .navigation-dashboard href=@{AdminDashboardR}>_{MsgDashboard}
-        <li>
-            <a .navigation-articles href=@{AdminShowArticlesR}>_{MsgArticles}
-        <li>
-            <a .navigation-new-article.nav-child href=@{AdminNewArticleR}>_{MsgNewArticle}
-        <li>
-            <a .navigation-trash-articles.nav-child href=@{AdminShowTrashArticlesR}>_{MsgTrash}
-        <li>
-            <a .navigation-pages href=@{AdminShowStaticPagesR}>_{MsgPages}
-        <li>
-            <a .navigation-new-page.nav-child href=@{AdminNewStaticPageR}>_{MsgNewPage}
-        <li>
-            <a .navigation-trash-pages.nav-child href=@{AdminShowTrashStaticPagesR}>_{MsgTrash}
-        <li>
-            <a .navigation-settings href="#">_{MsgSettings}
-    <ul #bottom-navigation>
-        <li>
-            <a href=@{AuthR LogoutR}>_{MsgLogout}
+$maybe msg <- mmsg
+    <div #message>#{msg}
+
+<nav #nav role="navigation">
+    <a href=@{AdminContentR} .nav-item>
+        <div .nav-label>
+            Content
+    <a href=@{AdminNewPostR} .nav-item>
+        <div .nav-label>
+            New Post
+    <a href=@{AdminSettingsR} .nav-item>
+        <div .nav-label>
+            Settings
 
 <div #main role="main">
-    <div #content>
-        $maybe msg <- mmsg
-            <div #message>#{msg}
+    <div #content .box>
         ^{widget}
-    <div .clear>
+

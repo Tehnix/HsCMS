@@ -1,35 +1,12 @@
 /static StaticR Static getStatic
 /auth   AuthR   Auth   getAuth
 
-/favicon.ico    FaviconR    GET
-/robots.txt     RobotsR     GET
+/favicon.ico FaviconR GET
+/robots.txt RobotsR GET
 
+/home HomeR GET
 
-/                           ArticlesR   GET
-/blog/#ContentId/#Text      ArticleR    GET
-/author/#UserId             AuthorR     GET
-/archives                   ArchivesR   GET
-/page/#ContentId/#Text      StaticPageR GET
-/about                      AboutR      GET
+/ AdminContentR GET
+/admin/new/post AdminNewPostR GET
+/admin/settings AdminSettingsR GET
 
-
-/admin                                  AdminDashboardR         GET
-
-/admin/blog                             AdminShowArticlesR      GET
-/admin/blog/new                         AdminNewArticleR        GET POST
-/admin/blog/update/#ContentId           AdminUpdateArticleR     GET POST
-/admin/blog/unpublish/#ContentId        AdminUnpublishArticleR      POST
-/admin/blog/publish/#ContentId          AdminPublishArticleR        POST
-/admin/blog/trash                       AdminShowTrashArticlesR GET
-/admin/blog/trash/#ContentId            AdminTrashArticleR          POST
-
-/admin/pages                            AdminShowStaticPagesR      GET
-/admin/pages/new                        AdminNewStaticPageR        GET POST
-/admin/pages/update/#ContentId          AdminUpdateStaticPageR     GET POST
-/admin/pages/unpublish/#ContentId       AdminUnpublishStaticPageR      POST
-/admin/pages/publish/#ContentId         AdminPublishStaticPageR        POST
-/admin/pages/trash                      AdminShowTrashStaticPagesR GET
-/admin/pages/trash/#ContentId           AdminTrashStaticPageR          POST
-
-/admin/api/cloudflare/stats             AdminCloudFlareStatsR   GET
-/admin/api/disqus/stats                 AdminDisqusStatsR       GET

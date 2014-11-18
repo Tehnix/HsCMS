@@ -1,9 +1,0 @@
-$if null allContent
-    <div .font-box>
-        <p #no-articles> There are no articles yet :(...
-$else
-    <div #articles-sidebar>
-        <div #articles-sidebar-item-bottom>
-            <div .arrow-down>
-    $forall (Entity contentId content, Entity _ _) <- allContent
-        ^{blogArticle contentId content False}
