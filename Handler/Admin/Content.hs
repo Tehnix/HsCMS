@@ -5,8 +5,7 @@ import Import
 
 
 getAdminContentR :: Handler Html
-getAdminContentR = do
-    adminLayout $ do
+getAdminContentR = adminLayout $ do
         setTitle "Admin: Content"
         $(widgetFile "admin/content")
 

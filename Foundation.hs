@@ -1,35 +1,36 @@
 module Foundation where
 
-import Prelude
-import Yesod
-import Yesod.Static
-import Yesod.Auth
-import Yesod.Auth.BrowserId
-import Yesod.Default.Config
-import Yesod.Default.Util (addStaticContentExternal)
-import Network.HTTP.Client.Conduit (Manager, HasHttpManager (getHttpManager))
-import qualified Settings
-import Settings.Development (development)
 import qualified Database.Persist
-import Database.Persist.Sql (SqlBackend)
-import Settings.StaticFiles
-import Settings (widgetFile, Extra (..))
-import Model
-import Text.Jasmine (minifym)
-import Text.Hamlet (hamletFile)
-import Yesod.Core.Types (Logger)
+import           Database.Persist.Sql        (SqlBackend)
+import           Model
+import           Network.HTTP.Client.Conduit (HasHttpManager (getHttpManager),
+                                              Manager)
+import           Prelude
+import           Settings                    (Extra (..), widgetFile)
+import qualified Settings
+import           Settings.Development        (development)
+import           Settings.StaticFiles
+import           Text.Hamlet                 (hamletFile)
+import           Text.Jasmine                (minifym)
+import           Yesod
+import           Yesod.Auth
+import           Yesod.Auth.BrowserId
+import           Yesod.Core.Types            (Logger)
+import           Yesod.Default.Config
+import           Yesod.Default.Util          (addStaticContentExternal)
+import           Yesod.Static
 
 -- | The site argument for your application. This can be a good place to
 -- keep settings and values requiring initialization before your application
 -- starts running, such as database connections. Every handler will have
 -- access to the data present here.
 data App = App
-    { settings :: AppConfig DefaultEnv Extra
-    , getStatic :: Static -- ^ Settings for static file serving.
-    , connPool :: Database.Persist.PersistConfigPool Settings.PersistConf -- ^ Database connection pool.
-    , httpManager :: Manager
+    { settings      :: AppConfig DefaultEnv Extra
+    , getStatic     :: Static -- ^ Settings for static file serving.
+    , connPool      :: Database.Persist.PersistConfigPool Settings.PersistConf -- ^ Database connection pool.
+    , httpManager   :: Manager
     , persistConfig :: Settings.PersistConf
-    , appLogger :: Logger
+    , appLogger     :: Logger
     }
 
 instance HasHttpManager App where
@@ -132,8 +133,7 @@ instance YesodAuth App where
         x <- getBy $ UniqueUser $ credsIdent creds
         case x of
             Just (Entity uid _) -> return $ Just uid
-            Nothing -> do
-                fmap Just $ insert User
+            Nothing -> fmap Just $ insert User
                     { userIdent = credsIdent creds
                     , userPassword = Nothing
                     }
@@ -143,7 +143,8 @@ instance YesodAuth App where
 
     authHttpManager = httpManager
 
-instance YesodAuthPersist App
+-- For some reason, this causes a "Malformed instance head: YesodAuthPersist ..." error
+-- instance YesodAuthPersist App
 
 -- This instance is required to use forms. You can modify renderMessage to
 -- achieve customized and internationalized form validation messages.
@@ -159,7 +160,7 @@ adminLayout :: Widget -> Handler Html
 adminLayout widget = do
     master <- getYesod
     mmsg <- getMessage
-    
+
     pc <- widgetToPageContent $ do
         $(combineStylesheets 'StaticR
             [ css_bootstrap_css

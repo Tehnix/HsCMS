@@ -1,0 +1,28 @@
+binary-ghc-args:
+- -O
+- -threaded
+module-template: ! 'module MODULE_NAME where
+
+
+  import Import'
+extensions:
+  GeneralizedNewtypeDeriving: true
+  TemplateHaskell: true
+  OverloadedStrings: true
+  GADTs: true
+  EmptyDataDecls: true
+  QuasiQuotes: true
+  TypeFamilies: true
+  DeriveDataTypeable: true
+  CPP: true
+  MultiParamTypeClasses: true
+  FlexibleContexts: true
+environment: ghc-7.8-stable-14.09
+auto-hidden: []
+cabal-file: project.cabal
+version: 1
+extra-packages: ''
+ghc-args:
+- -Wall
+excluded-modules:
+- app/DevelMain.hs

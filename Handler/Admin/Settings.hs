@@ -5,8 +5,7 @@ import Import
 
 
 getAdminSettingsR :: Handler Html
-getAdminSettingsR = do
-    adminLayout $ do
+getAdminSettingsR = adminLayout $ do
         setTitle "Admin: Settings"
         $(widgetFile "admin/settings")
 

@@ -5,8 +5,7 @@ import Import
 
 
 getAdminNewPostR :: Handler Html
-getAdminNewPostR = do
-    adminLayout $ do
+getAdminNewPostR = adminLayout $ do
         setTitle "Admin: New Post"
         $(widgetFile "admin/new-post")
 
